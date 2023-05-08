@@ -29,6 +29,7 @@
 /* USER CODE BEGIN PTD */
 uint64_t micros();
 void velocity();
+void Qubic(float q_k1,float q_k2,float qdot_k1,float qdot_k2,float tf);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -60,6 +61,11 @@ float QEIVelocity //step/sec
 QEIStructureTypedef QEIData = {0};
 
 uint64_t _micros = 0;
+
+float q_velocity;
+float q_position;
+float q_acc;
+float timestep = 0;
 
 // PID variable
 float pu1=0;
@@ -144,25 +150,26 @@ int main(void)
 	  //PID control position
 	  static uint64_t timestamp = 0;
 	  if(HAL_GetTick() >= timestamp){
-			  timestamp = HAL_GetTick()+100;
-			  velocity(); // velocity
-			  if(SetDegree < 0)SetDegree = 0; // minimum value
-			  if(SetDegree > 1800)SetDegree = 1800; // maximum value
-			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
-			  ReadDegree = QEIReadRaw/8192.0 * 360; // pluse to degree
-			  error = SetDegree - ReadDegree;
-			  DegreeFeedback = control_interrupt(); // PID function
-
-		 if(error > 0){ //setpoint > read_encoder
-			 if(error < 2.0)DegreeFeedback = 0; //Limit Position
-			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback);
-			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 0);
-		 }
-		 if(error < 0){ //setpoint < read_encoder
-			 if(error*-1 < 2.0)DegreeFeedback = 0; //Limit Position
-			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback*-1);
-			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 1);
-		 }
+		  Qubic(50,10,0,0,100);
+		  timestamp = HAL_GetTick()+100;
+		//			  velocity(); // velocity
+		//			  if(SetDegree < 0)SetDegree = 0; // minimum value
+		//			  if(SetDegree > 1800)SetDegree = 1800; // maximum value
+		//			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
+		//			  ReadDegree = QEIReadRaw/8192.0 * 360; // pluse to degree
+		//			  error = SetDegree - ReadDegree;
+		//			  DegreeFeedback = control_interrupt(); // PID function
+		//
+		//		 if(error > 0){ //setpoint > read_encoder
+		//			 if(error < 2.0)DegreeFeedback = 0; //Limit Position
+		//			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback);
+		//			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 0);
+		//		 }
+		//		 if(error < 0){ //setpoint < read_encoder
+		//			 if(error*-1 < 2.0)DegreeFeedback = 0; //Limit Position
+		//			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback*-1);
+		//			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 1);
+		//		 }
 	  }
   }
   /* USER CODE END 3 */
@@ -471,6 +478,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 uint64_t micros(){
 	return __HAL_TIM_GET_COUNTER(&htim5)+_micros;
+}
+void Qubic(float q_k1,float q_k2,float qdot_k1,float qdot_k2,float tf){
+
+	static float C0,C1,C2,C3;
+	if(timestep < tf){
+		timestep += 1;
+	}
+	C0 = q_k1;
+	C1 = qdot_k1;
+	C2 = 3*((q_k2 - q_k1)/tf*tf)+(-qdot_k2-(2*qdot_k1))/tf;
+	C3 = -2*((q_k2-q_k1)/tf*tf*tf)+((qdot_k2+qdot_k1)/tf*tf);
+
+	q_position = C0 + C1*timestep + C2*(timestep*timestep) + C3*(timestep*timestep);
+	q_velocity = C1 + 2*C2*timestep*timestep + 3*C3*(timestep*timestep);
+	q_acc = 2*C2 + 6*C3*timestep;
 }
 /* USER CODE END 4 */
 
