@@ -67,9 +67,9 @@ float pe1=0;
 float pe2=0;
 float u;
 float delta_u;
-const float K_P = 0.125;
-const float K_I = 0.025;
-const float K_D = 0.05;
+const float K_P = 0.5;
+const float K_I = 0.25;
+const float K_D = 0.2;
 
 uint32_t QEIReadRaw;
 float ReadDegree; // Encoder value
@@ -154,12 +154,12 @@ int main(void)
 			  DegreeFeedback = control_interrupt(); // PID function
 
 		 if(error > 0){ //setpoint > read_encoder
-			 if(error < 1.0)DegreeFeedback = 0; //Limit Position
+			 if(error < 2.0)DegreeFeedback = 0; //Limit Position
 			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback);
 			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 0);
 		 }
 		 if(error < 0){ //setpoint < read_encoder
-			 if(error*-1 < 1.0)DegreeFeedback = 0; //Limit Position
+			 if(error*-1 < 2.0)DegreeFeedback = 0; //Limit Position
 			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback*-1);
 			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 1);
 		 }
