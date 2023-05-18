@@ -22,6 +22,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "arm_math.h"
+#include "main.h"
+#include "Qubic.h"
+#include "Qubic_emxAPI.h"
+#include "Qubic_terminate.h"
+#include "Qubic_types.h"
+#include "rt_nonfinite.h"
+
 //Chayapol 6411
 /* USER CODE END Includes */
 
@@ -29,7 +36,17 @@
 /* USER CODE BEGIN PTD */
 uint64_t micros();
 void velocity();
-void Qubic(float q_k1,float q_k2,float qdot_k1,float qdot_k2,float tf);
+static double argInit_real_T(void);
+
+/* Function Definitions */
+/*
+ * Arguments    : void
+ * Return Type  : double
+ */
+static double argInit_real_T(void)
+{
+  return 0.0;
+}
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -42,6 +59,9 @@ void Qubic(float q_k1,float q_k2,float qdot_k1,float qdot_k2,float tf);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
+
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim5;
@@ -49,12 +69,14 @@ TIM_HandleTypeDef htim5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
 uint32_t QEIReadRaw;
+uint32_t Button1 = 0;
+double position;
+uint32_t Joystick_position[2];
+uint32_t Joystick_Control;
 typedef struct _QEIStructure{
 uint32_t data[2]; //Position data container
 uint32_t timestamp[2];
-
 float QEIPosition; //step
 float QEIVelocity //step/sec
 }QEIStructureTypedef;
@@ -62,9 +84,10 @@ QEIStructureTypedef QEIData = {0};
 
 uint64_t _micros = 0;
 
-float q_velocity;
-float q_position;
-float q_acc;
+emxArray_real_T *q_velocityN;
+emxArray_real_T *q_positionN;
+emxArray_real_T *q_accN;
+int indexposition = 0;
 float timestep = 0;
 
 // PID variable
@@ -88,10 +111,12 @@ float error; // error
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 float control_interrupt();
 /* USER CODE END PFP */
@@ -108,7 +133,7 @@ float control_interrupt();
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	main_Qubic();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -129,11 +154,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM5_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+    HAL_ADC_Start_DMA(&hadc1, Joystick_position, 2);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1|TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
@@ -147,30 +175,50 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //PID control position
-	  static uint64_t timestamp = 0;
-	  if(HAL_GetTick() >= timestamp){
-		  Qubic(50,10,0,0,100);
-		  timestamp = HAL_GetTick()+100;
-		//			  velocity(); // velocity
-		//			  if(SetDegree < 0)SetDegree = 0; // minimum value
-		//			  if(SetDegree > 1800)SetDegree = 1800; // maximum value
-		//			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
-		//			  ReadDegree = QEIReadRaw/8192.0 * 360; // pluse to degree
-		//			  error = SetDegree - ReadDegree;
-		//			  DegreeFeedback = control_interrupt(); // PID function
-		//
-		//		 if(error > 0){ //setpoint > read_encoder
-		//			 if(error < 2.0)DegreeFeedback = 0; //Limit Position
-		//			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback);
-		//			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 0);
-		//		 }
-		//		 if(error < 0){ //setpoint < read_encoder
-		//			 if(error*-1 < 2.0)DegreeFeedback = 0; //Limit Position
-		//			 __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,DegreeFeedback*-1);
-		//			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 1);
-		//		 }
-	  }
+	      static uint64_t timestamp = 0;
+	      position = q_positionN->data[indexposition];
+	      velocity(); // velocity
+		  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
+		  ReadDegree = QEIReadRaw / 8192.0 * 360; // pulse to degree
+		  error = SetDegree - ReadDegree;
+		  DegreeFeedback = control_interrupt(); // PID function
+	      if (HAL_GetTick() >= timestamp) {
+	          timestamp = HAL_GetTick() + 1000;
+
+	          if (Joystick_Control == 1) {
+	              if (Joystick_position[1] >= 6) {
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+	              }
+	              else if (Joystick_position[1] <= 5) {
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+	              }
+	          }
+	          else if (Joystick_Control == 0) {
+	              if (SetDegree < 0) {
+	                  SetDegree = 0; // minimum value
+	              }
+	              if (SetDegree > 1800) {
+	                  SetDegree = 1800; // maximum value
+	              }
+
+	              if (error > 0) { // setpoint > read_encoder
+	                  if (error < 2.0) {
+	                      DegreeFeedback = 0; // Limit Position
+	                  }
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+	              }
+	              if (error < 0) { // setpoint < read_encoder
+	                  if (error * -1 < 2.0) {
+	                      DegreeFeedback = 0; // Limit Position
+	                  }
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback * -1);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+	              }
+	          }
+	      }
   }
   /* USER CODE END 3 */
 }
@@ -197,9 +245,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 84;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -219,6 +267,67 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_10B;
+  hadc1.Init.ScanConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 2;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Rank = 2;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
 
 /**
@@ -408,6 +517,22 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -438,9 +563,27 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PB8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	if(GPIO_Pin == GPIO_PIN_8){
+		Button1 = 1;
+	}
+}
 float control_interrupt(){
 	error = SetDegree - ReadDegree;
 	delta_u = (K_P+K_I+K_D)*error-(K_P+2*K_D)*pe1+(K_D)*pe2;
@@ -479,20 +622,26 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 uint64_t micros(){
 	return __HAL_TIM_GET_COUNTER(&htim5)+_micros;
 }
-void Qubic(float q_k1,float q_k2,float qdot_k1,float qdot_k2,float tf){
-
-	static float C0,C1,C2,C3;
-	if(timestep < tf){
-		timestep += 1;
-	}
-	C0 = q_k1;
-	C1 = qdot_k1;
-	C2 = 3*((q_k2 - q_k1)/tf*tf)+(-qdot_k2-(2*qdot_k1))/tf;
-	C3 = -2*((q_k2-q_k1)/tf*tf*tf)+((qdot_k2+qdot_k1)/tf*tf);
-
-	q_position = C0 + C1*timestep + C2*(timestep*timestep) + C3*(timestep*timestep);
-	q_velocity = C1 + 2*C2*timestep*timestep + 3*C3*(timestep*timestep);
-	q_acc = 2*C2 + 6*C3*timestep;
+void main_Qubic(void)
+{
+  emxArray_real_T *q_acc;
+  emxArray_real_T *q_position;
+  emxArray_real_T *q_velocity;
+  double q_k1_tmp;
+  /* Initialize function 'Qubic' input arguments. */
+  q_k1_tmp = argInit_real_T();
+  /* Call the entry-point 'Qubic'. */
+  emxInitArray_real_T(&q_position, 2);
+  emxInitArray_real_T(&q_velocity, 2);
+  emxInitArray_real_T(&q_acc, 2);
+  Qubic(0, 100, 10, 50, 2, q_position,
+        q_velocity, q_acc);
+  q_positionN = q_position;
+  q_velocityN = q_velocity;
+  q_accN = q_acc;
+  emxDestroyArray_real_T(q_position);
+  emxDestroyArray_real_T(q_velocity);
+  emxDestroyArray_real_T(q_acc);
 }
 /* USER CODE END 4 */
 
