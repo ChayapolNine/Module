@@ -69,6 +69,7 @@ TIM_HandleTypeDef htim5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+int SoftReset = 0;
 uint32_T path = 0;
 uint32_t QEIReadRaw;
 uint32_t Button1 = 0;
@@ -97,10 +98,12 @@ float pu1=0;
 float pe1=0;
 float pe2=0;
 float u;
+float p = 0;
+float s = 0;
 float delta_u;
-const float K_P = 10;
-const float K_I = 0.1;
-const float K_D = 0;
+const float K_P = 0.17;
+const float K_I = 0.00008;
+const float K_D = 0.5;
 
 uint32_t QEIReadRaw;
 float ReadDegree; // Encoder value
@@ -179,8 +182,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	      static uint64_t timestamp = 0;
 	      static float timestampTrajact = 0;
+	      if(SoftReset == 1){
+	    	  NVIC_SystemReset();
+	    	  SoftReset = 0;
+	      }
 		  if(HAL_GetTick() >= timestampTrajact){
-			  timestampTrajact = HAL_GetTick() + 0.01;
+			  timestampTrajact = HAL_GetTick() + 1;
+			  if(path == 0)indexposition = 0;
 			  if(indexposition < (0.5*2000)-1 && path == 1){
 			  SetDegree = positionTraject;
 			  indexposition += 1;
@@ -196,18 +204,18 @@ int main(void)
 	          timestamp = HAL_GetTick() + 1;
 	          if (Joystick_Control == 1) {
 	        	  DegreeFeedback = 0;
-//	              if (Joystick_position[1] >= 6) {
-//	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
-//	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-//	              }
-//	              else if (Joystick_position[1] <= 5) {
-//	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
-//	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-//	              }
-//	              else{
+	              if (Joystick_position[0] >= 3150) {
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+	              }
+	              else if (Joystick_position[0] <= 100) {
+	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+	              }
+	              else{
 	            	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
 	            	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-//	              }
+	              }
 	          }
 	          else if (Joystick_Control == 0) {
 	              if (SetDegree < 0) {
@@ -218,15 +226,17 @@ int main(void)
 	              }
 
 	              if (error > 0) { // setpoint > read_encoder
-	                  if (error < 2.0) {
+	                  if (error < 0.5) {
 	                      DegreeFeedback = 0; // Limit Position
+	                      s = 0;
 	                  }
 	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 	              }
 	              if (error < 0) { // setpoint < read_encoder
-	                  if (error * -1 < 2.0) {
+	                  if (error * -1 < 0.5) {
 	                      DegreeFeedback = 0; // Limit Position
+	                      s = 0;
 	                  }
 	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback * -1);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
@@ -305,7 +315,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_10B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = ENABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
@@ -599,14 +609,21 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	}
 }
 float control_interrupt(){
+//	error = SetDegree - ReadDegree;
+//	delta_u = (K_P+K_I+K_D)*error-(K_P+2*K_D)*pe1+(K_D)*pe2;
+//	u = pu1+delta_u;
+//	if(u>100)u=100;
+//	if(u<-100)u=-100;
+//	pu1=u;
+//	pe2=pe1;
+//	pe1=error;
 	error = SetDegree - ReadDegree;
-	delta_u = (K_P+K_I+K_D)*error-(K_P+2*K_D)*pe1+(K_D)*pe2;
-	u = pu1+delta_u;
+	if(abs(error) <= 0.5)s = 0;
+	s = s + error;
+	u = K_P*error+K_I*s+K_D*(error-p);
 	if(u>100)u=100;
 	if(u<-100)u=-100;
-	pu1=u;
-	pe2=pe1;
-	pe1=error;
+	p = error;
 return u;
 }
 float control_velocity(){
@@ -658,7 +675,7 @@ void main_Qubic(void)
   emxInitArray_real_T(&q_position, 2);
   emxInitArray_real_T(&q_velocity, 2);
   emxInitArray_real_T(&q_acc, 2);
-  Qubic(0, 500, 0, 500, 0.5, q_position,
+  Qubic(0, 1000, 0, 400, 0.5, q_position,
         q_velocity, q_acc);
   q_positionN = q_position;
   q_velocityN = q_velocity;
