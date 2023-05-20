@@ -69,9 +69,11 @@ TIM_HandleTypeDef htim5;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint32_T path = 0;
 uint32_t QEIReadRaw;
 uint32_t Button1 = 0;
-double position;
+float positionTraject;
+float velocityTraject;
 uint32_t Joystick_position[2];
 uint32_t Joystick_Control;
 typedef struct _QEIStructure{
@@ -96,9 +98,9 @@ float pe1=0;
 float pe2=0;
 float u;
 float delta_u;
-const float K_P = 0.5;
-const float K_I = 0.25;
-const float K_D = 0.2;
+const float K_P = 10;
+const float K_I = 0.1;
+const float K_D = 0;
 
 uint32_t QEIReadRaw;
 float ReadDegree; // Encoder value
@@ -176,24 +178,36 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	      static uint64_t timestamp = 0;
-	      position = q_positionN->data[indexposition];
-	      velocity(); // velocity
-		  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
-		  ReadDegree = QEIReadRaw / 8192.0 * 360; // pulse to degree
-		  error = SetDegree - ReadDegree;
-		  DegreeFeedback = control_interrupt(); // PID function
+	      static float timestampTrajact = 0;
+		  if(HAL_GetTick() >= timestampTrajact){
+			  timestampTrajact = HAL_GetTick() + 0.01;
+			  if(indexposition < (0.5*2000)-1 && path == 1){
+			  SetDegree = positionTraject;
+			  indexposition += 1;
+		      positionTraject = q_positionN->data[indexposition];
+		      velocityTraject = q_velocityN->data[indexposition];
+			  }
+		  }
 	      if (HAL_GetTick() >= timestamp) {
-	          timestamp = HAL_GetTick() + 1000;
-
+			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
+			  ReadDegree = QEIReadRaw / 8192.0 * 360; // pulse to degree
+			  error = SetDegree - ReadDegree;
+			  DegreeFeedback = control_interrupt(); // PID function
+	          timestamp = HAL_GetTick() + 1;
 	          if (Joystick_Control == 1) {
-	              if (Joystick_position[1] >= 6) {
-	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
-	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-	              }
-	              else if (Joystick_position[1] <= 5) {
-	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
-	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-	              }
+	        	  DegreeFeedback = 0;
+//	              if (Joystick_position[1] >= 6) {
+//	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+//	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+//	              }
+//	              else if (Joystick_position[1] <= 5) {
+//	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
+//	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+//	              }
+//	              else{
+	            	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+	            	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+//	              }
 	          }
 	          else if (Joystick_Control == 0) {
 	              if (SetDegree < 0) {
@@ -595,6 +609,16 @@ float control_interrupt(){
 	pe1=error;
 return u;
 }
+float control_velocity(){
+	error = SetDegree - ReadDegree;
+	delta_u = (K_P+K_I+K_D)*error-(K_P+2*K_D)*pe1+(K_D)*pe2;
+	u = pu1+delta_u;
+	if(u>100)u=100;
+	if(u<-100)u=-100;
+	pu1=u;
+	pe2=pe1;
+	pe1=error;
+}
 void velocity(){
 	QEIData.data[0] = __HAL_TIM_GET_COUNTER(&htim2);
 	QEIData.timestamp[0] = micros();
@@ -634,7 +658,7 @@ void main_Qubic(void)
   emxInitArray_real_T(&q_position, 2);
   emxInitArray_real_T(&q_velocity, 2);
   emxInitArray_real_T(&q_acc, 2);
-  Qubic(0, 100, 10, 50, 2, q_position,
+  Qubic(0, 500, 0, 500, 0.5, q_position,
         q_velocity, q_acc);
   q_positionN = q_position;
   q_velocityN = q_velocity;
