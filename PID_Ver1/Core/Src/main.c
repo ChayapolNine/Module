@@ -70,6 +70,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 int SoftReset = 0;
+float speed;
 uint32_T path = 0;
 uint32_t QEIReadRaw;
 uint32_t Button1 = 0;
@@ -198,12 +199,16 @@ int main(void)
 		  }
 	      if (HAL_GetTick() >= timestamp) {
 			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
-			  ReadDegree = QEIReadRaw / 8192.0 * 360; // pulse to degree
+			  ReadDegree = (QEIReadRaw / 8192.0 * 360)*160/360; // pulse to degree
 			  error = SetDegree - ReadDegree;
+			  velocity();
+			  speed = ((QEIData.QEIVelocity / 8192.0)*360.0)*160/360;
 			  DegreeFeedback = control_interrupt(); // PID function
 	          timestamp = HAL_GetTick() + 1;
 	          if (Joystick_Control == 1) {
 	        	  DegreeFeedback = 0;
+	        	  s = 0;
+	        	  error = 0;
 	              if (Joystick_position[0] >= 3150) {
 	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 100);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
@@ -646,8 +651,8 @@ void velocity(){
 	if(diffposition > QEI_PERIOD >> 1) diffposition -= QEI_PERIOD;
 	if(diffposition < -(QEI_PERIOD >> 1)) diffposition += QEI_PERIOD;
 
-	QEIData.QEIPosition = __HAL_TIM_GET_COUNTER(&htim3) % 8191;
-	QEIData.QEIVelocity = diffposition*1000000/difftime;
+	QEIData.QEIPosition = __HAL_TIM_GET_COUNTER(&htim2) % 8192;
+	QEIData.QEIVelocity = (diffposition*1000000)/difftime;
 
 	QEIData.data[1] = QEIData.data[0];
 	QEIData.timestamp[1] = QEIData.timestamp[0];
