@@ -62,6 +62,8 @@ static double argInit_real_T(void)
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
+I2C_HandleTypeDef hi2c1;
+
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim5;
@@ -71,6 +73,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 int SoftReset = 0;
 float speed;
+float acceleration;
 uint32_T path = 0;
 uint32_t QEIReadRaw;
 uint32_t Button1 = 0;
@@ -85,6 +88,7 @@ float QEIPosition; //step
 float QEIVelocity //step/sec
 }QEIStructureTypedef;
 QEIStructureTypedef QEIData = {0};
+QEIStructureTypedef QEIAcc = {0};
 
 uint64_t _micros = 0;
 
@@ -101,12 +105,17 @@ float pe2=0;
 float u;
 float p = 0;
 float s = 0;
+float u2;
+float p2 = 0;
+float s2 = 0;
+float error2 = 0;
 float delta_u;
-const float K_P = 0.17;
+const float K_P = 0.5;
 const float K_I = 0.00008;
 const float K_D = 0.5;
 
 uint32_t QEIReadRaw;
+float SetVelocity;
 float ReadDegree; // Encoder value
 float SetDegree; // Set point
 float DegreeFeedback; // Feedback position
@@ -123,8 +132,11 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 float control_interrupt();
+float control_velocity();
+void accelerate();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -166,6 +178,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM5_Init();
   MX_ADC1_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
     HAL_ADC_Start_DMA(&hadc1, Joystick_position, 2);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1|TIM_CHANNEL_2);
@@ -192,6 +205,7 @@ int main(void)
 			  if(path == 0)indexposition = 0;
 			  if(indexposition < (0.5*2000)-1 && path == 1){
 			  SetDegree = positionTraject;
+			  SetVelocity = velocityTraject;
 			  indexposition += 1;
 		      positionTraject = q_positionN->data[indexposition];
 		      velocityTraject = q_velocityN->data[indexposition];
@@ -202,7 +216,9 @@ int main(void)
 			  ReadDegree = (QEIReadRaw / 8192.0 * 360)*160/360; // pulse to degree
 			  error = SetDegree - ReadDegree;
 			  velocity();
+			  accelerate();
 			  speed = ((QEIData.QEIVelocity / 8192.0)*360.0)*160/360;
+			  acceleration = QEIAcc.QEIVelocity;
 			  DegreeFeedback = control_interrupt(); // PID function
 	          timestamp = HAL_GetTick() + 1;
 	          if (Joystick_Control == 1) {
@@ -226,14 +242,15 @@ int main(void)
 	              if (SetDegree < 0) {
 	                  SetDegree = 0; // minimum value
 	              }
-	              if (SetDegree > 1800) {
-	                  SetDegree = 1800; // maximum value
+	              if (SetDegree > 700) {
+	                  SetDegree = 700; // maximum value
 	              }
 
 	              if (error > 0) { // setpoint > read_encoder
 	                  if (error < 0.5) {
 	                      DegreeFeedback = 0; // Limit Position
 	                      s = 0;
+	                      s2 = 0;
 	                  }
 	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
@@ -242,6 +259,7 @@ int main(void)
 	                  if (error * -1 < 0.5) {
 	                      DegreeFeedback = 0; // Limit Position
 	                      s = 0;
+	                      s2 = 0;
 	                  }
 	                  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, DegreeFeedback * -1);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
@@ -356,6 +374,40 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -577,7 +629,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LD2_Pin|GPIO_PIN_7, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LD2_Pin|DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -585,23 +637,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD2_Pin PA7 */
-  GPIO_InitStruct.Pin = LD2_Pin|GPIO_PIN_7;
+  /*Configure GPIO pins : LD2_Pin DIR_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin|DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  /*Configure GPIO pins : Set_Tray_Pin Clear_Tray_Pin */
+  GPIO_InitStruct.Pin = Set_Tray_Pin|Clear_Tray_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -632,14 +681,14 @@ float control_interrupt(){
 return u;
 }
 float control_velocity(){
-	error = SetDegree - ReadDegree;
-	delta_u = (K_P+K_I+K_D)*error-(K_P+2*K_D)*pe1+(K_D)*pe2;
-	u = pu1+delta_u;
-	if(u>100)u=100;
-	if(u<-100)u=-100;
-	pu1=u;
-	pe2=pe1;
-	pe1=error;
+	error2 = (control_interrupt() + SetVelocity) - speed;
+	if(abs(error2) <= 0.5)s2 = 0;
+	s2 = s2 + error2;
+	u2 = K_P*10*error2+K_I*10*s2+K_D*(error2-p2);
+	if(u2>100)u2=100;
+	if(u2<-100)u2=-100;
+	p2 = error2;
+return u2;
 }
 void velocity(){
 	QEIData.data[0] = __HAL_TIM_GET_COUNTER(&htim2);
@@ -658,11 +707,23 @@ void velocity(){
 	QEIData.timestamp[1] = QEIData.timestamp[0];
 
 }
+void accelerate(){
+	QEIAcc.data[0] = speed;
+	QEIAcc.timestamp[0] = micros();
+
+	int32_t diffposition = QEIAcc.data[0] - QEIAcc.data[1];
+	float difftime = QEIAcc.timestamp[0] - QEIAcc.timestamp[1];
+	difftime = difftime/1000000;
+
+	QEIAcc.QEIVelocity = (diffposition/difftime);
+
+	QEIAcc.data[1] = QEIAcc.data[0];
+	QEIAcc.timestamp[1] = QEIAcc.timestamp[0];
+}
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if(htim == &htim5){
 		_micros += UINT32_MAX;
-
 	}
 }
 uint64_t micros(){
@@ -680,7 +741,7 @@ void main_Qubic(void)
   emxInitArray_real_T(&q_position, 2);
   emxInitArray_real_T(&q_velocity, 2);
   emxInitArray_real_T(&q_acc, 2);
-  Qubic(0, 1000, 0, 400, 0.5, q_position,
+  Qubic(50, 650, 0, 400, 0.5, q_position,
         q_velocity, q_acc);
   q_positionN = q_position;
   q_velocityN = q_velocity;
