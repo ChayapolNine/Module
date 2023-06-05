@@ -77,10 +77,10 @@ void Error_Handler(void);
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
+#define Joystick_Y_Pin GPIO_PIN_4
+#define Joystick_Y_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
-#define PWM_Pin GPIO_PIN_6
-#define PWM_GPIO_Port GPIOA
 #define DIR_Pin GPIO_PIN_7
 #define DIR_GPIO_Port GPIOA
 #define Set_Tray_Pin GPIO_PIN_4
@@ -89,8 +89,6 @@ void Error_Handler(void);
 #define Clear_Tray_GPIO_Port GPIOC
 #define Joystick_X_Pin GPIO_PIN_0
 #define Joystick_X_GPIO_Port GPIOB
-#define Joystick_Y_Pin GPIO_PIN_1
-#define Joystick_Y_GPIO_Port GPIOB
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
