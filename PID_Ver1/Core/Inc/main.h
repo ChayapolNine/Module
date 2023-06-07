@@ -67,8 +67,6 @@ void Error_Handler(void);
 #define Sensor_Home_GPIO_Port GPIOC
 #define Sensor_1_Pin GPIO_PIN_1
 #define Sensor_1_GPIO_Port GPIOC
-#define Sensor_2_Pin GPIO_PIN_2
-#define Sensor_2_GPIO_Port GPIOC
 #define Encoder_B_Pin GPIO_PIN_0
 #define Encoder_B_GPIO_Port GPIOA
 #define Encoder_A_Pin GPIO_PIN_1
@@ -95,6 +93,10 @@ void Error_Handler(void);
 #define TCK_GPIO_Port GPIOA
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
+#define Sensor_2_Pin GPIO_PIN_4
+#define Sensor_2_GPIO_Port GPIOB
+#define PWM_Pin GPIO_PIN_6
+#define PWM_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

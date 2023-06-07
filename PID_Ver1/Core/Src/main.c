@@ -84,6 +84,7 @@ GPIO_PinState lastButtonState;
 GPIO_PinState buttonState;
 float start_p,stop_p,start_v,stop_v;
 int posx;
+int new_array[20];
 float rectangle[5][2] = {
     {0, 0},
     {60, 0},
@@ -124,8 +125,8 @@ float in_theta;
 float bottom_left_jog[2] = {47.3,187};
 float bottom_right_jog[2]=  {103.7,215};
 //dummy
-//------------------ ค่าที่jogมาให้ใส่ตรงนี้ (คูณ - 1ที่xด้วย)-----------------------
-//-----เช่น  ได้ (x,y)= (100,200) ค่าbottom_left_jogหรือbottom_right_jog ต้องเป็น (-100,200)------
+//------------------ �?�?าที�?jogมา�?ห�?�?ส�?ตร�?�?ี�? (�?ูณ - 1ที�?xด�?วย)-----------------------
+//-----เ�?�?�?  �?ด�? (x,y)= (100,200) �?�?าbottom_left_jogหรือbottom_right_jog ต�?อ�?เ�?�?�? (-100,200)------
 
 // rotation 2
 float rectangle2[5][2] = {
@@ -888,10 +889,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Sensor_Home_Pin Sensor_1_Pin Sensor_2_Pin Set_Tray_Pin
-                           Clear_Tray_Pin */
-  GPIO_InitStruct.Pin = Sensor_Home_Pin|Sensor_1_Pin|Sensor_2_Pin|Set_Tray_Pin
-                          |Clear_Tray_Pin;
+  /*Configure GPIO pins : Sensor_Home_Pin Sensor_1_Pin Set_Tray_Pin Clear_Tray_Pin */
+  GPIO_InitStruct.Pin = Sensor_Home_Pin|Sensor_1_Pin|Set_Tray_Pin|Clear_Tray_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -902,6 +901,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Sensor_2_Pin */
+  GPIO_InitStruct.Pin = Sensor_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Sensor_2_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
@@ -990,7 +995,7 @@ void limitsensor(){
 		TIM2->CNT = 0;
 		SetDegree = 0;
 	}
-	else if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_2) == 1)
+	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == 1)
 	{
 		TIM2->CNT = QEI_PERIOD;
 		SetDegree = 0;
@@ -998,7 +1003,6 @@ void limitsensor(){
 
 }
 void feedtrayposition(){
-	transformRectangleAndPointsPlace();
 	  static uint64_t timestamptray;
 	  static int point_tray;
 	  if(HAL_GetTick() >= timestamptray){ // heartbeat
@@ -1047,10 +1051,10 @@ void transformRectangleAndPointsPick() {
 	bottom_right_jog[0] = bottom_right_jog[0]-translation[0];
 	bottom_right_jog[1] = bottom_right_jog[1]-translation[1];
 
-	//เปรียบเทียบจากองศาของ bottom right และ bottom right jog
+	//เ�?รีย�?เทีย�?�?า�?อ�?ศา�?อ�? bottom right �?ละ bottom right jog
 	dot_product = 60*bottom_right_jog[0]+bottom_right_jog[1]*0;
 	in_theta = dot_product/vectorsize;
-	//หน่วยเป้น radian
+	//ห�?�?วยเ�?�?�? radian
 	theta = - acos(in_theta);
 
     T_rotation[0][0] = cos(theta);
@@ -1126,10 +1130,10 @@ void transformRectangleAndPointsPlace() {
 	bottom_right_jog2[0] = bottom_right_jog2[0]-translation[0];
 	bottom_right_jog2[1] = bottom_right_jog2[1]-translation[1];
 
-	//เปรียบเทียบจากองศาของ bottom right และ bottom right jog
+	//เ�?รีย�?เทีย�?�?า�?อ�?ศา�?อ�? bottom right �?ละ bottom right jog
 	dot_product2 = 60*bottom_right_jog2[0]+bottom_right_jog2[1]*0;
 	in_theta2 = dot_product2/vectorsize2;
-	//หน่วยเป้น radian
+	//ห�?�?วยเ�?�?�? radian
 	theta = - acos(in_theta);
 
     T_rotation2[0][0] = cos(theta);
@@ -1198,7 +1202,7 @@ void transformRectangleAndPointsPlace() {
 
 }
 void home(){
-    // เช่น ReadDegree = 30
+    // เ�?�?�? ReadDegree = 30
         if (ReadDegree < 200){
             __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
@@ -1206,7 +1210,7 @@ void home(){
                 TIM2->CNT = 17920 ;
             }
         }
-    // เช่น ReadDegree = 500
+    // เ�?�?�? ReadDegree = 500
         else if (ReadDegree > 200){
             __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
@@ -1420,7 +1424,7 @@ switch (Mobus){
 		break;
 	case Run_TrayMode:
 		registerFrame[1].U16 = 4 ;// Basesystem reset position
-
+		static uint64_t timedelay_traypoint;
 		break;
 		}
 	}
