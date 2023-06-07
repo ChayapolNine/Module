@@ -76,37 +76,37 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
+//I2C
+int choice;
+uint8_t data_read ;
 uint8_t starttray;
+GPIO_PinState lastButtonState;
+GPIO_PinState buttonState;
 float start_p,stop_p,start_v,stop_v;
 float rectangle[5][2] = {
     {0, 0},
-    {600, 0},
-    {600, 500},
-    {0, 500},
+    {60, 0},
+    {60, 50},
+    {0, 50},
     {0, 0}
 };
 
-// Define the rotation angle (in radians)
-//float theta = 0.785398;  // 45 degrees
-
 // Define the rotation matrix
-GPIO_PinState buttonState;
-GPIO_PinState lastButtonState;
 float T_rotation[2][2];
 
 // Declare and initialize the translation array
 float translation[2] ;
 
 float T[3][3] ;
-float points[9][2] = {{100, 400},
-					 {300, 400},
-					 {500, 400},
-					 {100, 250},
-					 {300, 250},
-					 {500, 250},
-					 {100, 100},
-					 {300, 100},
-					 {500, 100}};
+float points[9][2] = {{10, 40},
+                     {30, 40},
+                     {50, 40},
+                     {10, 25},
+                     {30, 25},
+                     {50, 25},
+                     {10, 10},
+                     {30, 10},
+                     {50, 10}};
 
 float homogeneousRectangle[5][3];
 float transformedRectangle[5][3];
@@ -114,14 +114,59 @@ float transformedRectangle[5][3];
 float homogeneousPoints[9][3];
 float transformedPoints[9][3];
 
-//dummy
-float bottom_left_jog[2] = {50,100};
-float bottom_right_jog[2]=  {50,160};
 //find theta
 float dot_product;
-float vectorsize = 360000.0;
+float vectorsize = 3600.0;
 float theta;
 float in_theta;
+
+float bottom_left_jog[2] = {47.3,187};
+float bottom_right_jog[2]=  {103.7,215};
+//dummy
+//------------------ ค่าที่jogมาให้ใส่ตรงนี้ (คูณ - 1ที่xด้วย)-----------------------
+//-----เช่น  ได้ (x,y)= (100,200) ค่าbottom_left_jogหรือbottom_right_jog ต้องเป็น (-100,200)------
+
+// rotation 2
+float rectangle2[5][2] = {
+    {0, 0},
+    {60, 0},
+    {60, 50},
+    {0, 50},
+    {0, 0}
+};
+
+// Define the rotation matrix
+float T_rotation2[2][2];
+
+// Declare and initialize the translation array
+float translation2[2] ;
+
+float T2[3][3] ;
+float points2[9][2] = {{10, 40},
+                     {30, 40},
+                     {50, 40},
+                     {10, 25},
+                     {30, 25},
+                     {50, 25},
+                     {10, 10},
+                     {30, 10},
+                     {50, 10}};
+
+float homogeneousRectangle2[5][3];
+float transformedRectangle2[5][3];
+// Transform the points
+float homogeneousPoints2[9][3];
+float transformedPoints2[9][3];
+
+//find theta
+float dot_product2;
+float vectorsize2 = 3600.0;
+float theta2;
+float in_theta2;
+
+
+float bottom_left_jog2[2] = {47.3,187};
+float bottom_right_jog2[2]=  {103.7,215};
 //Modbus Protocol
 typedef enum {
 	Initial,Jogging_Place,Jogging_Pick,Home,Run_PointMode,Run_TrayMode
@@ -204,7 +249,10 @@ static void MX_TIM11_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-void transformRectangleAndPoints();
+void I2C_all();
+void I2C_read_status();
+void transformRectangleAndPointsPlace();
+void transformRectangleAndPointsPick();
 float control_interrupt();
 float control_velocity();
 void accelerate();
@@ -254,7 +302,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   main_Qubic();
-  transformRectangleAndPoints();
+  transformRectangleAndPointsPlace();
     HAL_ADC_Start_DMA(&hadc1, Joystick_position, 2);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1|TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
@@ -276,11 +324,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(starttray == 1){
 		  starttray = 0;
-		  transformRectangleAndPoints();
+		  transformRectangleAndPointsPlace();
 
 	  }
 	  	  Modbus_Protocal_Worker();
 	  	  flowmodbus();
+	  	  static uint64_t timeI2C = 0;
 	      static uint64_t timestamp = 0;
 	      static uint64_t timemodbus = 0;
 	      static float timestampTrajact = 0;
@@ -288,7 +337,12 @@ int main(void)
 	    	  NVIC_SystemReset();
 	    	  SoftReset = 0;
 	      }
-//	      int pos = (int)registerFrame[17].U16;
+	      if(HAL_GetTick() >= timeI2C){
+	    	  timeI2C = HAL_GetTick() + 10;
+	    	  I2C_read_status(data_read);
+	    	  I2C_all();
+	      }
+	      int pos = (int)registerFrame[17].U16;
 	  	  if(HAL_GetTick() >= timemodbus){ // heartbeat
 	  		  	  timemodbus = HAL_GetTick() + 100;
 	  			  registerFrame[0].U16 = 22881;
@@ -855,6 +909,81 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void I2C_all() {
+	static uint8_t data_1[1];
+    static uint8_t data_2[2];
+    static uint8_t data_4[4];
+
+    switch (choice) {
+        // I2C_testmode_on
+        case 1:
+            data_2[0] = 0x01;
+            data_2[1] = 0x01;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // I2C_testmode_off
+        case 2:
+            data_2[0] = 0x01;
+            data_2[1] = 0x00;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // I2C_soft_reset
+        case 3:
+            data_4[0] = 0x00;
+            data_4[1] = 0xFF;
+            data_4[2] = 0x55;
+            data_4[3] = 0xAA;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, HAL_MAX_DELAY);
+            break;
+        // I2C_open_emergency
+        case 4:
+            data_1[0] = 0xF0;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_1, 1, HAL_MAX_DELAY);
+            break;
+        // I2C_close_emergency
+        case 5:
+            data_4[0] = 0xE5;
+            data_4[1] = 0x7A;
+            data_4[2] = 0xFF;
+            data_4[3] = 0x81;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, HAL_MAX_DELAY);
+            break;
+        // I2C_gripper_runmode_on
+        case 6:
+            data_2[0] = 0x10;
+            data_2[1] = 0x13;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // I2C_gripper_runmode_off
+        case 7:
+            data_2[0] = 0x10;
+            data_2[1] = 0x8C;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // I2C_gripper_pick
+        case 8:
+            data_2[0] = 0x10;
+            data_2[1] = 0x5A;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // I2C_gripper_place
+        case 9:
+            data_2[0] = 0x10;
+            data_2[1] = 0x69;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+        // Default case (Test mode off)
+        default:
+            data_2[0] = 0x01;
+            data_2[1] = 0x00;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, HAL_MAX_DELAY);
+            break;
+    }
+}
+
+void I2C_read_status(uint8_t * Rdata){
+	HAL_I2C_Master_Receive(&hi2c1, 0x15 << 1, Rdata, 1, HAL_MAX_DELAY);
+}
 void limitsensor(){
 	if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1) == 1){
 		TIM2->CNT = 0;
@@ -868,7 +997,7 @@ void limitsensor(){
 
 }
 void feedtrayposition(){
-	transformRectangleAndPoints();
+	transformRectangleAndPointsPlace();
 	  static uint64_t timestamptray;
 	  static int point_tray;
 	  if(HAL_GetTick() >= timestamptray){ // heartbeat
@@ -909,7 +1038,7 @@ void feedtrayposition(){
 		  			}
 	  	}
 }
-void transformRectangleAndPoints() {
+void transformRectangleAndPointsPick() {
 
 	translation[0] = bottom_left_jog[0];
 	translation[1] = bottom_left_jog[1];
@@ -917,10 +1046,11 @@ void transformRectangleAndPoints() {
 	bottom_right_jog[0] = bottom_right_jog[0]-translation[0];
 	bottom_right_jog[1] = bottom_right_jog[1]-translation[1];
 
-	dot_product = 600*bottom_right_jog[0]+bottom_right_jog[1]*0;
+	//เปรียบเทียบจากองศาของ bottom right และ bottom right jog
+	dot_product = 60*bottom_right_jog[0]+bottom_right_jog[1]*0;
 	in_theta = dot_product/vectorsize;
+	//หน่วยเป้น radian
 	theta = - acos(in_theta);
-	//theta = acos(in_theta)* 57.257795;
 
     T_rotation[0][0] = cos(theta);
     T_rotation[0][1] = -sin(theta);
@@ -975,6 +1105,7 @@ void transformRectangleAndPoints() {
     for (int i = 0; i < 9; i++) {
     	transformedPoints[i][0] = transformedPoints[i][0] + translation[0];
     	transformedPoints[i][1] =  transformedPoints[i][1] + translation[1] ;
+    	transformedPoints[i][0] = transformedPoints[i][0] *(-1);
 
     }
 
@@ -986,9 +1117,89 @@ void transformRectangleAndPoints() {
 
 
 }
+void transformRectangleAndPointsPlace() {
+
+	translation2[0] = bottom_left_jog2[0];
+	translation2[1] = bottom_left_jog2[1];
+
+	bottom_right_jog2[0] = bottom_right_jog2[0]-translation[0];
+	bottom_right_jog2[1] = bottom_right_jog2[1]-translation[1];
+
+	//เปรียบเทียบจากองศาของ bottom right และ bottom right jog
+	dot_product2 = 60*bottom_right_jog2[0]+bottom_right_jog2[1]*0;
+	in_theta2 = dot_product2/vectorsize2;
+	//หน่วยเป้น radian
+	theta = - acos(in_theta);
+
+    T_rotation2[0][0] = cos(theta);
+    T_rotation2[0][1] = -sin(theta);
+    T_rotation2[1][0] = sin(theta);
+    T_rotation2[1][1] = cos(theta);
+
+    T2[0][0] = T_rotation2[0][0];
+    T2[0][1] = T_rotation2[0][1];
+    T2[0][2] = translation2[0];
+    T2[1][0] = T_rotation2[1][0];
+    T2[1][1] = T_rotation2[1][1];
+    T2[1][2] = translation2[1];
+    T2[2][0] = 0;
+    T2[2][1] = 0;
+    T2[2][2] = 1;
+
+    // Transform the rectangle
+    for (int i = 0; i < 5; i++) {
+        homogeneousRectangle2[i][0] = rectangle2[i][0];
+        homogeneousRectangle2[i][1] = rectangle2[i][1];
+        homogeneousRectangle2[i][2] = 1;
+    }
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 3; j++) {
+            transformedRectangle2[i][j] = 0;
+            for (int k = 0; k < 3; k++) {
+                transformedRectangle2[i][j] += homogeneousRectangle2[i][k] * T2[k][j];
+            }
+        }
+    }
+
+    // Transform the points
+    for (int i = 0; i < 9; i++) {
+        homogeneousPoints2[i][0] = points2[i][0];
+        homogeneousPoints2[i][1] = points2[i][1];
+        homogeneousPoints2[i][2] = 1;
+    }
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 3; j++) {
+            transformedPoints2[i][j] = 0;
+            for (int k = 0; k < 3; k++) {
+
+
+                transformedPoints2[i][j] += homogeneousPoints2[i][k] * T2[k][j];
+            }
+        }
+    }
+
+    // Translation points
+    for (int i = 0; i < 9; i++) {
+    	transformedPoints2[i][0] = transformedPoints2[i][0] + translation2[0];
+    	transformedPoints2[i][1] =  transformedPoints2[i][1] + translation2[1] ;
+    	transformedPoints2[i][0] = transformedPoints2[i][0] *(-1);
+
+    }
+
+    // Translation rectangle
+    for (int i = 0; i < 5; i++) {
+    	transformedRectangle2[i][0] = transformedRectangle2[i][0] + + translation2[0];
+    	transformedRectangle2[i][1] =  transformedRectangle2[i][1] + translation2[1] ;
+    }
+
+
+}
 void flowmodbus(){
 switch (Mobus){
 	case Initial:
+		//choice = 1;
 		if(registerFrame[1].U16 == 0b00010){ // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
@@ -1007,6 +1218,11 @@ switch (Mobus){
 		else if(registerFrame[1].U16 == 0b00100){ // Set Home
 			registerFrame[1].U16 = 0;
 			Mobus = Home;
+		}
+		else if(registerFrame[1].U16 == 0b01000){
+			registerFrame[1].U16 = 0;
+			choice = 2;
+			Mobus = Run_TrayMode;
 		}
 		break;
 	case Jogging_Place:
@@ -1035,24 +1251,24 @@ switch (Mobus){
 			  }
 
 			  // Set position
-			        lastButtonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
+			  	  buttonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
 			        if (buttonState != lastButtonState) {
 			            // Button press is valid, perform desired action
 						  if(CheckTray == 0){
-							  bottom_left_jog[0] = (int)registerFrame[68].U16/10; // Calculate Point x-axis
-							  bottom_left_jog[1] = (int)(ReadDegree-350)*10; // Calulate Point y-axis
+							  bottom_left_jog2[0] = (int)registerFrame[68].U16/10*-1; // Calculate Point x-axis
+							  bottom_left_jog2[1] = (int)(ReadDegree-350); // Calulate Point y-axis
 							  registerFrame[35].U16 = registerFrame[68].U16; // Place Tray Origin x
 							  CheckTray++;
 						  }
 						  else if(CheckTray == 1){
-							  bottom_right_jog[0] = (int)registerFrame[68].U16/10;
-							  bottom_right_jog[1] = (int)(ReadDegree-350)*10; // Calculate Point y-axis
-							  registerFrame[36].U16 = (ReadDegree-350)*10; // Place Tray Origin y
+							  bottom_right_jog2[0] = (int)registerFrame[68].U16/10*-1;
+							  bottom_right_jog2[1] = (int)(ReadDegree-350); // Calculate Point y-axis
+							  registerFrame[36].U16 = (int)(ReadDegree-350)*10; // Place Tray Origin y
 							  CheckTray++;
 						  }
 						  else if(CheckTray == 2){
-							  transformRectangleAndPoints();
-							  registerFrame[37].U16 = abs(theta)*57.2958*100;
+							  transformRectangleAndPointsPlace();
+							  registerFrame[37].U16 = abs(theta2)*57.2958*100;
 							  registerFrame[16].U16 = 0; //0x10 y-status jogging fisnish reset to 0
 							  CheckTray = 0;
 							  Mobus = Initial;
@@ -1092,19 +1308,19 @@ switch (Mobus){
 						if (buttonState != lastButtonState) {
 							// Button press is valid, perform desired action
 							if (CheckTray == 0) {
-								bottom_left_jog[0] = (int)registerFrame[68].U16/10; // Calculate Point x-axis
-								bottom_left_jog[1] = (int)(ReadDegree-350)*10; // Calulate Point y-axis
+								bottom_left_jog[0] = ((float)registerFrame[68].U16/(float)-10); // Calculate Point x-axis
+								bottom_left_jog[1] = ((float)ReadDegree-(float)350); // Calulate Point y-axis
 								registerFrame[32].U16 = registerFrame[68].U16; // Place Tray Origin x
 								CheckTray++;
 							}
 							else if (CheckTray == 1) {
-								bottom_right_jog[0] = (int)registerFrame[68].U16/10;
-								bottom_right_jog[1] = (int)(ReadDegree-350)*10; // Calculate Point y-axis
-								registerFrame[33].U16 = (ReadDegree - 350) * 10; // Place Tray Origin y
+								bottom_right_jog[0] = (float)(registerFrame[68].U16/(float)-10);
+								bottom_right_jog[1] = (float)(ReadDegree-(float)350); // Calculate Point y-axis
+								registerFrame[33].U16 = (int)(ReadDegree - 350) * 10; // Place Tray Origin y
 								CheckTray++;
 							}
 							else if (CheckTray == 2) {
-								transformRectangleAndPoints();
+								transformRectangleAndPointsPick();
 								registerFrame[34].U16 = abs(theta) * 57.2958 * 100;
 								registerFrame[16].U16 = 0; // 0x10 y-status jogging finish reset to 0
 								CheckTray = 0;
@@ -1152,10 +1368,12 @@ switch (Mobus){
 			  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback * -1);
 			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 		  }
+			registerFrame[16].U16 = 0;
 			Mobus = Initial;
 		break;
 	case Run_TrayMode:
 		registerFrame[1].U16 = 4 ;// Basesystem reset position
+
 		break;
 		}
 	}
