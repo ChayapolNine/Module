@@ -95,8 +95,6 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 #define Sensor_2_Pin GPIO_PIN_4
 #define Sensor_2_GPIO_Port GPIOB
-#define PWM_Pin GPIO_PIN_6
-#define PWM_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
