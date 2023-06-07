@@ -83,6 +83,7 @@ uint8_t starttray;
 GPIO_PinState lastButtonState;
 GPIO_PinState buttonState;
 float start_p,stop_p,start_v,stop_v;
+int posx;
 float rectangle[5][2] = {
     {0, 0},
     {60, 0},
@@ -1196,6 +1197,24 @@ void transformRectangleAndPointsPlace() {
 
 
 }
+void home(){
+    // เช่น ReadDegree = 30
+        if (ReadDegree < 200){
+            __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+            if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0) == 1){
+                TIM2->CNT = 17920 ;
+            }
+        }
+    // เช่น ReadDegree = 500
+        else if (ReadDegree > 200){
+            __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
+            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+            if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0) == 1){
+                TIM2->CNT = 17920 ;
+            }
+        }
+}
 void flowmodbus(){
 switch (Mobus){
 	case Initial:
@@ -1231,7 +1250,7 @@ switch (Mobus){
 				  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
 				  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 			  }
-			  else if (Joystick_position[1] <= 100) {
+			  else if (Joystick_position[1] > 100) {
 				  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
 				  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 			  }
@@ -1255,14 +1274,28 @@ switch (Mobus){
 			        if (buttonState != lastButtonState) {
 			            // Button press is valid, perform desired action
 						  if(CheckTray == 0){
-							  bottom_left_jog2[0] = (int)registerFrame[68].U16/10*-1; // Calculate Point x-axis
-							  bottom_left_jog2[1] = (int)(ReadDegree-350); // Calulate Point y-axis
+							  if(registerFrame[68].U16 > 60000){
+								posx = registerFrame[68].U16 - UINT16_MAX-1;
+								bottom_left_jog2[0] = (float)(posx)/-10;
+							}
+							else{
+								posx = registerFrame[68].U16;
+								bottom_left_jog2[0] = (float)(posx)/-10;
+							} // Calculate Point x-axis
+							  bottom_left_jog2[1] = (float)(ReadDegree-350); // Calulate Point y-axis
 							  registerFrame[35].U16 = registerFrame[68].U16; // Place Tray Origin x
 							  CheckTray++;
 						  }
 						  else if(CheckTray == 1){
-							  bottom_right_jog2[0] = (int)registerFrame[68].U16/10*-1;
-							  bottom_right_jog2[1] = (int)(ReadDegree-350); // Calculate Point y-axis
+							  if(registerFrame[68].U16 > 60000){
+									posx = registerFrame[68].U16 - UINT16_MAX-1;
+									bottom_right_jog2[0] = (float)(posx)/-10;
+								}
+								else{
+									posx = registerFrame[68].U16;
+									bottom_right_jog2[0] = (float)(posx)/-10;
+								}
+							  bottom_right_jog2[1] = (float)(ReadDegree-350); // Calculate Point y-axis
 							  registerFrame[36].U16 = (int)(ReadDegree-350)*10; // Place Tray Origin y
 							  CheckTray++;
 						  }
@@ -1308,13 +1341,27 @@ switch (Mobus){
 						if (buttonState != lastButtonState) {
 							// Button press is valid, perform desired action
 							if (CheckTray == 0) {
-								bottom_left_jog[0] = ((float)registerFrame[68].U16/(float)-10); // Calculate Point x-axis
-								bottom_left_jog[1] = ((float)ReadDegree-(float)350); // Calulate Point y-axis
+								if(registerFrame[68].U16 > 60000){
+									posx = registerFrame[68].U16 - UINT16_MAX-1;
+									bottom_left_jog[0] = (float)(posx)/-10;
+								}
+								else{
+									posx = registerFrame[68].U16;
+									bottom_left_jog[0] = (float)(posx)/-10;
+								}
+								bottom_left_jog[1] = ((float)ReadDegree-350); // Calulate Point y-axis
 								registerFrame[32].U16 = registerFrame[68].U16; // Place Tray Origin x
 								CheckTray++;
 							}
 							else if (CheckTray == 1) {
-								bottom_right_jog[0] = (float)(registerFrame[68].U16/(float)-10);
+								if(registerFrame[68].U16 > 60000){
+									posx = registerFrame[68].U16 - UINT16_MAX-1;
+									bottom_right_jog[0] = (float)(posx)/-10;
+								}
+								else{
+									posx = registerFrame[68].U16;
+									bottom_right_jog[0] = (float)(posx)/-10;
+								}
 								bottom_right_jog[1] = (float)(ReadDegree-(float)350); // Calculate Point y-axis
 								registerFrame[33].U16 = (int)(ReadDegree - 350) * 10; // Place Tray Origin y
 								CheckTray++;
