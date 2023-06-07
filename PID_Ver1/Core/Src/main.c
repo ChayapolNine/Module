@@ -90,6 +90,8 @@ float rectangle[5][2] = {
 //float theta = 0.785398;  // 45 degrees
 
 // Define the rotation matrix
+GPIO_PinState buttonState;
+GPIO_PinState lastButtonState;
 float T_rotation[2][2];
 
 // Declare and initialize the translation array
@@ -122,7 +124,7 @@ float theta;
 float in_theta;
 //Modbus Protocol
 typedef enum {
-	Initial,Jogging,Home,Run_PointMode,Run_TrayMode
+	Initial,Jogging_Place,Jogging_Pick,Home,Run_PointMode,Run_TrayMode
 } state;
  state Mobus = 0;
 ModbusHandleTypedef hmodbus;
@@ -141,8 +143,9 @@ float velocityTraject;
 
 //Jogging
 uint32_t Joystick_position[2];
-uint32_t Joystick_Control;
+uint32_t Joystick_Control = 1;
 uint8_t CheckTray;
+uint8_t JoystickSpeed = 20;
 
 typedef struct _QEIStructure{
 uint32_t data[2]; //Position data container
@@ -271,6 +274,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(starttray == 1){
+		  starttray = 0;
+		  transformRectangleAndPoints();
+
+	  }
 	  	  Modbus_Protocal_Worker();
 	  	  flowmodbus();
 	      static uint64_t timestamp = 0;
@@ -280,9 +288,13 @@ int main(void)
 	    	  NVIC_SystemReset();
 	    	  SoftReset = 0;
 	      }
+//	      int pos = (int)registerFrame[17].U16;
 	  	  if(HAL_GetTick() >= timemodbus){ // heartbeat
 	  		  	  timemodbus = HAL_GetTick() + 100;
 	  			  registerFrame[0].U16 = 22881;
+	  			  registerFrame[17].U16 = (int)(ReadDegree-350)*10;
+	  			  registerFrame[18].U16 = abs(speed);
+	  			  registerFrame[19].U16 = acceleration;
 	  		}
 		  if(HAL_GetTick() >= timestampTrajact){
 			  timestampTrajact = HAL_GetTick() + 1;
@@ -310,11 +322,11 @@ int main(void)
 	        	  s = 0;
 	        	  error = 0;
 	              if (Joystick_position[0] >= 3150) {
-	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 50);
+	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 	              }
 	              else if (Joystick_position[0] <= 100) {
-	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 50);
+	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 	              }
 	              else{
@@ -843,6 +855,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void limitsensor(){
+	if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1) == 1){
+		TIM2->CNT = 0;
+		SetDegree = 0;
+	}
+	else if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_2) == 1)
+	{
+		TIM2->CNT = QEI_PERIOD;
+		SetDegree = 0;
+	}
+
+}
 void feedtrayposition(){
 	transformRectangleAndPoints();
 	  static uint64_t timestamptray;
@@ -893,10 +917,8 @@ void transformRectangleAndPoints() {
 	bottom_right_jog[0] = bottom_right_jog[0]-translation[0];
 	bottom_right_jog[1] = bottom_right_jog[1]-translation[1];
 
-	//à¹€à¸?à¸£à¸µà¸¢à¸?à¹€à¸—à¸µà¸¢à¸?à¸?à¸²à¸?à¸­à¸?à¸¨à¸²à¸?à¸­à¸? bottom right à¹?à¸¥à¸° bottom right jog
 	dot_product = 600*bottom_right_jog[0]+bottom_right_jog[1]*0;
 	in_theta = dot_product/vectorsize;
-	//à¸«à¸?à¹?à¸§à¸¢à¹€à¸?à¹?à¸? radian
 	theta = - acos(in_theta);
 	//theta = acos(in_theta)* 57.257795;
 
@@ -969,55 +991,133 @@ switch (Mobus){
 	case Initial:
 		if(registerFrame[1].U16 == 0b00010){ // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
-			registerFrame[10].U16 = 2; // 0x10 y-axis Set Place
-			Mobus = Jogging;
+			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
+			Mobus = Jogging_Place;
 		}
 		else if(registerFrame[1].U16 == 0b00001){ //Set Pick
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
-			registerFrame[10].U16 = 1; // 0x10 y-axis Set Pick
-			Mobus = Jogging;
+			registerFrame[16].U16 = 1; // 0x10 y-axis Set Pick
+			Mobus = Jogging_Pick;
 		}
 		else if(registerFrame[1].U16 == 0b10000){ // Run point Mode
 			registerFrame[1].U16 = 0; // base system run point mode reset
-			registerFrame[10].U16 = 16; // y-axis moving status go point x
+			registerFrame[16].U16 = 16; // y-axis moving status go point x
 			Mobus = Run_PointMode;
 		}
-		else if(registerFrame[1].U16 == 0b00100) // Set Home
+		else if(registerFrame[1].U16 == 0b00100){ // Set Home
+			registerFrame[1].U16 = 0;
 			Mobus = Home;
+		}
 		break;
-	case Jogging:
+	case Jogging_Place:
 		//y-axis jogging
-		if (Joystick_position[0] >= 3150) {
-		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 40);
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-	  }
-	  else if (Joystick_position[0] <= 100) {
-		  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 40);
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-	  }
-		//x-axis jogging
-	  if (Joystick_position[1] >= 3150)
-	  {
-		  registerFrame[64].U16 = 4;
-	  }
-	  else if (Joystick_position[1] <= 100){
-		  registerFrame[64].U16 = 8;
-	  }
-	  else{
-		  registerFrame[64].U16 = 0;
-	  }
-	  if(CheckTray == 3){
-		  registerFrame[10].U16 = 0; //0x10 y-status jogging fisnish reset to 0
-		  Mobus = Initial;
-	  }
+				if (Joystick_position[1] >= 3150) {
+				  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
+				  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+			  }
+			  else if (Joystick_position[1] <= 100) {
+				  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
+				  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+			  }
+			  else{
+				  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 0);
+			  }
+				//x-axis jogging
+			  if (Joystick_position[0] >= 3150)
+			  {
+				  registerFrame[64].U16 = 8;
+			  }
+			  else if (Joystick_position[0] <= 100){
+				  registerFrame[64].U16 = 4;
+			  }
+			  else{
+				  registerFrame[64].U16 = 0;
+			  }
 
+			  // Set position
+			        lastButtonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
+			        if (buttonState != lastButtonState) {
+			            // Button press is valid, perform desired action
+						  if(CheckTray == 0){
+							  bottom_left_jog[0] = (int)registerFrame[68].U16/10; // Calculate Point x-axis
+							  bottom_left_jog[1] = (int)(ReadDegree-350)*10; // Calulate Point y-axis
+							  registerFrame[35].U16 = registerFrame[68].U16; // Place Tray Origin x
+							  CheckTray++;
+						  }
+						  else if(CheckTray == 1){
+							  bottom_right_jog[0] = (int)registerFrame[68].U16/10;
+							  bottom_right_jog[1] = (int)(ReadDegree-350)*10; // Calculate Point y-axis
+							  registerFrame[36].U16 = (ReadDegree-350)*10; // Place Tray Origin y
+							  CheckTray++;
+						  }
+						  else if(CheckTray == 2){
+							  transformRectangleAndPoints();
+							  registerFrame[37].U16 = abs(theta)*57.2958*100;
+							  registerFrame[16].U16 = 0; //0x10 y-status jogging fisnish reset to 0
+							  CheckTray = 0;
+							  Mobus = Initial;
+						  }
+			        }
+
+			    // Update the previous state
+			    lastButtonState = buttonState;
+		break;
+	case Jogging_Pick:
+		//y-axis jogging
+					if (Joystick_position[1] >= 3150) {
+						  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
+						  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+					  }
+					  else if (Joystick_position[1] <= 100) {
+						  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
+						  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+					  }
+					  else{
+						  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 0);
+					  }
+						//x-axis jogging
+					  if (Joystick_position[0] >= 3150)
+					  {
+						  registerFrame[64].U16 = 8;
+					  }
+					  else if (Joystick_position[0] <= 100){
+						  registerFrame[64].U16 = 4;
+					  }
+					  else{
+						  registerFrame[64].U16 = 0;
+					  }
+
+			  // Set position
+						buttonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
+						if (buttonState != lastButtonState) {
+							// Button press is valid, perform desired action
+							if (CheckTray == 0) {
+								bottom_left_jog[0] = (int)registerFrame[68].U16/10; // Calculate Point x-axis
+								bottom_left_jog[1] = (int)(ReadDegree-350)*10; // Calulate Point y-axis
+								registerFrame[32].U16 = registerFrame[68].U16; // Place Tray Origin x
+								CheckTray++;
+							}
+							else if (CheckTray == 1) {
+								bottom_right_jog[0] = (int)registerFrame[68].U16/10;
+								bottom_right_jog[1] = (int)(ReadDegree-350)*10; // Calculate Point y-axis
+								registerFrame[33].U16 = (ReadDegree - 350) * 10; // Place Tray Origin y
+								CheckTray++;
+							}
+							else if (CheckTray == 2) {
+								transformRectangleAndPoints();
+								registerFrame[34].U16 = abs(theta) * 57.2958 * 100;
+								registerFrame[16].U16 = 0; // 0x10 y-status jogging finish reset to 0
+								CheckTray = 0;
+								Mobus = Initial;
+							}
+						}
+				// Update the previous state
+				lastButtonState = buttonState;
 		break;
 	case Home:
 		// x axis
 			registerFrame[64].U16 = 1; // 0x40 Moving Status x-axis - Home
-			if(registerFrame[64].U16 == 0){
-				Mobus = Initial;
-			}
+			Mobus = Initial;
 		// y axis
 		break;
 	case Run_PointMode:
@@ -1056,12 +1156,9 @@ switch (Mobus){
 		break;
 	case Run_TrayMode:
 		registerFrame[1].U16 = 4 ;// Basesystem reset position
-
 		break;
-	default:
-		break;
-}
-}
+		}
+	}
 float control_interrupt(){
     //loop 1
 	error = SetDegree - ReadDegree;
@@ -1097,7 +1194,7 @@ void velocity(){
 	float difftime = QEIData.timestamp[0] - QEIData.timestamp[1];
 
 	if(ReadDegree > 750){
-		TIM2->CNT = 0;
+		SetDegree = 0;
 	}
 	if(diffposition < -(QEI_PERIOD >> 1)){
 		diffposition += QEI_PERIOD;
