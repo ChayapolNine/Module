@@ -83,7 +83,7 @@ uint8_t data_read ;
 uint8_t starttray;
 GPIO_PinState lastButtonState;
 GPIO_PinState buttonState;
-float start_p,stop_p,start_v,stop_v;
+float start_p,stop_p,start_v,stop_v,timecycle;
 int posx;
 int orenationtray = 0;
 float point_x[20];
@@ -211,6 +211,7 @@ int indexposition = 0;
 float timestep = 0;
 
 // PID variable
+
 float pu1=0;
 float pe1=0;
 float pe2=0;
@@ -222,14 +223,14 @@ float p2 = 0;
 float s2 = 0;
 float error2 = 0;
 float delta_u;
-float K_P = 0; //0.4
-float K_I = 0.005; // 0.0008
+float K_P = 0.100000001; //0.4
+float K_I = 0.0500000007; // 0.0008
 float K_D = 0; //0.5
-float K_Pvelo = 0;
-float K_Ivelo = 0.005;
-float K_Dvelo = 0;
+float K_Pvelo = 0.004999999899;
+float K_Ivelo = 9.99999975e-005;
+float K_Dvelo = 0.100000001;
 
-float SetVelocity;
+float SetVelocity = 500;
 float ReadDegree; // Encoder value
 float SetDegree; // Set point
 float DegreeFeedback; // Feedback position
@@ -302,9 +303,10 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   start_p = 0;
-  stop_p = 700;
+  stop_p = 600;
   start_v = 0;
   stop_v = 0;
+  timecycle = 2;
   main_Qubic();
   transformRectangleAndPointsPlace();
     HAL_ADC_Start_DMA(&hadc1, Joystick_position, 2);
@@ -326,6 +328,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+//	  limitsensor();
 	  if(starttray == 1){
 		  starttray = 0;
 		  transformRectangleAndPointsPlace();
@@ -355,9 +358,9 @@ int main(void)
 	  			  registerFrame[19].U16 = acceleration;
 	  		}
 		  if(HAL_GetTick() >= timestampTrajact){
-			  timestampTrajact = HAL_GetTick() + 0.05;
+			  timestampTrajact = HAL_GetTick() + 0.5;
 			  if(path == 0)indexposition = 0;
-			  if(indexposition < (1.5*2000)-1 && path == 1){
+			  if(indexposition < (timecycle*2000)-1 && path == 1){
 			  SetDegree = positionTraject;
 			  SetVelocity = velocityTraject;
 			  indexposition += 1;
@@ -375,16 +378,21 @@ int main(void)
 			  acceleration = QEIAcc.QEIVelocity;
 			  DegreeFeedback = control_interrupt(); // PID function
 	          timestamp = HAL_GetTick() + 10;
+		      if(velocityTraject == 0){
+		    	  s2 = 0;
+		      }
 	          if (Joystick_Control == 1) {
 	        	  DegreeFeedback = 0;
 	        	  s = 0;
+	        	  s2 = 0;
 	        	  error = 0;
+	        	  error2 = 0;
 	              if (Joystick_position[0] >= 3150) {
-	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
+	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 16383); // 20 %
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 	              }
 	              else if (Joystick_position[0] <= 100) {
-	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
+	                  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 16383); // 20 %
 	                  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 	              }
 	              else{
@@ -402,7 +410,7 @@ int main(void)
 
 	              if (error > 0) { // setpoint > read_encoder
 	            	  SetVelocity = abs(SetVelocity);
-	                  if (error < 1) {
+	                  if (error < 0.2) {
 	                      DegreeFeedback = 0; // Limit Position
 	                      s = 0;
 	                      s2 = 0;
@@ -412,7 +420,7 @@ int main(void)
 	              }
 	              if (error < 0 ) { // setpoint < read_encoder
 	            	  if(SetVelocity > 0)SetVelocity = -SetVelocity;
-	                  if (error * -1 < 1) {
+	                  if (error * -1 < 0.2) {
 	                      DegreeFeedback = 0; // Limit Position
 	                      s = 0;
 	                      s2 = 0;
@@ -1008,9 +1016,12 @@ void feedtrayposition(){
 		  // y axis
 		  start_p = point_y[plustray]+350;
 		  stop_p = point_y[plustray+1]+350;
-		  start_v = 400;
-		  stop_v = 0;
-		  main_Qubic(start_p, stop_p, start_v, stop_v);
+		  start_v = 400; // qk
+		  stop_p = 700; // qk+1
+		  start_v = 0; // q_dotk
+		  stop_v = 0; // q_dotk+1
+		  timecycle = 1.5;
+		  main_Qubic();
 		  path = 1;
 		  // x axis
 		registerFrame[65].U16 = point_x[plustray];// position Tray pick/place
@@ -1086,7 +1097,7 @@ void transformRectangleAndPointsPick() {
     for (int i = 0; i < 9; i++) {
     	transformedPoints[i][0] = transformedPoints[i][0] + translation[0];
     	transformedPoints[i][1] =  transformedPoints[i][1] + translation[1] ;
-    	transformedPoints[i][0] = transformedPoints[i][0] *(-1);
+    	//transformedPoints[i][0] = transformedPoints[i][0] *(-1);
 
     }
 
@@ -1200,16 +1211,23 @@ switch (Mobus){
 		if(registerFrame[1].U16 == 0b00010){ // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
+			Joystick_Control = 1;
+			choice = 1;
+			I2C_all();
 			Mobus = Jogging_Place;
 		}
 		else if(registerFrame[1].U16 == 0b00001){ //Set Pick
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 1; // 0x10 y-axis Set Pick
+			Joystick_Control = 1;
+			choice = 1;
+			I2C_all();
 			Mobus = Jogging_Pick;
 		}
 		else if(registerFrame[1].U16 == 0b10000){ // Run point Mode
 			registerFrame[1].U16 = 0; // base system run point mode reset
 			registerFrame[16].U16 = 16; // y-axis moving status go point x
+			Joystick_Control = 0;
 			Mobus = Run_PointMode;
 		}
 		else if(registerFrame[1].U16 == 0b00100){ // Set Home
@@ -1266,27 +1284,29 @@ switch (Mobus){
 						  if(CheckTray == 0){
 							  if(registerFrame[68].U16 > 60000){
 								posx = registerFrame[68].U16 - UINT16_MAX-1;
-								bottom_left_jog2[0] = (float)(posx)/-10;
+								bottom_left_jog2[0] = (float)(posx)/10;
 							}
 							else{
 								posx = registerFrame[68].U16;
-								bottom_left_jog2[0] = (float)(posx)/-10;
+								bottom_left_jog2[0] = (float)(posx)/10;
 							} // Calculate Point x-axis
 							  bottom_left_jog2[1] = (float)(ReadDegree-350); // Calulate Point y-axis
-							  registerFrame[35].U16 = registerFrame[68].U16; // Place Tray Origin x
+							  registerFrame[35].U16 = (int)posx; // Place Tray Origin x
+							  registerFrame[36].U16 = (int)(ReadDegree-350)*10; // Place Tray Origin y
 							  CheckTray++;
 						  }
 						  else if(CheckTray == 1){
 							  if(registerFrame[68].U16 > 60000){
 									posx = registerFrame[68].U16 - UINT16_MAX-1;
-									bottom_right_jog2[0] = (float)(posx)/-10;
+									bottom_right_jog2[0] = (float)(posx)/10;
 								}
 								else{
 									posx = registerFrame[68].U16;
-									bottom_right_jog2[0] = (float)(posx)/-10;
+									bottom_right_jog2[0] = (float)(posx)/10;
 								}
+							  posx = registerFrame[68].U16;
+							  bottom_right_jog2[0] = (float)(posx)/10;
 							  bottom_right_jog2[1] = (float)(ReadDegree-350); // Calculate Point y-axis
-							  registerFrame[36].U16 = (int)(ReadDegree-350)*10; // Place Tray Origin y
 							  CheckTray++;
 						  }
 						  else if(CheckTray == 2){
@@ -1335,27 +1355,27 @@ switch (Mobus){
 							if (CheckTray == 0) {
 								if(registerFrame[68].U16 > 60000){
 									posx = registerFrame[68].U16 - UINT16_MAX-1;
-									bottom_left_jog[0] = (float)(posx)/-10;
+									bottom_left_jog[0] = (float)(posx)/10;
 								}
 								else{
 									posx = registerFrame[68].U16;
-									bottom_left_jog[0] = (float)(posx)/-10;
+									bottom_left_jog[0] = (float)(posx)/10;
 								}
 								bottom_left_jog[1] = ((float)ReadDegree-350); // Calulate Point y-axis
-								registerFrame[32].U16 = registerFrame[68].U16; // Place Tray Origin x
+								registerFrame[32].U16 = (int)posx; // Place Tray Origin x
+								registerFrame[33].U16 = (int)(ReadDegree-350)*10; // Place Tray Origin y
 								CheckTray++;
 							}
 							else if (CheckTray == 1) {
 								if(registerFrame[68].U16 > 60000){
 									posx = registerFrame[68].U16 - UINT16_MAX-1;
-									bottom_right_jog[0] = (float)(posx)/-10;
+									bottom_right_jog[0] = (float)(posx)/10;
 								}
 								else{
 									posx = registerFrame[68].U16;
-									bottom_right_jog[0] = (float)(posx)/-10;
+									bottom_right_jog[0] = (float)(posx)/10;
 								}
 								bottom_right_jog[1] = (float)(ReadDegree-(float)350); // Calculate Point y-axis
-								registerFrame[33].U16 = (int)(ReadDegree - 350) * 10; // Place Tray Origin y
 								CheckTray++;
 							}
 							else if (CheckTray == 2) {
@@ -1390,7 +1410,7 @@ switch (Mobus){
 			SetVelocity = 400;
 			if (error > 0) { // setpoint > read_encoder
 			  SetVelocity = abs(SetVelocity);
-			 if (error < 1) {
+			 if (error < 0.2) {
 				  DegreeFeedback = 0; // Limit Position
 				  s = 0;
 				  s2 = 0;
@@ -1400,7 +1420,7 @@ switch (Mobus){
 		  }
 			if (error < 0 ) { // setpoint < read_encoder
 			  if(SetVelocity > 0)SetVelocity = -SetVelocity;
-			  if (error * -1 < 1) {
+			  if (error * -1 < 0.2) {
 				  DegreeFeedback = 0; // Limit Position
 				  s = 0;
 				  s2 = 0;
@@ -1420,13 +1440,11 @@ switch (Mobus){
 float control_interrupt(){
     //loop 1
 	error = SetDegree - ReadDegree;
-	if(abs(error) <= 0.5)s = 0;
 	s = s + error;
 	u = K_P*error+K_I*s+K_D*(error-p);
 	p = error;
 	// loop 2
 	error2 = (u + SetVelocity) - speed;
-	if(abs(error2) <= 0.5)s2 = 0;
 	s2 = s2 + error2;
 	u2 = K_Pvelo*error2+K_Ivelo*s2+K_Dvelo*(error2-p2);
 	if(u2>100)u2=100;
@@ -1439,8 +1457,8 @@ float control_velocity(){
 	if(abs(error2) <= 0.5)s2 = 0;
 	s2 = s2 + error2;
 	u2 = K_P*error2+K_I*s2+K_D*(error2-p2);
-	if(u2>100)u2=100;
-	if(u2<-100)u2=-100;
+	if(u2>65535)u2=65535;
+	if(u2<-65535)u2=-65535;
 	p2 = error2;
 return u2;
 }
@@ -1499,7 +1517,7 @@ void main_Qubic()
   emxInitArray_real_T(&q_position, 2);
   emxInitArray_real_T(&q_velocity, 2);
   emxInitArray_real_T(&q_acc, 2);
-  Qubic(start_p, stop_p, start_v, stop_v, 1.5, q_position,
+  Qubic(start_p, stop_p, start_v, stop_v, timecycle, q_position,
         q_velocity, q_acc);
   q_positionN = q_position;
   q_velocityN = q_velocity;
