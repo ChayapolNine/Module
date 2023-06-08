@@ -78,6 +78,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
+int plustray = 0;
 int choice;
 uint8_t data_read ;
 uint8_t starttray;
@@ -86,8 +87,8 @@ GPIO_PinState buttonState;
 float start_p,stop_p,start_v,stop_v,timecycle;
 int posx;
 int orenationtray = 0;
-float point_x[20];
-float point_y[20];
+float point_x[18];
+float point_y[18] = {185,-114,199,-100,213,-86,174,-125,188,-111,203,-96,164,-135,178,-121,-192,-107};
 float rectangle[5][2] = {
     {0, 0},
     {60, 0},
@@ -191,7 +192,7 @@ float velocityTraject;
 uint32_t Joystick_position[2];
 uint32_t Joystick_Control = 1;
 uint8_t CheckTray;
-uint8_t JoystickSpeed = 20;
+int JoystickSpeed = 16383;
 
 typedef struct _QEIStructure{
 uint32_t data[2]; //Position data container
@@ -223,12 +224,12 @@ float p2 = 0;
 float s2 = 0;
 float error2 = 0;
 float delta_u;
-float K_P = 0.100000001; //0.4
-float K_I = 0.0500000007; // 0.0008
-float K_D = 0; //0.5
-float K_Pvelo = 0.004999999899;
-float K_Ivelo = 9.99999975e-005;
-float K_Dvelo = 0.100000001;
+float K_P = 0; //1
+float K_I = 0.1; // 0.05
+float K_D = 0; //0
+float K_Pvelo = 200; // 30
+float K_Ivelo = 0.5; // 1
+float K_Dvelo = 0; // 0
 
 float SetVelocity = 500;
 float ReadDegree; // Encoder value
@@ -303,7 +304,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   start_p = 0;
-  stop_p = 600;
+  stop_p = 15;
   start_v = 0;
   stop_v = 0;
   timecycle = 2;
@@ -351,7 +352,7 @@ int main(void)
 //	      }
 	      int pos = (int)registerFrame[17].U16;
 	  	  if(HAL_GetTick() >= timemodbus){ // heartbeat
-	  		  	  timemodbus = HAL_GetTick() + 100;
+	  		  	  timemodbus = HAL_GetTick() + 0.5;
 	  			  registerFrame[0].U16 = 22881;
 	  			  registerFrame[17].U16 = (int)(ReadDegree-350)*10;
 	  			  registerFrame[18].U16 = abs(speed);
@@ -359,13 +360,14 @@ int main(void)
 	  		}
 		  if(HAL_GetTick() >= timestampTrajact){
 			  timestampTrajact = HAL_GetTick() + 0.5;
-			  if(path == 0)indexposition = 0;
+			  if(path == 0){indexposition = 0;}
 			  if(indexposition < (timecycle*2000)-1 && path == 1){
+			  positionTraject = q_positionN->data[indexposition];
+			  velocityTraject = q_velocityN->data[indexposition];
 			  SetDegree = positionTraject;
 			  SetVelocity = velocityTraject;
 			  indexposition += 1;
-		      positionTraject = q_positionN->data[indexposition];
-		      velocityTraject = q_velocityN->data[indexposition];
+
 			  }
 		  }
 	      if (HAL_GetTick() >= timestamp) {
@@ -377,7 +379,7 @@ int main(void)
 			  speed = ((QEIData.QEIVelocity / 8192.0)*360.0)*160/360;
 			  acceleration = QEIAcc.QEIVelocity;
 			  DegreeFeedback = control_interrupt(); // PID function
-	          timestamp = HAL_GetTick() + 10;
+	          timestamp = HAL_GetTick() + 0.5;
 		      if(velocityTraject == 0){
 		    	  s2 = 0;
 		      }
@@ -689,9 +691,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 49;
+  htim4.Init.Prescaler = 0;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 99;
+  htim4.Init.Period = 65535;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -1009,28 +1011,34 @@ void limitsensor(){
 void feedtrayposition(){
 	transformRectangleAndPointsPlace();
 	  static uint64_t timestamptray;
+	  static uint64_t timemodbus;
 	  static int point_tray;
-	  static int plustray;
 	  if(HAL_GetTick() >= timestamptray){ // heartbeat
+		  path = 1;
+		  indexposition = 0;
 		  timestamptray = HAL_GetTick() + 3000;
 		  // y axis
 		  start_p = point_y[plustray]+350;
 		  stop_p = point_y[plustray+1]+350;
-		  start_v = 400; // qk
-		  stop_p = 700; // qk+1
-		  start_v = 0; // q_dotk
+		  start_v = 0; // qk
 		  stop_v = 0; // q_dotk+1
-		  timecycle = 1.5;
+		  timecycle = 2;
 		  main_Qubic();
-		  path = 1;
 		  // x axis
 		registerFrame[65].U16 = point_x[plustray];// position Tray pick/place
 		registerFrame[66].U16 = 3000; // speed x-axis 300mm
 		registerFrame[67].U16 = 1; // Acc time 1mms
 		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
-		plustray++;
-}
-	  path = 0;
+		if(indexposition == (timecycle*2000)-1){
+			indexposition = 0;
+		}
+		if(plustray < 18){
+			plustray++;
+		}
+		else if(plustray == 18){
+				Mobus = Initial;
+		}
+	  }
 }
 void transformRectangleAndPointsPick() {
 
@@ -1174,7 +1182,7 @@ void transformRectangleAndPointsPlace() {
     for (int i = 0; i < 9; i++) {
     	transformedPoints2[i][0] = transformedPoints2[i][0] + translation2[0];
     	transformedPoints2[i][1] =  transformedPoints2[i][1] + translation2[1] ;
-    	transformedPoints2[i][0] = transformedPoints2[i][0] *(-1);
+    	//transformedPoints2[i][0] = transformedPoints2[i][0] *(-1);
 
     }
 
@@ -1213,7 +1221,7 @@ switch (Mobus){
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
 			Joystick_Control = 1;
 			choice = 1;
-			I2C_all();
+			//I2C_all();
 			Mobus = Jogging_Place;
 		}
 		else if(registerFrame[1].U16 == 0b00001){ //Set Pick
@@ -1221,7 +1229,7 @@ switch (Mobus){
 			registerFrame[16].U16 = 1; // 0x10 y-axis Set Pick
 			Joystick_Control = 1;
 			choice = 1;
-			I2C_all();
+			//I2C_all();
 			Mobus = Jogging_Pick;
 		}
 		else if(registerFrame[1].U16 == 0b10000){ // Run point Mode
@@ -1433,7 +1441,7 @@ switch (Mobus){
 		break;
 	case Run_TrayMode:
 		registerFrame[1].U16 = 4 ;// Basesystem reset position
-
+		feedtrayposition();
 		break;
 		}
 	}
@@ -1447,8 +1455,8 @@ float control_interrupt(){
 	error2 = (u + SetVelocity) - speed;
 	s2 = s2 + error2;
 	u2 = K_Pvelo*error2+K_Ivelo*s2+K_Dvelo*(error2-p2);
-	if(u2>100)u2=100;
-	if(u2<-100)u2=-100;
+	if(u2>65534)u2=65535;
+	if(u2<-65534)u2=-65535;
 	p2 = error2;
 return u2;
 }
