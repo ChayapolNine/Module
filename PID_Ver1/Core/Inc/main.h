@@ -87,6 +87,8 @@ void Error_Handler(void);
 #define Clear_Tray_GPIO_Port GPIOC
 #define Joystick_X_Pin GPIO_PIN_0
 #define Joystick_X_GPIO_Port GPIOB
+#define emergency_Pin GPIO_PIN_9
+#define emergency_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
