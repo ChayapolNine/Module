@@ -78,6 +78,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
+uint64_t abc = 0;
 int plustray = 0;
 int choice;
 uint8_t data_read ;
@@ -360,7 +361,6 @@ int main(void)
 	  		}
 		  if(HAL_GetTick() >= timestampTrajact){
 			  timestampTrajact = HAL_GetTick() + 0.5;
-			  if(path == 0){indexposition = 0;}
 			  if(indexposition < (timecycle*2000)-1 && path == 1){
 			  positionTraject = q_positionN->data[indexposition];
 			  velocityTraject = q_velocityN->data[indexposition];
@@ -371,6 +371,7 @@ int main(void)
 			  }
 		  }
 	      if (HAL_GetTick() >= timestamp) {
+	    	  abc++;
 			  QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
 			  ReadDegree = (QEIReadRaw / 8192.0 * 360)*160/360; // pulse to degree
 			  error = SetDegree - ReadDegree;
@@ -927,6 +928,44 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void runQubicMultipleTimes(int numIterations) {
+    double q_k1 = 0.0;
+    double q_k2 = 1.0;
+    double qdot_k1 = 0.0;
+    double qdot_k2 = 0.0;
+    double tf = 1.0;
+
+    emxArray_real_T *q_position;
+    emxArray_real_T *q_velocity;
+    emxArray_real_T *q_acc;
+
+    // Initialize emxArray_real_T instances
+    q_position = emxCreate_real_T(1, 1);
+    q_velocity = emxCreate_real_T(1, 1);
+    q_acc = emxCreate_real_T(1, 1);
+
+    // Run the Qubic function multiple times
+    for (int i = 0; i < numIterations; i++) {
+        // Call the Qubic function
+        Qubic(q_k1, q_k2, qdot_k1, qdot_k2, tf, q_position, q_velocity, q_acc);
+
+        // Access the calculated values
+        double *q_position_data = q_position->data;
+        double *q_velocity_data = q_velocity->data;
+        double *q_acc_data = q_acc->data;
+
+        // Update the input values for the next iteration
+        q_k1 = *q_position_data;
+        qdot_k1 = *q_velocity_data;
+
+    }
+
+    // Free the memory
+    emxDestroy_real_T(q_position);
+    emxDestroy_real_T(q_velocity);
+    emxDestroy_real_T(q_acc);
+}
+
 void I2C_all() {
 	static uint8_t data_1[1];
     static uint8_t data_2[2];
@@ -1007,38 +1046,6 @@ void limitsensor(){
 		SetDegree = 0;
 	}
 
-}
-void feedtrayposition(){
-	transformRectangleAndPointsPlace();
-	  static uint64_t timestamptray;
-	  static uint64_t timemodbus;
-	  static int point_tray;
-	  if(HAL_GetTick() >= timestamptray){ // heartbeat
-		  path = 1;
-		  indexposition = 0;
-		  timestamptray = HAL_GetTick() + 3000;
-		  // y axis
-		  start_p = point_y[plustray]+350;
-		  stop_p = point_y[plustray+1]+350;
-		  start_v = 0; // qk
-		  stop_v = 0; // q_dotk+1
-		  timecycle = 2;
-		  main_Qubic();
-		  // x axis
-		registerFrame[65].U16 = point_x[plustray];// position Tray pick/place
-		registerFrame[66].U16 = 3000; // speed x-axis 300mm
-		registerFrame[67].U16 = 1; // Acc time 1mms
-		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
-		if(indexposition == (timecycle*2000)-1){
-			indexposition = 0;
-		}
-		if(plustray < 18){
-			plustray++;
-		}
-		else if(plustray == 18){
-				Mobus = Initial;
-		}
-	  }
 }
 void transformRectangleAndPointsPick() {
 
@@ -1441,7 +1448,34 @@ switch (Mobus){
 		break;
 	case Run_TrayMode:
 		registerFrame[1].U16 = 4 ;// Basesystem reset position
-		feedtrayposition();
+		static uint64_t timestamptray;
+			  if(HAL_GetTick() >= timestamptray){ // heartbeat
+				  path = 1;
+				  indexposition = 0;
+				  timestamptray = HAL_GetTick() + 3000;
+				  // y axis
+				  start_p = point_y[plustray]+350;
+				  stop_p = point_y[plustray+1]+350;
+				  start_v = 0; // qk
+				  stop_v = 0; // q_dotk+1
+				  timecycle = 2;
+				  Qubic(start_p, stop_p, start_v, stop_v, timecycle, 0,
+				          0, 0);
+				  // x axis
+				registerFrame[65].U16 = point_x[plustray];// position Tray pick/place
+				registerFrame[66].U16 = 3000; // speed x-axis 300mm
+				registerFrame[67].U16 = 1; // Acc time 1mms
+				registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
+				if(indexposition == (timecycle*2000)-1){
+					indexposition = 0;
+				}
+				if(plustray < 18){
+					plustray++;
+				}
+				else if(plustray == 18){
+						Mobus = Initial;
+				}
+			  }
 		break;
 		}
 	}
@@ -1534,6 +1568,8 @@ void main_Qubic()
   emxDestroyArray_real_T(q_velocity);
   emxDestroyArray_real_T(q_acc);
 }
+
+
 /* USER CODE END 4 */
 
 /**
