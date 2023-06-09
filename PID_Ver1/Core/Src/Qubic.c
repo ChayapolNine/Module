@@ -96,7 +96,7 @@ void Qubic(double q_k1, double q_k2, double qdot_k1, double qdot_k2, double tf,
   int k;
   int q_acc_tmp_tmp;
   q_acc_data = q_acc->data;
-  delta1 = tf * 2000.0;
+  delta1 = tf * 100.0;
   if (!(delta1 >= 0.0)) {
     q_acc->size[0] = 1;
     q_acc->size[1] = 0;

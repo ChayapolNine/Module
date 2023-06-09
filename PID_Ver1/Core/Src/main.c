@@ -89,8 +89,8 @@ float start_p, stop_p, start_v, stop_v, timecycle;
 int posx;
 int orenationtray = 0;
 float point_x[18];
-float point_y[18] = { 18, -11, 19, -10, 21, -8, 17, -12, 18, -11, 20,
-		-9, 16, -13, 17, -12, -19, -10};
+float point_y[18] = { 0, -110, 190, -100, 210, -80, 170, -120, 180, -110, 200,
+		-90, 160, -130, 170, -120, 190, -100};
 float rectangle[5][2] = { { 0, 0 }, { 60, 0 }, { 60, 50 }, { 0, 50 }, { 0, 0 } };
 
 // Define the rotation matrix
@@ -202,10 +202,10 @@ float s2 = 0;
 float error2 = 0;
 float delta_u;
 float K_P = 0; //1
-float K_I = 0.1; // 0.05
+float K_I = 0.0500000007; // 0.1
 float K_D = 0; //0
-float K_Pvelo = 200; // 30
-float K_Ivelo = 0.5; // 1
+float K_Pvelo = 250; // 200
+float K_Ivelo = 0.100000001; // 0.5
 float K_Dvelo = 0; // 0
 
 float SetVelocity = 500;
@@ -215,7 +215,6 @@ float DegreeFeedback; // Feedback position
 float error; // error
 
 int testgo = 0;
-
 uint64_t timeI2C = 0;
 uint64_t timestamp = 0;
 uint64_t timemodbus = 0;
@@ -292,7 +291,6 @@ int main(void) {
 	start_v = 0;
 	stop_v = 0;
 	timecycle = 2;
-	main_Qubic();
 	transformRectangleAndPointsPlace();
 	HAL_ADC_Start_DMA(&hadc1, Joystick_position, 2);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1 | TIM_CHANNEL_2);
@@ -338,10 +336,9 @@ int main(void) {
 			registerFrame[18].U16 = abs(speed);
 			registerFrame[19].U16 = acceleration;
 		}
-
 		if (HAL_GetTick() >= timestampTrajact) {
-			timestampTrajact = HAL_GetTick() + 0.5;
-			if (indexposition < (timecycle * 2000) - 1 && path == 1) {
+			timestampTrajact = HAL_GetTick() + 10;
+			if (indexposition < (timecycle * 100) - 1 && path == 1) {
 				positionTraject = q_positionN->data[indexposition];
 				velocityTraject = q_velocityN->data[indexposition];
 				SetDegree = positionTraject;
@@ -355,7 +352,7 @@ int main(void) {
 			testgo = 0;
 		}
 		if (HAL_GetTick() >= timestamp) {
-			timestamp = HAL_GetTick() + 0.5;
+			timestamp = HAL_GetTick() + 5;
 			//abc++;
 			QEIReadRaw = __HAL_TIM_GET_COUNTER(&htim2); // Read QEI
 			ReadDegree = (QEIReadRaw / 8192.0 * 360) * 160 / 360; // pulse to degree
@@ -394,24 +391,19 @@ int main(void) {
 				}
 
 				if (error > 0) { // setpoint > read_encoder
-					SetVelocity = abs(SetVelocity);
 					if (error < 0.2) {
 						DegreeFeedback = 0; // Limit Position
 						s = 0;
-						s2 = 0;
 					}
-					//__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback);
+					__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback);
 					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 				}
 				if (error < 0) { // setpoint < read_encoder
-					if (SetVelocity > 0)
-						SetVelocity = -SetVelocity;
 					if (error * -1 < 0.2) {
 						DegreeFeedback = 0; // Limit Position
 						s = 0;
-						s2 = 0;
 					}
-					//__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback * -1);
+					__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback * -1);
 					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 				}
 			}
@@ -922,9 +914,9 @@ void runQubicMultipleTimes(int numIterations) {
 	}
 
 	// Free the memory
-	emxDestroy_real_T(q_position);
-	emxDestroy_real_T(q_velocity);
-	emxDestroy_real_T(q_acc);
+	emxDestroyArray_real_T(q_position);
+	emxDestroyArray_real_T(q_velocity);
+	emxDestroyArray_real_T(q_acc);
 }
 
 void I2C_all() {
@@ -1393,13 +1385,13 @@ void flowmodbus() {
 		if (HAL_GetTick() >= timestamptray) { // heartbeat
 			path = 1;
 			indexposition = 0;
-			timestamptray = HAL_GetTick() + 3000;
+			timestamptray = HAL_GetTick() + 4000;
 			// y axis
-			start_p = point_y[plustray] ;
-			stop_p = point_y[plustray + 1] ;
+			start_p = point_y[plustray]+350 ;
+			stop_p = point_y[plustray + 1]+350 ;
 			start_v = 0; // qk
 			stop_v = 0; // q_dotk+1
-			timecycle = 2;
+			timecycle = 1.5;
 			main_Qubic();
 			//Qubic(start_p, stop_p, start_v, stop_v, timecycle, 0, 0, 0);
 
@@ -1415,6 +1407,11 @@ void flowmodbus() {
 			} else if (plustray == 18) {
 				Mobus = Initial;
 			}
+		}
+		if(indexposition >= (timecycle*100)-1){
+			s2 = 0;
+			indexposition = 0;
+			path = 0;
 		}
 		break;
 	}
