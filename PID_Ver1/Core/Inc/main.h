@@ -77,8 +77,6 @@ void Error_Handler(void);
 #define USART_RX_GPIO_Port GPIOA
 #define Joystick_Y_Pin GPIO_PIN_4
 #define Joystick_Y_GPIO_Port GPIOA
-#define LD2_Pin GPIO_PIN_5
-#define LD2_GPIO_Port GPIOA
 #define DIR_Pin GPIO_PIN_7
 #define DIR_GPIO_Port GPIOA
 #define Set_Tray_Pin GPIO_PIN_4
