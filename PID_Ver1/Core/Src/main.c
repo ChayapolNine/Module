@@ -91,7 +91,7 @@ GPIO_PinState buttonState;
 float start_p, stop_p, start_v, stop_v, timecycle;
 int posx;
 int orenationtray = 0;
-float point_x[18];
+float point_x[18] = {100,-100,100,-100,100,-100,100,-100,100,-100,100,-100,100,-100,100,-100,100,-100,};
 float point_y[18] = { 100, -110, 190, -100, 210, -80, 170, -120, 180, -110, 200,
 		-90, 160, -130, 170, -120, 190, -100};
 float rectangle[5][2] = { { 0, 0 }, { 60, 0 }, { 60, 50 }, { 0, 50 }, { 0, 0 } };
@@ -1271,12 +1271,12 @@ void flowmodbus() {
 			k = 0;
 			b = 0;
 			for (i = 0; i < 9; i++) {
-				point_y[k++] = transformedPoints2[i][1];
 				point_y[k++] = transformedPoints[i][1];
+				point_y[k++] = transformedPoints2[i][1];
 			}
 			for (j = 0; j < 9; j++) {
-				point_x[b++] = transformedPoints2[j][0];
 				point_x[b++] = transformedPoints[j][0];
+				point_x[b++] = transformedPoints2[j][0];
 			}
 			Mobus = Run_TrayMode;
 		}
@@ -1461,10 +1461,12 @@ void flowmodbus() {
 					timecycle = 1.5;
 					main_Qubic();
 					// x axis
-					 registerFrame[65].U16 = point_x[plustray+1]; // position Tray pick/place
+					if(registerFrame[64].U16 == 0){
+					 registerFrame[65].U16 = (int16_t)(point_x[plustray+1]*10); // position Tray pick/place
 					 registerFrame[66].U16 = 3000; // speed x-axis 300mm
 					 registerFrame[67].U16 = 1; // Acc time 1mms
 					 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
+					}
 					 CaseTray = 1;
 				}
 				else{
@@ -1477,7 +1479,7 @@ void flowmodbus() {
 				//Qubic(start_p, stop_p, start_v, stop_v, timecycle, 0, 0, 0);
 
 				 // x axis
-				 registerFrame[65].U16 = point_x[plustray+1]; // position Tray pick/place
+				 registerFrame[65].U16 = (int16_t)point_x[plustray+1]*10; // position Tray pick/place
 				 registerFrame[66].U16 = 3000; // speed x-axis 300mm
 				 registerFrame[67].U16 = 1; // Acc time 1mms
 				 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
