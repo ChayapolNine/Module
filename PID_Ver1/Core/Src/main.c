@@ -77,6 +77,8 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
+int done;
+int CaseTray = 1;
 uint64_t abc = 0;
 int plustray = 0;
 int gentest = 0;
@@ -219,7 +221,7 @@ uint64_t timeI2C = 0;
 uint64_t timestamp = 0;
 uint64_t timemodbus = 0;
 uint64_t timestampTrajact = 0;
-uint64_t timestamptray = 0;
+uint64_t timestamptray = 2000;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -393,6 +395,7 @@ int main(void)
 				if (error > 0) { // setpoint > read_encoder
 					if (error < 0.2) {
 						DegreeFeedback = 0; // Limit Position
+						done = 1;
 						s = 0;
 					}
 					__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback);
@@ -401,6 +404,7 @@ int main(void)
 				if (error < 0) { // setpoint < read_encoder
 					if (error * -1 < 0.2) {
 						DegreeFeedback = 0; // Limit Position
+						done = 1;
 						s = 0;
 					}
 					__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback * -1);
@@ -1235,7 +1239,7 @@ void home() {
 void flowmodbus() {
 	switch (Mobus) {
 	case Initial:
-		//choice = 1;
+		choice = 2;
 		if (registerFrame[1].U16 == 0b00010) { // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
@@ -1254,13 +1258,14 @@ void flowmodbus() {
 			registerFrame[1].U16 = 0; // base system run point mode reset
 			registerFrame[16].U16 = 16; // y-axis moving status go point x
 			Joystick_Control = 0;
+			choice = 1;
 			Mobus = Run_PointMode;
 		} else if (registerFrame[1].U16 == 0b00100) { // Set Home
 			registerFrame[1].U16 = 0;
 			Mobus = Home;
 		} else if (registerFrame[1].U16 == 0b01000) {
-			registerFrame[1].U16 = 0;
 			choice = 2;
+			registerFrame[1].U16 = 0;
 			int i, j, k, b;
 			k = 0;
 			b = 0;
@@ -1440,38 +1445,79 @@ void flowmodbus() {
 		Mobus = Initial;
 		break;
 	case Run_TrayMode:
+		switch (CaseTray) {
+			case 0:
+				registerFrame[1].U16 = 4; // Basesystem reset position
+				path = 1;
+				indexposition = 0;
+				// y axis
+				start_p = point_y[plustray]+350 ;
+				stop_p = point_y[plustray + 1]+350 ;
+				start_v = 0; // qk
+				stop_v = 0; // q_dotk+1
+				timecycle = 1.5;
+				main_Qubic();
+				//Qubic(start_p, stop_p, start_v, stop_v, timecycle, 0, 0, 0);
 
-		registerFrame[1].U16 = 4; // Basesystem reset position
-		if (HAL_GetTick() >= timestamptray) { // heartbeat
-			path = 1;
-			indexposition = 0;
-			timestamptray = HAL_GetTick() + 4000;
-			// y axis
-			start_p = point_y[plustray]+350 ;
-			stop_p = point_y[plustray + 1]+350 ;
-			start_v = 0; // qk
-			stop_v = 0; // q_dotk+1
-			timecycle = 0.5;
-			main_Qubic();
-			//Qubic(start_p, stop_p, start_v, stop_v, timecycle, 0, 0, 0);
-
-			 // x axis
-			 registerFrame[65].U16 = point_x[plustray]; // position Tray pick/place
-			 registerFrame[66].U16 = 3000; // speed x-axis 300mm
-			 registerFrame[67].U16 = 1; // Acc time 1mms
-			 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
-
-
-			if (plustray < 18) {
-				plustray++;
-			} else if (plustray == 18) {
-				Mobus = Initial;
-			}
-		}
-		if(indexposition >= (timecycle*100)-1){
-			s2 = 0;
-			indexposition = 0;
-			path = 0;
+				 // x axis
+				 registerFrame[65].U16 = point_x[plustray]; // position Tray pick/place
+				 registerFrame[66].U16 = 3000; // speed x-axis 300mm
+				 registerFrame[67].U16 = 1; // Acc time 1mms
+				 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
+				 CaseTray = 1;
+				break;
+			case 1:
+				timestamptray = HAL_GetTick() + 4000;
+				if(HAL_GetTick() >= timestamptray){
+					CaseTray = 2;
+				}
+			break;
+			case 2:
+				choice = 6;
+				if(indexposition >= (timecycle*100)-1){
+						s2 = 0;
+						indexposition = 0;
+						path = 0;
+					}
+				 if(done == 1){
+					 if((plustray%2) != 0){ // Place Case
+						s2 = 0;
+						s = 0;
+						 choice = 8;
+						 CaseTray = 3;
+					 }
+					 if(plustray%2 == 0){ // Pick Case
+						s2 = 0;
+						s = 0;
+						 choice = 9;
+						 CaseTray = 4;
+					 }
+				 }
+				break;
+			case 3: // Pick Case
+				if(data_read == 7){
+					if(plustray < 18){
+					plustray++;
+					CaseTray = 0;
+					done = 0;
+					}
+					else if(plustray == 18){
+						Mobus = Initial;
+					}
+				}
+				break;
+			case 4: // Place Case
+				if(data_read == 4){
+					if(plustray < 18){
+					plustray++;
+					CaseTray = 0;
+					done = 0;
+					}
+					else if(plustray == 18){
+						Mobus = Initial;
+					}
+				}
+			break;
 		}
 		break;
 	}
