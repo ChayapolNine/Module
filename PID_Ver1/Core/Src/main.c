@@ -77,7 +77,11 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
-int score;
+int homeflag = 0;
+float posy_point;
+uint64_t timestampI2Cdone;
+int set_home = 0;
+int I2Cdone;
 int done;
 int CaseTray = 0;
 uint64_t abc = 0;
@@ -246,6 +250,7 @@ float control_interrupt();
 float control_velocity();
 void accelerate();
 void main_Qubic();
+void home_yaxis();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -326,11 +331,11 @@ int main(void)
 			NVIC_SystemReset();
 			SoftReset = 0;
 		}
-		static uint32_t timestamp_I2C = 0;
-		      if(HAL_GetTick() >= timestamp_I2C){
-		          I2C_all(&data_read);
-		          timestamp_I2C = HAL_GetTick()+ 10;
-		      }
+//		static uint32_t timestamp_I2C = 0;
+//		      if(HAL_GetTick() >= timestamp_I2C){
+//		          I2C_all(&data_read);
+//		          timestamp_I2C = HAL_GetTick()+ 20;
+//		      }
 
 		if (HAL_GetTick() >= timemodbus) { // heartbeat
 			timemodbus = HAL_GetTick() + 0.5;
@@ -394,6 +399,7 @@ int main(void)
 				}
 
 				if (error > 0) { // setpoint > read_encoder
+
 					if (error < 0.2) {
 						DegreeFeedback = 0; // Limit Position
 						s = 0;
@@ -967,7 +973,9 @@ void runQubicMultipleTimes(int numIterations) {
 	emxDestroyArray_real_T(q_velocity);
 	emxDestroyArray_real_T(q_acc);
 }
+void home(){
 
+}
 void I2C_all(uint8_t * Rdata) {
 	static uint8_t data_1[1];
     static uint8_t data_2[2];
@@ -978,15 +986,13 @@ void I2C_all(uint8_t * Rdata) {
         case 1:
             data_2[0] = 0x01;
             data_2[1] = 0x01;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_testmode_off
         case 2:
             data_2[0] = 0x01;
             data_2[1] = 0x00;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_soft_reset
         case 3:
@@ -994,14 +1000,12 @@ void I2C_all(uint8_t * Rdata) {
             data_4[1] = 0xFF;
             data_4[2] = 0x55;
             data_4[3] = 0xAA;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, 50);
             break;
         // I2C_open_emergency
         case 4:
             data_1[0] = 0xF0;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_1, 1, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_1, 1, 50);
             break;
         // I2C_close_emergency
         case 5:
@@ -1009,40 +1013,35 @@ void I2C_all(uint8_t * Rdata) {
             data_4[1] = 0x7A;
             data_4[2] = 0xFF;
             data_4[3] = 0x81;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_4, 4, 50);
             break;
         // I2C_gripper_runmode_on
         case 6:
             data_2[0] = 0x10;
             data_2[1] = 0x13;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_gripper_runmode_off
         case 7:
             data_2[0] = 0x10;
             data_2[1] = 0x8C;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_gripper_pick
         case 8:
             data_2[0] = 0x10;
             data_2[1] = 0x5A;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_gripper_place
         case 9:
             data_2[0] = 0x10;
             data_2[1] = 0x69;
-            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 10);
-            choice = 10;
+            HAL_I2C_Master_Transmit(&hi2c1, 0x15 << 1, data_2, 2, 50);
             break;
         // I2C_read_status
         case 10:
-        	HAL_I2C_Master_Receive(&hi2c1, 0x15 << 1, Rdata, 1, 10);
+        	HAL_I2C_Master_Receive(&hi2c1, 0x15 << 1, Rdata, 1, 50);
         	break;
     }
 }
@@ -1217,28 +1216,32 @@ void transformRectangleAndPointsPlace() {
 	}
 
 }
-void home() {
-	// เ�?�?�? ReadDegree = 30
-	if (ReadDegree < 200) {
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
+void home_yaxis(){
+	if(homeflag == 0){
+		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 16383); // 20 %
+		path = 0;
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0) == 1) {
-			TIM2->CNT = 17920;
-		}
 	}
-	// เ�?�?�? ReadDegree = 500
-	else if (ReadDegree > 200) {
-		__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 20);
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0) == 1) {
-			TIM2->CNT = 17920;
-		}
+	if (Joystick_AND_Sensor[2] > 3000)
+	{
+		Joystick_Control = 0;
+		homeflag = 1;
+		s=0;
+		s2=0;
+		TIM2->CNT = 0;
+		start_p = 0;
+		stop_p = 350;
+		start_v = 0; // qk
+		stop_v = 0; // q_dotk+1
+		timecycle = 1.5;
+		main_Qubic();
+		path = 1;
+		Mobus = Initial;
 	}
 }
 void flowmodbus() {
 	switch (Mobus) {
 	case Initial:
-		choice = 2;
 		if (registerFrame[1].U16 == 0b00010) { // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
@@ -1255,12 +1258,16 @@ void flowmodbus() {
 			Mobus = Jogging_Pick;
 		} else if (registerFrame[1].U16 == 0b10000) { // Run point Mode
 			registerFrame[1].U16 = 0; // base system run point mode reset
-			registerFrame[16].U16 = 16; // y-axis moving status go point x
+			registerFrame[16].U16 = 32; // y-axis moving status go point x
 			Joystick_Control = 0;
 			choice = 1;
+			indexposition = 0;
 			Mobus = Run_PointMode;
 		} else if (registerFrame[1].U16 == 0b00100) { // Set Home
 			registerFrame[1].U16 = 0;
+			homeflag = 0;
+			path = 0;
+			indexposition = 0;
 			Mobus = Home;
 		} else if (registerFrame[1].U16 == 0b01000) {
 			choice = 2;
@@ -1405,7 +1412,7 @@ void flowmodbus() {
 	case Home:
 		// x axis
 		registerFrame[64].U16 = 1; // 0x40 Moving Status x-axis - Home
-		Mobus = Initial;
+		home_yaxis();
 		// y axis
 		break;
 	case Run_PointMode:
@@ -1416,32 +1423,17 @@ void flowmodbus() {
 		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
 		// y axis
 		if (registerFrame[49].U16 > 60000)
-			SetDegree = ((350 - (UINT16_MAX - registerFrame[49].U16) / 10));
+			posy_point = -((UINT16_MAX - registerFrame[49].U16) / 10.0);
 		else if (registerFrame[49].U16 <= 3500) {
-			SetDegree = (registerFrame[49].U16 / 10) + 350;
+			posy_point = (registerFrame[49].U16 / 10.0);
 		}
-		SetVelocity = 400;
-		if (error > 0) { // setpoint > read_encoder
-			SetVelocity = abs(SetVelocity);
-			if (error < 0.2) {
-				DegreeFeedback = 0; // Limit Position
-				s = 0;
-				s2 = 0;
-			}
-			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback);
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-		}
-		if (error < 0) { // setpoint < read_encoder
-			if (SetVelocity > 0)
-				SetVelocity = -SetVelocity;
-			if (error * -1 < 0.2) {
-				DegreeFeedback = 0; // Limit Position
-				s = 0;
-				s2 = 0;
-			}
-			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, DegreeFeedback * -1);
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-		}
+		start_p = ReadDegree;
+		stop_p = posy_point+350;
+		start_v = 0; // qk
+		stop_v = 0; // q_dotk+1
+		timecycle = 1.5;
+		main_Qubic();
+		path = 1;
 		registerFrame[16].U16 = 0;
 		Mobus = Initial;
 		break;
@@ -1451,6 +1443,8 @@ void flowmodbus() {
 				registerFrame[1].U16 = 4; // Basesystem reset position
 				path = 1;
 				indexposition = 0;
+				choice = 6;
+				I2C_all(&data_read);
 				// y axis
 				if(plustray == -1){ // home
 					// y-axis
@@ -1501,8 +1495,11 @@ void flowmodbus() {
 					Mobus = Initial;
 					plustray = -1;
 					CaseTray = 0;
+					data_read = 0;
+					choice = 3;
+					I2C_all(&data_read);
 					}
-				choice = 6;
+				 else{
 				if(indexposition >= (timecycle*100)){
 						s2 = 0;
 						indexposition = 0;
@@ -1513,34 +1510,41 @@ void flowmodbus() {
 						s2 = 0;
 						s = 0;
 						 choice = 8;
+						 I2C_all(&data_read);
 						 CaseTray = 3;
 					 }
 					 if(plustray%2 == 0){ // Place Case
 						s2 = 0;
 						s = 0;
 						 choice = 9;
-						 CaseTray = 4;
-					 }
+						 I2C_all(&data_read);
+						 CaseTray = 3;
+					 	 }
+				 	 }
 				 }
 				break;
-			case 3: // Pick Case
-				if(data_read == 7){
+			case 3:
+				if(I2Cdone == 0){
+					timestampI2Cdone = HAL_GetTick() + 2500;
+				I2Cdone = 1;
+				}
+				if(HAL_GetTick() >= timestampI2Cdone){
+					choice = 10;
+					I2C_all(&data_read);
+					CaseTray = 4;
+					I2Cdone = 0;
+				}
+				break;
+			case 4: // Pick Case
+				if(data_read == 7 || data_read == 4){
 					if(plustray < 17 || plustray == -1){
+					choice = 0;
 					plustray++;
 					CaseTray = 0;
 					done = 0;
 					}
 				}
 				break;
-			case 4: // Place Case
-				if(data_read == 4){
-					if(plustray < 17 || plustray == -1){
-					plustray++;
-					CaseTray = 0;
-					done = 0;
-					}
-				}
-			break;
 		}
 		break;
 	}
