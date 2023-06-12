@@ -77,6 +77,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
+int score;
 int homeflag = 0;
 float posy_point;
 uint64_t timestampI2Cdone;
@@ -155,7 +156,7 @@ float bottom_left_jog2[2];
 float bottom_right_jog2[2];
 //Modbus Protocol
 typedef enum {
-	Initial, Jogging_Place, Jogging_Pick, Home, Run_PointMode, Run_TrayMode
+	Initial, Jogging_Place, Jogging_Pick, Home, Run_PointMode, Run_TrayMode ,EM_Run_PointMode
 } state;
 state Mobus = 0;
 ModbusHandleTypedef hmodbus;
@@ -896,7 +897,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DIR_Pin|Em_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -910,18 +911,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DIR_Pin */
-  GPIO_InitStruct.Pin = DIR_Pin;
+  /*Configure GPIO pins : DIR_Pin Em_Pin */
+  GPIO_InitStruct.Pin = DIR_Pin|Em_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DIR_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : emergency_Pin */
-  GPIO_InitStruct.Pin = emergency_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(emergency_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Sensor_2_Pin */
   GPIO_InitStruct.Pin = Sensor_2_Pin;
@@ -978,8 +973,8 @@ void home(){
 }
 void I2C_all(uint8_t * Rdata) {
 	static uint8_t data_1[1];
-    static uint8_t data_2[2];
-    static uint8_t data_4[4];
+	static uint8_t data_2[2];
+	static uint8_t data_4[4];
 
     switch (choice) {
         // I2C_testmode_on
@@ -1260,8 +1255,19 @@ void flowmodbus() {
 			registerFrame[1].U16 = 0; // base system run point mode reset
 			registerFrame[16].U16 = 32; // y-axis moving status go point x
 			Joystick_Control = 0;
-			choice = 1;
 			indexposition = 0;
+			if (registerFrame[49].U16 > 60000)
+				posy_point = -((UINT16_MAX - registerFrame[49].U16) / 10.0);
+			else if (registerFrame[49].U16 <= 3500) {
+				posy_point = (registerFrame[49].U16 / 10.0);
+			}
+			start_p = ReadDegree;
+			stop_p = posy_point+350;
+			start_v = 0; // qk
+			stop_v = 0; // q_dotk+1
+			timecycle = 1.5;
+			main_Qubic();
+			path = 1;
 			Mobus = Run_PointMode;
 		} else if (registerFrame[1].U16 == 0b00100) { // Set Home
 			registerFrame[1].U16 = 0;
@@ -1422,20 +1428,29 @@ void flowmodbus() {
 		registerFrame[67].U16 = 1; // Acc time 1mms
 		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
 		// y axis
-		if (registerFrame[49].U16 > 60000)
-			posy_point = -((UINT16_MAX - registerFrame[49].U16) / 10.0);
-		else if (registerFrame[49].U16 <= 3500) {
-			posy_point = (registerFrame[49].U16 / 10.0);
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1){ // if Emergency Point mode on
+			choice = 4;
+			I2C_all(&data_read);
+			path = 0;
+			s = 0;
+			s2 = 0;
+			Mobus = EM_Run_PointMode;
 		}
-		start_p = ReadDegree;
-		stop_p = posy_point+350;
-		start_v = 0; // qk
-		stop_v = 0; // q_dotk+1
-		timecycle = 1.5;
-		main_Qubic();
-		path = 1;
-		registerFrame[16].U16 = 0;
-		Mobus = Initial;
+		if(abs(error) < 0.2 && indexposition == (timecycle*100)){
+				Mobus = Initial;
+				registerFrame[16].U16 = 0;
+		}
+		break;
+	case EM_Run_PointMode:
+		path = 0;
+		s = 0;
+		s2 = 0;
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Point mode off
+			choice = 5;
+			I2C_all(&data_read);
+			path = 1;
+			Mobus = Run_PointMode;
+		}
 		break;
 	case Run_TrayMode:
 		switch (CaseTray) {
