@@ -77,6 +77,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 //I2C
+int Em_state;
 int score;
 int homeflag = 0;
 float posy_point;
@@ -156,7 +157,7 @@ float bottom_left_jog2[2];
 float bottom_right_jog2[2];
 //Modbus Protocol
 typedef enum {
-	Initial, Jogging_Place, Jogging_Pick, Home, Run_PointMode, Run_TrayMode ,EM_Run_PointMode
+	Initial, Jogging_Place, Jogging_Pick, Home, Run_PointMode, Run_TrayMode ,EM_Run_PointMode,EM_Run_TrayMode
 } state;
 state Mobus = 0;
 ModbusHandleTypedef hmodbus;
@@ -972,9 +973,9 @@ void home(){
 
 }
 void I2C_all(uint8_t * Rdata) {
-	static uint8_t data_1[1];
-	static uint8_t data_2[2];
-	static uint8_t data_4[4];
+	uint8_t data_1[1];
+	uint8_t data_2[2];
+	uint8_t data_4[4];
 
     switch (choice) {
         // I2C_testmode_on
@@ -1242,13 +1243,14 @@ void flowmodbus() {
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
 			Joystick_Control = 1;
 			choice = 1;
-			//I2C_all();
+			I2C_all(&data_read);
 			Mobus = Jogging_Place;
 		} else if (registerFrame[1].U16 == 0b00001) { //Set Pick
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 1; // 0x10 y-axis Set Pick
 			Joystick_Control = 1;
 			choice = 1;
+			I2C_all(&data_read);
 			//I2C_all();
 			Mobus = Jogging_Pick;
 		} else if (registerFrame[1].U16 == 0b10000) { // Run point Mode
@@ -1276,7 +1278,7 @@ void flowmodbus() {
 			indexposition = 0;
 			Mobus = Home;
 		} else if (registerFrame[1].U16 == 0b01000) {
-			choice = 2;
+			Joystick_Control = 0;
 			plustray = -1;
 			CaseTray = 0;
 			registerFrame[1].U16 = 0;
@@ -1349,6 +1351,8 @@ void flowmodbus() {
 				registerFrame[37].U16 = orenationtray;
 				registerFrame[16].U16 = 0; //0x10 y-status jogging fisnish reset to 0
 				CheckTray = 0;
+				choice = 2;
+				I2C_all(&data_read);
 				Mobus = Initial;
 			}
 		}
@@ -1409,6 +1413,8 @@ void flowmodbus() {
 				registerFrame[34].U16 = orenationtray;
 				registerFrame[16].U16 = 0; // 0x10 y-status jogging finish reset to 0
 				CheckTray = 0;
+				choice = 2;
+				I2C_all(&data_read);
 				Mobus = Initial;
 			}
 		}
@@ -1442,17 +1448,77 @@ void flowmodbus() {
 		}
 		break;
 	case EM_Run_PointMode:
-		path = 0;
-		s = 0;
-		s2 = 0;
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Point mode off
-			choice = 5;
-			I2C_all(&data_read);
-			path = 1;
-			Mobus = Run_PointMode;
+
+		switch (Em_state) {
+			case 0:
+				path = 0;
+				s = 0;
+				s2 = 0;
+				if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Tray mode On
+					path = 1;
+					Em_state = 1;
+					I2Cdone = 0;
+				}
+				break;
+			case 1:
+				if(I2Cdone == 0){
+					timestampI2Cdone = HAL_GetTick() + 500;
+					I2Cdone = 1;
+				}
+				if(HAL_GetTick() >= timestampI2Cdone){
+					choice = 5;
+					I2C_all(&data_read);
+					if(I2Cdone == 1){
+						I2Cdone = 0;
+						Em_state = 0;
+						Mobus = Run_PointMode;
+					}
+				}
+				break;
+		}
+		break;
+	case EM_Run_TrayMode:
+		switch (Em_state) {
+			case 0:
+				if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Tray mode On
+					CaseTray = 0;
+					plustray = -1;
+					path = 0;
+					data_read = 0;
+					done = 0;
+					I2Cdone = 0;
+					Em_state = 1;
+				}
+				break;
+			case 1:
+				if(I2Cdone == 0){
+					timestampI2Cdone = HAL_GetTick() + 500;
+					I2Cdone = 1;
+				}
+				if(HAL_GetTick() >= timestampI2Cdone){
+					choice = 5;
+					I2C_all(&data_read);
+					if(I2Cdone == 1){
+						I2Cdone = 0;
+						Em_state = 0;
+						Mobus = Initial;;
+					}
+				}
+				break;
 		}
 		break;
 	case Run_TrayMode:
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1){ // if Emergency Tray mode On
+			CaseTray = 0;
+			plustray = -1;
+			path = 0;
+			data_read = 0;
+			done = 0;
+			I2Cdone = 0;
+			choice = 4;
+			I2C_all(&data_read);
+			Mobus = EM_Run_TrayMode;
+		}
 		switch (CaseTray) {
 			case 0:
 				registerFrame[1].U16 = 4; // Basesystem reset position
@@ -1511,7 +1577,7 @@ void flowmodbus() {
 					plustray = -1;
 					CaseTray = 0;
 					data_read = 0;
-					choice = 3;
+					choice = 7;
 					I2C_all(&data_read);
 					}
 				 else{
