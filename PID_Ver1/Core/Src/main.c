@@ -1240,6 +1240,7 @@ void home_yaxis(){
 void flowmodbus() {
 	switch (Mobus) {
 	case Initial:
+		homeflag = 0;
 		if(registerFrame[2].U16 == 0b0001 && laser_on_off == 0){ // Laser On
 			laser_flag = 1;
 			if(laser_flag == 1){
@@ -1250,7 +1251,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if(registerFrame[2].U16 == 0b0001 && laser_on_off == 1){ // Laser Off
+		else if(registerFrame[2].U16 == 0b0001 && laser_on_off == 1){ // Laser Off
 			laser_flag = 1;
 			if(laser_flag == 1){
 			laser_on_off = 0;
@@ -1260,7 +1261,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if(registerFrame[2].U16 == 0b0010 && laser_power == 0){ // Laser Power
+		else if(registerFrame[2].U16 == 0b0010 && laser_power == 0){ // Laser Power
 			laser_flag = 1;
 			if(laser_flag == 1){
 			laser_power = 1;
@@ -1270,7 +1271,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if(registerFrame[2].U16 == 0b0010 && laser_power == 1){ // Laser Power off
+		else if(registerFrame[2].U16 == 0b0010 && laser_power == 1){ // Laser Power off
 			laser_flag = 1;
 			if(laser_flag == 1){
 			laser_power = 0;
@@ -1280,7 +1281,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if(registerFrame[2].U16 == 0b0100){ // Laser Power off
+		else if(registerFrame[2].U16 == 0b0100){ // Laser Power off
 			laser_flag = 1;
 			if(laser_flag == 1){
 			choice = 8;
@@ -1289,7 +1290,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if(registerFrame[2].U16 == 0b1000){ // Laser Power off
+		else if(registerFrame[2].U16 == 0b1000){ // Laser Power off
 			laser_flag = 1;
 			if(laser_flag == 1){
 			choice = 9;
@@ -1298,7 +1299,7 @@ void flowmodbus() {
 			registerFrame[2].U16 = 0;
 			}
 		}
-		if (registerFrame[1].U16 == 0b00010) { // Set Place
+		 if (registerFrame[1].U16 == 0b00010) { // Set Place
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
 			Joystick_Control = 1;
@@ -1401,8 +1402,6 @@ void flowmodbus() {
 					posx = registerFrame[68].U16;
 					bottom_right_jog2[0] = (float) (posx) / 10;
 				}
-				posx = registerFrame[68].U16;
-				bottom_right_jog2[0] = (float) (posx) / 10;
 				bottom_right_jog2[1] = (float) (ReadDegree - 350); // Calculate Point y-axis
 				CheckTray++;
 			} else if (CheckTray == 2) {
@@ -1493,6 +1492,7 @@ void flowmodbus() {
 		registerFrame[66].U16 = 3000; // speed x-axis 300mm
 		registerFrame[67].U16 = 1; // Acc time 1mms
 		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
+		path = 1;
 		// y axis
 		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1){ // if Emergency Point mode on
 			choice = 4;
@@ -1515,7 +1515,6 @@ void flowmodbus() {
 				s = 0;
 				s2 = 0;
 				if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Tray mode On
-					path = 1;
 					Em_state = 1;
 					I2Cdone = 0;
 				}
@@ -1633,12 +1632,15 @@ void flowmodbus() {
 			break;
 			case 2:
 				 if(plustray == 17){
-					Mobus = Initial;
+					registerFrame[16].U16 = 4;
 					plustray = -1;
 					CaseTray = 0;
 					data_read = 0;
 					choice = 7;
+					indexposition = 0;
+					path = 0;
 					I2C_all(&data_read);
+					Mobus = Home;
 					}
 				 else{
 				if(indexposition >= (timecycle*100)){
@@ -1648,7 +1650,7 @@ void flowmodbus() {
 					}
 				 if(abs(error) < 0.2){
 					 if((plustray%2) != 0 || plustray == -1){ // Pick Case
-						registerFrame[16].U16 = 8; //Status Picking
+						registerFrame[16].U16 = 16; //Status Picking
 						s2 = 0;
 						s = 0;
 						 choice = 8;
@@ -1656,7 +1658,7 @@ void flowmodbus() {
 						 CaseTray = 3;
 					 }
 					 if(plustray%2 == 0){ // Place Case
-						registerFrame[16].U16 = 16; //Status Placing
+						registerFrame[16].U16 = 8; //Status Placing
 						s2 = 0;
 						s = 0;
 						 choice = 9;

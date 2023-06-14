@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00018caf  00000000  00000000  0003b0b8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   000171d9  00000000  00000000  00053d67  2**0
+ 17 .debug_line   000171e2  00000000  00000000  00053d67  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0009e970  00000000  00000000  0006af40  2**0
+ 18 .debug_str    0009e970  00000000  00000000  0006af49  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  001098b0  2**0
+ 19 .comment      00000050  00000000  00000000  001098b9  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00005818  00000000  00000000  00109900  2**2
+ 20 .debug_frame  00005818  00000000  00000000  0010990c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -7454,2172 +7454,2182 @@ void flowmodbus() {
  8003b84:	b08e      	sub	sp, #56	; 0x38
  8003b86:	af00      	add	r7, sp, #0
 	switch (Mobus) {
- 8003b88:	4b91      	ldr	r3, [pc, #580]	; (8003dd0 <flowmodbus+0x250>)
+ 8003b88:	4b95      	ldr	r3, [pc, #596]	; (8003de0 <flowmodbus+0x260>)
  8003b8a:	781b      	ldrb	r3, [r3, #0]
  8003b8c:	2b07      	cmp	r3, #7
  8003b8e:	f201 8080 	bhi.w	8004c92 <flowmodbus+0x1112>
  8003b92:	a201      	add	r2, pc, #4	; (adr r2, 8003b98 <flowmodbus+0x18>)
  8003b94:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
  8003b98:	08003bb9 	.word	0x08003bb9
- 8003b9c:	08003f7b 	.word	0x08003f7b
- 8003ba0:	08004283 	.word	0x08004283
- 8003ba4:	08004547 	.word	0x08004547
- 8003ba8:	08004555 	.word	0x08004555
- 8003bac:	08004803 	.word	0x08004803
- 8003bb0:	0800460f 	.word	0x0800460f
- 8003bb4:	0800473f 	.word	0x0800473f
+ 8003b9c:	08003f8f 	.word	0x08003f8f
+ 8003ba0:	08004271 	.word	0x08004271
+ 8003ba4:	08004537 	.word	0x08004537
+ 8003ba8:	08004545 	.word	0x08004545
+ 8003bac:	080047f3 	.word	0x080047f3
+ 8003bb0:	08004605 	.word	0x08004605
+ 8003bb4:	0800472f 	.word	0x0800472f
 	case Initial:
+		homeflag = 0;
+ 8003bb8:	4b8a      	ldr	r3, [pc, #552]	; (8003de4 <flowmodbus+0x264>)
+ 8003bba:	2200      	movs	r2, #0
+ 8003bbc:	601a      	str	r2, [r3, #0]
 		if(registerFrame[2].U16 == 0b0001 && laser_on_off == 0){ // Laser On
- 8003bb8:	4b86      	ldr	r3, [pc, #536]	; (8003dd4 <flowmodbus+0x254>)
- 8003bba:	889b      	ldrh	r3, [r3, #4]
- 8003bbc:	2b01      	cmp	r3, #1
- 8003bbe:	d119      	bne.n	8003bf4 <flowmodbus+0x74>
- 8003bc0:	4b85      	ldr	r3, [pc, #532]	; (8003dd8 <flowmodbus+0x258>)
- 8003bc2:	681b      	ldr	r3, [r3, #0]
- 8003bc4:	2b00      	cmp	r3, #0
- 8003bc6:	d115      	bne.n	8003bf4 <flowmodbus+0x74>
+ 8003bbe:	4b8a      	ldr	r3, [pc, #552]	; (8003de8 <flowmodbus+0x268>)
+ 8003bc0:	889b      	ldrh	r3, [r3, #4]
+ 8003bc2:	2b01      	cmp	r3, #1
+ 8003bc4:	d11b      	bne.n	8003bfe <flowmodbus+0x7e>
+ 8003bc6:	4b89      	ldr	r3, [pc, #548]	; (8003dec <flowmodbus+0x26c>)
+ 8003bc8:	681b      	ldr	r3, [r3, #0]
+ 8003bca:	2b00      	cmp	r3, #0
+ 8003bcc:	d117      	bne.n	8003bfe <flowmodbus+0x7e>
 			laser_flag = 1;
- 8003bc8:	4b84      	ldr	r3, [pc, #528]	; (8003ddc <flowmodbus+0x25c>)
- 8003bca:	2201      	movs	r2, #1
- 8003bcc:	601a      	str	r2, [r3, #0]
+ 8003bce:	4b88      	ldr	r3, [pc, #544]	; (8003df0 <flowmodbus+0x270>)
+ 8003bd0:	2201      	movs	r2, #1
+ 8003bd2:	601a      	str	r2, [r3, #0]
 			if(laser_flag == 1){
- 8003bce:	4b83      	ldr	r3, [pc, #524]	; (8003ddc <flowmodbus+0x25c>)
- 8003bd0:	681b      	ldr	r3, [r3, #0]
- 8003bd2:	2b01      	cmp	r3, #1
- 8003bd4:	d10e      	bne.n	8003bf4 <flowmodbus+0x74>
+ 8003bd4:	4b86      	ldr	r3, [pc, #536]	; (8003df0 <flowmodbus+0x270>)
+ 8003bd6:	681b      	ldr	r3, [r3, #0]
+ 8003bd8:	2b01      	cmp	r3, #1
+ 8003bda:	f040 809c 	bne.w	8003d16 <flowmodbus+0x196>
 			laser_on_off = 1;
- 8003bd6:	4b80      	ldr	r3, [pc, #512]	; (8003dd8 <flowmodbus+0x258>)
- 8003bd8:	2201      	movs	r2, #1
- 8003bda:	601a      	str	r2, [r3, #0]
+ 8003bde:	4b83      	ldr	r3, [pc, #524]	; (8003dec <flowmodbus+0x26c>)
+ 8003be0:	2201      	movs	r2, #1
+ 8003be2:	601a      	str	r2, [r3, #0]
 			choice = 1;
- 8003bdc:	4b80      	ldr	r3, [pc, #512]	; (8003de0 <flowmodbus+0x260>)
- 8003bde:	2201      	movs	r2, #1
- 8003be0:	601a      	str	r2, [r3, #0]
+ 8003be4:	4b83      	ldr	r3, [pc, #524]	; (8003df4 <flowmodbus+0x274>)
+ 8003be6:	2201      	movs	r2, #1
+ 8003be8:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003be2:	4880      	ldr	r0, [pc, #512]	; (8003de4 <flowmodbus+0x264>)
- 8003be4:	f7ff f968 	bl	8002eb8 <I2C_all>
+ 8003bea:	4883      	ldr	r0, [pc, #524]	; (8003df8 <flowmodbus+0x278>)
+ 8003bec:	f7ff f964 	bl	8002eb8 <I2C_all>
 			laser_flag = 0;
- 8003be8:	4b7c      	ldr	r3, [pc, #496]	; (8003ddc <flowmodbus+0x25c>)
- 8003bea:	2200      	movs	r2, #0
- 8003bec:	601a      	str	r2, [r3, #0]
+ 8003bf0:	4b7f      	ldr	r3, [pc, #508]	; (8003df0 <flowmodbus+0x270>)
+ 8003bf2:	2200      	movs	r2, #0
+ 8003bf4:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003bee:	4b79      	ldr	r3, [pc, #484]	; (8003dd4 <flowmodbus+0x254>)
- 8003bf0:	2200      	movs	r2, #0
- 8003bf2:	809a      	strh	r2, [r3, #4]
+ 8003bf6:	4b7c      	ldr	r3, [pc, #496]	; (8003de8 <flowmodbus+0x268>)
+ 8003bf8:	2200      	movs	r2, #0
+ 8003bfa:	809a      	strh	r2, [r3, #4]
+			if(laser_flag == 1){
+ 8003bfc:	e08b      	b.n	8003d16 <flowmodbus+0x196>
 			}
 		}
-		if(registerFrame[2].U16 == 0b0001 && laser_on_off == 1){ // Laser Off
- 8003bf4:	4b77      	ldr	r3, [pc, #476]	; (8003dd4 <flowmodbus+0x254>)
- 8003bf6:	889b      	ldrh	r3, [r3, #4]
- 8003bf8:	2b01      	cmp	r3, #1
- 8003bfa:	d119      	bne.n	8003c30 <flowmodbus+0xb0>
- 8003bfc:	4b76      	ldr	r3, [pc, #472]	; (8003dd8 <flowmodbus+0x258>)
- 8003bfe:	681b      	ldr	r3, [r3, #0]
- 8003c00:	2b01      	cmp	r3, #1
- 8003c02:	d115      	bne.n	8003c30 <flowmodbus+0xb0>
+		else if(registerFrame[2].U16 == 0b0001 && laser_on_off == 1){ // Laser Off
+ 8003bfe:	4b7a      	ldr	r3, [pc, #488]	; (8003de8 <flowmodbus+0x268>)
+ 8003c00:	889b      	ldrh	r3, [r3, #4]
+ 8003c02:	2b01      	cmp	r3, #1
+ 8003c04:	d11a      	bne.n	8003c3c <flowmodbus+0xbc>
+ 8003c06:	4b79      	ldr	r3, [pc, #484]	; (8003dec <flowmodbus+0x26c>)
+ 8003c08:	681b      	ldr	r3, [r3, #0]
+ 8003c0a:	2b01      	cmp	r3, #1
+ 8003c0c:	d116      	bne.n	8003c3c <flowmodbus+0xbc>
 			laser_flag = 1;
- 8003c04:	4b75      	ldr	r3, [pc, #468]	; (8003ddc <flowmodbus+0x25c>)
- 8003c06:	2201      	movs	r2, #1
- 8003c08:	601a      	str	r2, [r3, #0]
+ 8003c0e:	4b78      	ldr	r3, [pc, #480]	; (8003df0 <flowmodbus+0x270>)
+ 8003c10:	2201      	movs	r2, #1
+ 8003c12:	601a      	str	r2, [r3, #0]
 			if(laser_flag == 1){
- 8003c0a:	4b74      	ldr	r3, [pc, #464]	; (8003ddc <flowmodbus+0x25c>)
- 8003c0c:	681b      	ldr	r3, [r3, #0]
- 8003c0e:	2b01      	cmp	r3, #1
- 8003c10:	d10e      	bne.n	8003c30 <flowmodbus+0xb0>
+ 8003c14:	4b76      	ldr	r3, [pc, #472]	; (8003df0 <flowmodbus+0x270>)
+ 8003c16:	681b      	ldr	r3, [r3, #0]
+ 8003c18:	2b01      	cmp	r3, #1
+ 8003c1a:	d17c      	bne.n	8003d16 <flowmodbus+0x196>
 			laser_on_off = 0;
- 8003c12:	4b71      	ldr	r3, [pc, #452]	; (8003dd8 <flowmodbus+0x258>)
- 8003c14:	2200      	movs	r2, #0
- 8003c16:	601a      	str	r2, [r3, #0]
+ 8003c1c:	4b73      	ldr	r3, [pc, #460]	; (8003dec <flowmodbus+0x26c>)
+ 8003c1e:	2200      	movs	r2, #0
+ 8003c20:	601a      	str	r2, [r3, #0]
 			choice = 2;
- 8003c18:	4b71      	ldr	r3, [pc, #452]	; (8003de0 <flowmodbus+0x260>)
- 8003c1a:	2202      	movs	r2, #2
- 8003c1c:	601a      	str	r2, [r3, #0]
+ 8003c22:	4b74      	ldr	r3, [pc, #464]	; (8003df4 <flowmodbus+0x274>)
+ 8003c24:	2202      	movs	r2, #2
+ 8003c26:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003c1e:	4871      	ldr	r0, [pc, #452]	; (8003de4 <flowmodbus+0x264>)
- 8003c20:	f7ff f94a 	bl	8002eb8 <I2C_all>
+ 8003c28:	4873      	ldr	r0, [pc, #460]	; (8003df8 <flowmodbus+0x278>)
+ 8003c2a:	f7ff f945 	bl	8002eb8 <I2C_all>
 			laser_flag = 0;
- 8003c24:	4b6d      	ldr	r3, [pc, #436]	; (8003ddc <flowmodbus+0x25c>)
- 8003c26:	2200      	movs	r2, #0
- 8003c28:	601a      	str	r2, [r3, #0]
+ 8003c2e:	4b70      	ldr	r3, [pc, #448]	; (8003df0 <flowmodbus+0x270>)
+ 8003c30:	2200      	movs	r2, #0
+ 8003c32:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003c2a:	4b6a      	ldr	r3, [pc, #424]	; (8003dd4 <flowmodbus+0x254>)
- 8003c2c:	2200      	movs	r2, #0
- 8003c2e:	809a      	strh	r2, [r3, #4]
+ 8003c34:	4b6c      	ldr	r3, [pc, #432]	; (8003de8 <flowmodbus+0x268>)
+ 8003c36:	2200      	movs	r2, #0
+ 8003c38:	809a      	strh	r2, [r3, #4]
+			if(laser_flag == 1){
+ 8003c3a:	e06c      	b.n	8003d16 <flowmodbus+0x196>
 			}
 		}
-		if(registerFrame[2].U16 == 0b0010 && laser_power == 0){ // Laser Power
- 8003c30:	4b68      	ldr	r3, [pc, #416]	; (8003dd4 <flowmodbus+0x254>)
- 8003c32:	889b      	ldrh	r3, [r3, #4]
- 8003c34:	2b02      	cmp	r3, #2
- 8003c36:	d119      	bne.n	8003c6c <flowmodbus+0xec>
- 8003c38:	4b6b      	ldr	r3, [pc, #428]	; (8003de8 <flowmodbus+0x268>)
- 8003c3a:	681b      	ldr	r3, [r3, #0]
- 8003c3c:	2b00      	cmp	r3, #0
- 8003c3e:	d115      	bne.n	8003c6c <flowmodbus+0xec>
+		else if(registerFrame[2].U16 == 0b0010 && laser_power == 0){ // Laser Power
+ 8003c3c:	4b6a      	ldr	r3, [pc, #424]	; (8003de8 <flowmodbus+0x268>)
+ 8003c3e:	889b      	ldrh	r3, [r3, #4]
+ 8003c40:	2b02      	cmp	r3, #2
+ 8003c42:	d11a      	bne.n	8003c7a <flowmodbus+0xfa>
+ 8003c44:	4b6d      	ldr	r3, [pc, #436]	; (8003dfc <flowmodbus+0x27c>)
+ 8003c46:	681b      	ldr	r3, [r3, #0]
+ 8003c48:	2b00      	cmp	r3, #0
+ 8003c4a:	d116      	bne.n	8003c7a <flowmodbus+0xfa>
 			laser_flag = 1;
- 8003c40:	4b66      	ldr	r3, [pc, #408]	; (8003ddc <flowmodbus+0x25c>)
- 8003c42:	2201      	movs	r2, #1
- 8003c44:	601a      	str	r2, [r3, #0]
+ 8003c4c:	4b68      	ldr	r3, [pc, #416]	; (8003df0 <flowmodbus+0x270>)
+ 8003c4e:	2201      	movs	r2, #1
+ 8003c50:	601a      	str	r2, [r3, #0]
 			if(laser_flag == 1){
- 8003c46:	4b65      	ldr	r3, [pc, #404]	; (8003ddc <flowmodbus+0x25c>)
- 8003c48:	681b      	ldr	r3, [r3, #0]
- 8003c4a:	2b01      	cmp	r3, #1
- 8003c4c:	d10e      	bne.n	8003c6c <flowmodbus+0xec>
+ 8003c52:	4b67      	ldr	r3, [pc, #412]	; (8003df0 <flowmodbus+0x270>)
+ 8003c54:	681b      	ldr	r3, [r3, #0]
+ 8003c56:	2b01      	cmp	r3, #1
+ 8003c58:	d15d      	bne.n	8003d16 <flowmodbus+0x196>
 			laser_power = 1;
- 8003c4e:	4b66      	ldr	r3, [pc, #408]	; (8003de8 <flowmodbus+0x268>)
- 8003c50:	2201      	movs	r2, #1
- 8003c52:	601a      	str	r2, [r3, #0]
+ 8003c5a:	4b68      	ldr	r3, [pc, #416]	; (8003dfc <flowmodbus+0x27c>)
+ 8003c5c:	2201      	movs	r2, #1
+ 8003c5e:	601a      	str	r2, [r3, #0]
 			choice = 6;
- 8003c54:	4b62      	ldr	r3, [pc, #392]	; (8003de0 <flowmodbus+0x260>)
- 8003c56:	2206      	movs	r2, #6
- 8003c58:	601a      	str	r2, [r3, #0]
-			I2C_all(&data_read);
- 8003c5a:	4862      	ldr	r0, [pc, #392]	; (8003de4 <flowmodbus+0x264>)
- 8003c5c:	f7ff f92c 	bl	8002eb8 <I2C_all>
-			laser_flag = 0;
- 8003c60:	4b5e      	ldr	r3, [pc, #376]	; (8003ddc <flowmodbus+0x25c>)
- 8003c62:	2200      	movs	r2, #0
+ 8003c60:	4b64      	ldr	r3, [pc, #400]	; (8003df4 <flowmodbus+0x274>)
+ 8003c62:	2206      	movs	r2, #6
  8003c64:	601a      	str	r2, [r3, #0]
+			I2C_all(&data_read);
+ 8003c66:	4864      	ldr	r0, [pc, #400]	; (8003df8 <flowmodbus+0x278>)
+ 8003c68:	f7ff f926 	bl	8002eb8 <I2C_all>
+			laser_flag = 0;
+ 8003c6c:	4b60      	ldr	r3, [pc, #384]	; (8003df0 <flowmodbus+0x270>)
+ 8003c6e:	2200      	movs	r2, #0
+ 8003c70:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003c66:	4b5b      	ldr	r3, [pc, #364]	; (8003dd4 <flowmodbus+0x254>)
- 8003c68:	2200      	movs	r2, #0
- 8003c6a:	809a      	strh	r2, [r3, #4]
+ 8003c72:	4b5d      	ldr	r3, [pc, #372]	; (8003de8 <flowmodbus+0x268>)
+ 8003c74:	2200      	movs	r2, #0
+ 8003c76:	809a      	strh	r2, [r3, #4]
+			if(laser_flag == 1){
+ 8003c78:	e04d      	b.n	8003d16 <flowmodbus+0x196>
 			}
 		}
-		if(registerFrame[2].U16 == 0b0010 && laser_power == 1){ // Laser Power off
- 8003c6c:	4b59      	ldr	r3, [pc, #356]	; (8003dd4 <flowmodbus+0x254>)
- 8003c6e:	889b      	ldrh	r3, [r3, #4]
- 8003c70:	2b02      	cmp	r3, #2
- 8003c72:	d119      	bne.n	8003ca8 <flowmodbus+0x128>
- 8003c74:	4b5c      	ldr	r3, [pc, #368]	; (8003de8 <flowmodbus+0x268>)
- 8003c76:	681b      	ldr	r3, [r3, #0]
- 8003c78:	2b01      	cmp	r3, #1
- 8003c7a:	d115      	bne.n	8003ca8 <flowmodbus+0x128>
-			laser_flag = 1;
- 8003c7c:	4b57      	ldr	r3, [pc, #348]	; (8003ddc <flowmodbus+0x25c>)
- 8003c7e:	2201      	movs	r2, #1
- 8003c80:	601a      	str	r2, [r3, #0]
-			if(laser_flag == 1){
- 8003c82:	4b56      	ldr	r3, [pc, #344]	; (8003ddc <flowmodbus+0x25c>)
+		else if(registerFrame[2].U16 == 0b0010 && laser_power == 1){ // Laser Power off
+ 8003c7a:	4b5b      	ldr	r3, [pc, #364]	; (8003de8 <flowmodbus+0x268>)
+ 8003c7c:	889b      	ldrh	r3, [r3, #4]
+ 8003c7e:	2b02      	cmp	r3, #2
+ 8003c80:	d11a      	bne.n	8003cb8 <flowmodbus+0x138>
+ 8003c82:	4b5e      	ldr	r3, [pc, #376]	; (8003dfc <flowmodbus+0x27c>)
  8003c84:	681b      	ldr	r3, [r3, #0]
  8003c86:	2b01      	cmp	r3, #1
- 8003c88:	d10e      	bne.n	8003ca8 <flowmodbus+0x128>
-			laser_power = 0;
- 8003c8a:	4b57      	ldr	r3, [pc, #348]	; (8003de8 <flowmodbus+0x268>)
- 8003c8c:	2200      	movs	r2, #0
+ 8003c88:	d116      	bne.n	8003cb8 <flowmodbus+0x138>
+			laser_flag = 1;
+ 8003c8a:	4b59      	ldr	r3, [pc, #356]	; (8003df0 <flowmodbus+0x270>)
+ 8003c8c:	2201      	movs	r2, #1
  8003c8e:	601a      	str	r2, [r3, #0]
+			if(laser_flag == 1){
+ 8003c90:	4b57      	ldr	r3, [pc, #348]	; (8003df0 <flowmodbus+0x270>)
+ 8003c92:	681b      	ldr	r3, [r3, #0]
+ 8003c94:	2b01      	cmp	r3, #1
+ 8003c96:	d13e      	bne.n	8003d16 <flowmodbus+0x196>
+			laser_power = 0;
+ 8003c98:	4b58      	ldr	r3, [pc, #352]	; (8003dfc <flowmodbus+0x27c>)
+ 8003c9a:	2200      	movs	r2, #0
+ 8003c9c:	601a      	str	r2, [r3, #0]
 			choice = 6;
- 8003c90:	4b53      	ldr	r3, [pc, #332]	; (8003de0 <flowmodbus+0x260>)
- 8003c92:	2206      	movs	r2, #6
- 8003c94:	601a      	str	r2, [r3, #0]
+ 8003c9e:	4b55      	ldr	r3, [pc, #340]	; (8003df4 <flowmodbus+0x274>)
+ 8003ca0:	2206      	movs	r2, #6
+ 8003ca2:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003c96:	4853      	ldr	r0, [pc, #332]	; (8003de4 <flowmodbus+0x264>)
- 8003c98:	f7ff f90e 	bl	8002eb8 <I2C_all>
+ 8003ca4:	4854      	ldr	r0, [pc, #336]	; (8003df8 <flowmodbus+0x278>)
+ 8003ca6:	f7ff f907 	bl	8002eb8 <I2C_all>
 			laser_flag = 0;
- 8003c9c:	4b4f      	ldr	r3, [pc, #316]	; (8003ddc <flowmodbus+0x25c>)
- 8003c9e:	2200      	movs	r2, #0
- 8003ca0:	601a      	str	r2, [r3, #0]
+ 8003caa:	4b51      	ldr	r3, [pc, #324]	; (8003df0 <flowmodbus+0x270>)
+ 8003cac:	2200      	movs	r2, #0
+ 8003cae:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003ca2:	4b4c      	ldr	r3, [pc, #304]	; (8003dd4 <flowmodbus+0x254>)
- 8003ca4:	2200      	movs	r2, #0
- 8003ca6:	809a      	strh	r2, [r3, #4]
+ 8003cb0:	4b4d      	ldr	r3, [pc, #308]	; (8003de8 <flowmodbus+0x268>)
+ 8003cb2:	2200      	movs	r2, #0
+ 8003cb4:	809a      	strh	r2, [r3, #4]
+			if(laser_flag == 1){
+ 8003cb6:	e02e      	b.n	8003d16 <flowmodbus+0x196>
 			}
 		}
-		if(registerFrame[2].U16 == 0b0100){ // Laser Power off
- 8003ca8:	4b4a      	ldr	r3, [pc, #296]	; (8003dd4 <flowmodbus+0x254>)
- 8003caa:	889b      	ldrh	r3, [r3, #4]
- 8003cac:	2b04      	cmp	r3, #4
- 8003cae:	d112      	bne.n	8003cd6 <flowmodbus+0x156>
+		else if(registerFrame[2].U16 == 0b0100){ // Laser Power off
+ 8003cb8:	4b4b      	ldr	r3, [pc, #300]	; (8003de8 <flowmodbus+0x268>)
+ 8003cba:	889b      	ldrh	r3, [r3, #4]
+ 8003cbc:	2b04      	cmp	r3, #4
+ 8003cbe:	d113      	bne.n	8003ce8 <flowmodbus+0x168>
 			laser_flag = 1;
- 8003cb0:	4b4a      	ldr	r3, [pc, #296]	; (8003ddc <flowmodbus+0x25c>)
- 8003cb2:	2201      	movs	r2, #1
- 8003cb4:	601a      	str	r2, [r3, #0]
+ 8003cc0:	4b4b      	ldr	r3, [pc, #300]	; (8003df0 <flowmodbus+0x270>)
+ 8003cc2:	2201      	movs	r2, #1
+ 8003cc4:	601a      	str	r2, [r3, #0]
 			if(laser_flag == 1){
- 8003cb6:	4b49      	ldr	r3, [pc, #292]	; (8003ddc <flowmodbus+0x25c>)
- 8003cb8:	681b      	ldr	r3, [r3, #0]
- 8003cba:	2b01      	cmp	r3, #1
- 8003cbc:	d10b      	bne.n	8003cd6 <flowmodbus+0x156>
+ 8003cc6:	4b4a      	ldr	r3, [pc, #296]	; (8003df0 <flowmodbus+0x270>)
+ 8003cc8:	681b      	ldr	r3, [r3, #0]
+ 8003cca:	2b01      	cmp	r3, #1
+ 8003ccc:	d123      	bne.n	8003d16 <flowmodbus+0x196>
 			choice = 8;
- 8003cbe:	4b48      	ldr	r3, [pc, #288]	; (8003de0 <flowmodbus+0x260>)
- 8003cc0:	2208      	movs	r2, #8
- 8003cc2:	601a      	str	r2, [r3, #0]
+ 8003cce:	4b49      	ldr	r3, [pc, #292]	; (8003df4 <flowmodbus+0x274>)
+ 8003cd0:	2208      	movs	r2, #8
+ 8003cd2:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003cc4:	4847      	ldr	r0, [pc, #284]	; (8003de4 <flowmodbus+0x264>)
- 8003cc6:	f7ff f8f7 	bl	8002eb8 <I2C_all>
+ 8003cd4:	4848      	ldr	r0, [pc, #288]	; (8003df8 <flowmodbus+0x278>)
+ 8003cd6:	f7ff f8ef 	bl	8002eb8 <I2C_all>
 			laser_flag = 0;
- 8003cca:	4b44      	ldr	r3, [pc, #272]	; (8003ddc <flowmodbus+0x25c>)
- 8003ccc:	2200      	movs	r2, #0
- 8003cce:	601a      	str	r2, [r3, #0]
+ 8003cda:	4b45      	ldr	r3, [pc, #276]	; (8003df0 <flowmodbus+0x270>)
+ 8003cdc:	2200      	movs	r2, #0
+ 8003cde:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003cd0:	4b40      	ldr	r3, [pc, #256]	; (8003dd4 <flowmodbus+0x254>)
- 8003cd2:	2200      	movs	r2, #0
- 8003cd4:	809a      	strh	r2, [r3, #4]
+ 8003ce0:	4b41      	ldr	r3, [pc, #260]	; (8003de8 <flowmodbus+0x268>)
+ 8003ce2:	2200      	movs	r2, #0
+ 8003ce4:	809a      	strh	r2, [r3, #4]
+ 8003ce6:	e016      	b.n	8003d16 <flowmodbus+0x196>
 			}
 		}
-		if(registerFrame[2].U16 == 0b1000){ // Laser Power off
- 8003cd6:	4b3f      	ldr	r3, [pc, #252]	; (8003dd4 <flowmodbus+0x254>)
- 8003cd8:	889b      	ldrh	r3, [r3, #4]
- 8003cda:	2b08      	cmp	r3, #8
- 8003cdc:	d112      	bne.n	8003d04 <flowmodbus+0x184>
+		else if(registerFrame[2].U16 == 0b1000){ // Laser Power off
+ 8003ce8:	4b3f      	ldr	r3, [pc, #252]	; (8003de8 <flowmodbus+0x268>)
+ 8003cea:	889b      	ldrh	r3, [r3, #4]
+ 8003cec:	2b08      	cmp	r3, #8
+ 8003cee:	d112      	bne.n	8003d16 <flowmodbus+0x196>
 			laser_flag = 1;
- 8003cde:	4b3f      	ldr	r3, [pc, #252]	; (8003ddc <flowmodbus+0x25c>)
- 8003ce0:	2201      	movs	r2, #1
- 8003ce2:	601a      	str	r2, [r3, #0]
+ 8003cf0:	4b3f      	ldr	r3, [pc, #252]	; (8003df0 <flowmodbus+0x270>)
+ 8003cf2:	2201      	movs	r2, #1
+ 8003cf4:	601a      	str	r2, [r3, #0]
 			if(laser_flag == 1){
- 8003ce4:	4b3d      	ldr	r3, [pc, #244]	; (8003ddc <flowmodbus+0x25c>)
- 8003ce6:	681b      	ldr	r3, [r3, #0]
- 8003ce8:	2b01      	cmp	r3, #1
- 8003cea:	d10b      	bne.n	8003d04 <flowmodbus+0x184>
+ 8003cf6:	4b3e      	ldr	r3, [pc, #248]	; (8003df0 <flowmodbus+0x270>)
+ 8003cf8:	681b      	ldr	r3, [r3, #0]
+ 8003cfa:	2b01      	cmp	r3, #1
+ 8003cfc:	d10b      	bne.n	8003d16 <flowmodbus+0x196>
 			choice = 9;
- 8003cec:	4b3c      	ldr	r3, [pc, #240]	; (8003de0 <flowmodbus+0x260>)
- 8003cee:	2209      	movs	r2, #9
- 8003cf0:	601a      	str	r2, [r3, #0]
+ 8003cfe:	4b3d      	ldr	r3, [pc, #244]	; (8003df4 <flowmodbus+0x274>)
+ 8003d00:	2209      	movs	r2, #9
+ 8003d02:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003cf2:	483c      	ldr	r0, [pc, #240]	; (8003de4 <flowmodbus+0x264>)
- 8003cf4:	f7ff f8e0 	bl	8002eb8 <I2C_all>
+ 8003d04:	483c      	ldr	r0, [pc, #240]	; (8003df8 <flowmodbus+0x278>)
+ 8003d06:	f7ff f8d7 	bl	8002eb8 <I2C_all>
 			laser_flag = 0;
- 8003cf8:	4b38      	ldr	r3, [pc, #224]	; (8003ddc <flowmodbus+0x25c>)
- 8003cfa:	2200      	movs	r2, #0
- 8003cfc:	601a      	str	r2, [r3, #0]
+ 8003d0a:	4b39      	ldr	r3, [pc, #228]	; (8003df0 <flowmodbus+0x270>)
+ 8003d0c:	2200      	movs	r2, #0
+ 8003d0e:	601a      	str	r2, [r3, #0]
 			registerFrame[2].U16 = 0;
- 8003cfe:	4b35      	ldr	r3, [pc, #212]	; (8003dd4 <flowmodbus+0x254>)
- 8003d00:	2200      	movs	r2, #0
- 8003d02:	809a      	strh	r2, [r3, #4]
+ 8003d10:	4b35      	ldr	r3, [pc, #212]	; (8003de8 <flowmodbus+0x268>)
+ 8003d12:	2200      	movs	r2, #0
+ 8003d14:	809a      	strh	r2, [r3, #4]
 			}
 		}
-		if (registerFrame[1].U16 == 0b00010) { // Set Place
- 8003d04:	4b33      	ldr	r3, [pc, #204]	; (8003dd4 <flowmodbus+0x254>)
- 8003d06:	885b      	ldrh	r3, [r3, #2]
- 8003d08:	2b02      	cmp	r3, #2
- 8003d0a:	d113      	bne.n	8003d34 <flowmodbus+0x1b4>
+		 if (registerFrame[1].U16 == 0b00010) { // Set Place
+ 8003d16:	4b34      	ldr	r3, [pc, #208]	; (8003de8 <flowmodbus+0x268>)
+ 8003d18:	885b      	ldrh	r3, [r3, #2]
+ 8003d1a:	2b02      	cmp	r3, #2
+ 8003d1c:	d113      	bne.n	8003d46 <flowmodbus+0x1c6>
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
- 8003d0c:	4b31      	ldr	r3, [pc, #196]	; (8003dd4 <flowmodbus+0x254>)
- 8003d0e:	2200      	movs	r2, #0
- 8003d10:	805a      	strh	r2, [r3, #2]
+ 8003d1e:	4b32      	ldr	r3, [pc, #200]	; (8003de8 <flowmodbus+0x268>)
+ 8003d20:	2200      	movs	r2, #0
+ 8003d22:	805a      	strh	r2, [r3, #2]
 			registerFrame[16].U16 = 2; // 0x10 y-axis Set Place
- 8003d12:	4b30      	ldr	r3, [pc, #192]	; (8003dd4 <flowmodbus+0x254>)
- 8003d14:	2202      	movs	r2, #2
- 8003d16:	841a      	strh	r2, [r3, #32]
+ 8003d24:	4b30      	ldr	r3, [pc, #192]	; (8003de8 <flowmodbus+0x268>)
+ 8003d26:	2202      	movs	r2, #2
+ 8003d28:	841a      	strh	r2, [r3, #32]
 			Joystick_Control = 1;
- 8003d18:	4b34      	ldr	r3, [pc, #208]	; (8003dec <flowmodbus+0x26c>)
- 8003d1a:	2201      	movs	r2, #1
- 8003d1c:	601a      	str	r2, [r3, #0]
-			choice = 1;
- 8003d1e:	4b30      	ldr	r3, [pc, #192]	; (8003de0 <flowmodbus+0x260>)
- 8003d20:	2201      	movs	r2, #1
- 8003d22:	601a      	str	r2, [r3, #0]
-			I2C_all(&data_read);
- 8003d24:	482f      	ldr	r0, [pc, #188]	; (8003de4 <flowmodbus+0x264>)
- 8003d26:	f7ff f8c7 	bl	8002eb8 <I2C_all>
-			Mobus = Jogging_Place;
- 8003d2a:	4b29      	ldr	r3, [pc, #164]	; (8003dd0 <flowmodbus+0x250>)
+ 8003d2a:	4b35      	ldr	r3, [pc, #212]	; (8003e00 <flowmodbus+0x280>)
  8003d2c:	2201      	movs	r2, #1
- 8003d2e:	701a      	strb	r2, [r3, #0]
+ 8003d2e:	601a      	str	r2, [r3, #0]
+			choice = 1;
+ 8003d30:	4b30      	ldr	r3, [pc, #192]	; (8003df4 <flowmodbus+0x274>)
+ 8003d32:	2201      	movs	r2, #1
+ 8003d34:	601a      	str	r2, [r3, #0]
+			I2C_all(&data_read);
+ 8003d36:	4830      	ldr	r0, [pc, #192]	; (8003df8 <flowmodbus+0x278>)
+ 8003d38:	f7ff f8be 	bl	8002eb8 <I2C_all>
+			Mobus = Jogging_Place;
+ 8003d3c:	4b28      	ldr	r3, [pc, #160]	; (8003de0 <flowmodbus+0x260>)
+ 8003d3e:	2201      	movs	r2, #1
+ 8003d40:	701a      	strb	r2, [r3, #0]
 				point_x[b++] = transformedPoints[j][0];
 				point_x[b++] = transformedPoints2[j][0];
 			}
 			Mobus = Run_TrayMode;
 		}
 		break;
- 8003d30:	f000 bf79 	b.w	8004c26 <flowmodbus+0x10a6>
+ 8003d42:	f000 bfa1 	b.w	8004c88 <flowmodbus+0x1108>
 		} else if (registerFrame[1].U16 == 0b00001) { //Set Pick
- 8003d34:	4b27      	ldr	r3, [pc, #156]	; (8003dd4 <flowmodbus+0x254>)
- 8003d36:	885b      	ldrh	r3, [r3, #2]
- 8003d38:	2b01      	cmp	r3, #1
- 8003d3a:	d113      	bne.n	8003d64 <flowmodbus+0x1e4>
+ 8003d46:	4b28      	ldr	r3, [pc, #160]	; (8003de8 <flowmodbus+0x268>)
+ 8003d48:	885b      	ldrh	r3, [r3, #2]
+ 8003d4a:	2b01      	cmp	r3, #1
+ 8003d4c:	d113      	bne.n	8003d76 <flowmodbus+0x1f6>
 			registerFrame[1].U16 = 0; // 0x01 base system reset place tray
- 8003d3c:	4b25      	ldr	r3, [pc, #148]	; (8003dd4 <flowmodbus+0x254>)
- 8003d3e:	2200      	movs	r2, #0
- 8003d40:	805a      	strh	r2, [r3, #2]
+ 8003d4e:	4b26      	ldr	r3, [pc, #152]	; (8003de8 <flowmodbus+0x268>)
+ 8003d50:	2200      	movs	r2, #0
+ 8003d52:	805a      	strh	r2, [r3, #2]
 			registerFrame[16].U16 = 1; // 0x10 y-axis Set Pick
- 8003d42:	4b24      	ldr	r3, [pc, #144]	; (8003dd4 <flowmodbus+0x254>)
- 8003d44:	2201      	movs	r2, #1
- 8003d46:	841a      	strh	r2, [r3, #32]
+ 8003d54:	4b24      	ldr	r3, [pc, #144]	; (8003de8 <flowmodbus+0x268>)
+ 8003d56:	2201      	movs	r2, #1
+ 8003d58:	841a      	strh	r2, [r3, #32]
 			Joystick_Control = 1;
- 8003d48:	4b28      	ldr	r3, [pc, #160]	; (8003dec <flowmodbus+0x26c>)
- 8003d4a:	2201      	movs	r2, #1
- 8003d4c:	601a      	str	r2, [r3, #0]
+ 8003d5a:	4b29      	ldr	r3, [pc, #164]	; (8003e00 <flowmodbus+0x280>)
+ 8003d5c:	2201      	movs	r2, #1
+ 8003d5e:	601a      	str	r2, [r3, #0]
 			choice = 1;
- 8003d4e:	4b24      	ldr	r3, [pc, #144]	; (8003de0 <flowmodbus+0x260>)
- 8003d50:	2201      	movs	r2, #1
- 8003d52:	601a      	str	r2, [r3, #0]
+ 8003d60:	4b24      	ldr	r3, [pc, #144]	; (8003df4 <flowmodbus+0x274>)
+ 8003d62:	2201      	movs	r2, #1
+ 8003d64:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8003d54:	4823      	ldr	r0, [pc, #140]	; (8003de4 <flowmodbus+0x264>)
- 8003d56:	f7ff f8af 	bl	8002eb8 <I2C_all>
+ 8003d66:	4824      	ldr	r0, [pc, #144]	; (8003df8 <flowmodbus+0x278>)
+ 8003d68:	f7ff f8a6 	bl	8002eb8 <I2C_all>
 			Mobus = Jogging_Pick;
- 8003d5a:	4b1d      	ldr	r3, [pc, #116]	; (8003dd0 <flowmodbus+0x250>)
- 8003d5c:	2202      	movs	r2, #2
- 8003d5e:	701a      	strb	r2, [r3, #0]
+ 8003d6c:	4b1c      	ldr	r3, [pc, #112]	; (8003de0 <flowmodbus+0x260>)
+ 8003d6e:	2202      	movs	r2, #2
+ 8003d70:	701a      	strb	r2, [r3, #0]
 		break;
- 8003d60:	f000 bf61 	b.w	8004c26 <flowmodbus+0x10a6>
+ 8003d72:	f000 bf89 	b.w	8004c88 <flowmodbus+0x1108>
 		} else if (registerFrame[1].U16 == 0b10000) { // Run point Mode
- 8003d64:	4b1b      	ldr	r3, [pc, #108]	; (8003dd4 <flowmodbus+0x254>)
- 8003d66:	885b      	ldrh	r3, [r3, #2]
- 8003d68:	2b10      	cmp	r3, #16
- 8003d6a:	f040 8086 	bne.w	8003e7a <flowmodbus+0x2fa>
+ 8003d76:	4b1c      	ldr	r3, [pc, #112]	; (8003de8 <flowmodbus+0x268>)
+ 8003d78:	885b      	ldrh	r3, [r3, #2]
+ 8003d7a:	2b10      	cmp	r3, #16
+ 8003d7c:	f040 8087 	bne.w	8003e8e <flowmodbus+0x30e>
 			registerFrame[1].U16 = 0; // base system run point mode reset
- 8003d6e:	4b19      	ldr	r3, [pc, #100]	; (8003dd4 <flowmodbus+0x254>)
- 8003d70:	2200      	movs	r2, #0
- 8003d72:	805a      	strh	r2, [r3, #2]
-			registerFrame[16].U16 = 32; // y-axis moving status go point x
- 8003d74:	4b17      	ldr	r3, [pc, #92]	; (8003dd4 <flowmodbus+0x254>)
- 8003d76:	2220      	movs	r2, #32
- 8003d78:	841a      	strh	r2, [r3, #32]
-			Joystick_Control = 0;
- 8003d7a:	4b1c      	ldr	r3, [pc, #112]	; (8003dec <flowmodbus+0x26c>)
- 8003d7c:	2200      	movs	r2, #0
- 8003d7e:	601a      	str	r2, [r3, #0]
-			indexposition = 0;
- 8003d80:	4b1b      	ldr	r3, [pc, #108]	; (8003df0 <flowmodbus+0x270>)
+ 8003d80:	4b19      	ldr	r3, [pc, #100]	; (8003de8 <flowmodbus+0x268>)
  8003d82:	2200      	movs	r2, #0
- 8003d84:	601a      	str	r2, [r3, #0]
-			if (registerFrame[49].U16 > 60000)
- 8003d86:	4b13      	ldr	r3, [pc, #76]	; (8003dd4 <flowmodbus+0x254>)
- 8003d88:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
- 8003d8c:	f64e 2260 	movw	r2, #60000	; 0xea60
- 8003d90:	4293      	cmp	r3, r2
- 8003d92:	d933      	bls.n	8003dfc <flowmodbus+0x27c>
-				posy_point = -((UINT16_MAX - registerFrame[49].U16) / 10.0);
- 8003d94:	4b0f      	ldr	r3, [pc, #60]	; (8003dd4 <flowmodbus+0x254>)
- 8003d96:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
- 8003d9a:	f5c3 437f 	rsb	r3, r3, #65280	; 0xff00
- 8003d9e:	33ff      	adds	r3, #255	; 0xff
- 8003da0:	4618      	mov	r0, r3
- 8003da2:	f7fc fb6b 	bl	800047c <__aeabi_i2d>
- 8003da6:	f04f 0200 	mov.w	r2, #0
- 8003daa:	4b12      	ldr	r3, [pc, #72]	; (8003df4 <flowmodbus+0x274>)
- 8003dac:	f7fc fcfa 	bl	80007a4 <__aeabi_ddiv>
- 8003db0:	4602      	mov	r2, r0
- 8003db2:	460b      	mov	r3, r1
- 8003db4:	4610      	mov	r0, r2
- 8003db6:	4619      	mov	r1, r3
- 8003db8:	f7fc fea2 	bl	8000b00 <__aeabi_d2f>
- 8003dbc:	4603      	mov	r3, r0
- 8003dbe:	ee07 3a90 	vmov	s15, r3
- 8003dc2:	eef1 7a67 	vneg.f32	s15, s15
- 8003dc6:	4b0c      	ldr	r3, [pc, #48]	; (8003df8 <flowmodbus+0x278>)
- 8003dc8:	edc3 7a00 	vstr	s15, [r3]
- 8003dcc:	e031      	b.n	8003e32 <flowmodbus+0x2b2>
- 8003dce:	bf00      	nop
- 8003dd0:	20000d40 	.word	0x20000d40
- 8003dd4:	2000121c 	.word	0x2000121c
- 8003dd8:	2000099c 	.word	0x2000099c
- 8003ddc:	20000998 	.word	0x20000998
- 8003de0:	200009c4 	.word	0x200009c4
- 8003de4:	200009c8 	.word	0x200009c8
- 8003de8:	200009a0 	.word	0x200009a0
- 8003dec:	2000037c 	.word	0x2000037c
- 8003df0:	2000131c 	.word	0x2000131c
- 8003df4:	40240000 	.word	0x40240000
- 8003df8:	200009ac 	.word	0x200009ac
-			else if (registerFrame[49].U16 <= 3500) {
- 8003dfc:	4b97      	ldr	r3, [pc, #604]	; (800405c <flowmodbus+0x4dc>)
- 8003dfe:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
- 8003e02:	f640 52ac 	movw	r2, #3500	; 0xdac
- 8003e06:	4293      	cmp	r3, r2
- 8003e08:	d813      	bhi.n	8003e32 <flowmodbus+0x2b2>
-				posy_point = (registerFrame[49].U16 / 10.0);
- 8003e0a:	4b94      	ldr	r3, [pc, #592]	; (800405c <flowmodbus+0x4dc>)
- 8003e0c:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
- 8003e10:	4618      	mov	r0, r3
- 8003e12:	f7fc fb33 	bl	800047c <__aeabi_i2d>
- 8003e16:	f04f 0200 	mov.w	r2, #0
- 8003e1a:	4b91      	ldr	r3, [pc, #580]	; (8004060 <flowmodbus+0x4e0>)
- 8003e1c:	f7fc fcc2 	bl	80007a4 <__aeabi_ddiv>
- 8003e20:	4602      	mov	r2, r0
- 8003e22:	460b      	mov	r3, r1
- 8003e24:	4610      	mov	r0, r2
- 8003e26:	4619      	mov	r1, r3
- 8003e28:	f7fc fe6a 	bl	8000b00 <__aeabi_d2f>
- 8003e2c:	4603      	mov	r3, r0
- 8003e2e:	4a8d      	ldr	r2, [pc, #564]	; (8004064 <flowmodbus+0x4e4>)
- 8003e30:	6013      	str	r3, [r2, #0]
-			start_p = ReadDegree;
- 8003e32:	4b8d      	ldr	r3, [pc, #564]	; (8004068 <flowmodbus+0x4e8>)
- 8003e34:	681b      	ldr	r3, [r3, #0]
- 8003e36:	4a8d      	ldr	r2, [pc, #564]	; (800406c <flowmodbus+0x4ec>)
- 8003e38:	6013      	str	r3, [r2, #0]
-			stop_p = posy_point+350.0;
- 8003e3a:	4b8a      	ldr	r3, [pc, #552]	; (8004064 <flowmodbus+0x4e4>)
- 8003e3c:	edd3 7a00 	vldr	s15, [r3]
- 8003e40:	ed9f 7a8b 	vldr	s14, [pc, #556]	; 8004070 <flowmodbus+0x4f0>
- 8003e44:	ee77 7a87 	vadd.f32	s15, s15, s14
- 8003e48:	4b8a      	ldr	r3, [pc, #552]	; (8004074 <flowmodbus+0x4f4>)
- 8003e4a:	edc3 7a00 	vstr	s15, [r3]
-			start_v = 0; // qk
- 8003e4e:	4b8a      	ldr	r3, [pc, #552]	; (8004078 <flowmodbus+0x4f8>)
- 8003e50:	f04f 0200 	mov.w	r2, #0
- 8003e54:	601a      	str	r2, [r3, #0]
-			stop_v = 0; // q_dotk+1
- 8003e56:	4b89      	ldr	r3, [pc, #548]	; (800407c <flowmodbus+0x4fc>)
- 8003e58:	f04f 0200 	mov.w	r2, #0
- 8003e5c:	601a      	str	r2, [r3, #0]
-			timecycle = 1.5;
- 8003e5e:	4b88      	ldr	r3, [pc, #544]	; (8004080 <flowmodbus+0x500>)
- 8003e60:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
- 8003e64:	601a      	str	r2, [r3, #0]
-			main_Qubic();
- 8003e66:	f001 f8d3 	bl	8005010 <main_Qubic>
-			path = 1;
- 8003e6a:	4b86      	ldr	r3, [pc, #536]	; (8004084 <flowmodbus+0x504>)
- 8003e6c:	2201      	movs	r2, #1
- 8003e6e:	601a      	str	r2, [r3, #0]
-			Mobus = Run_PointMode;
- 8003e70:	4b85      	ldr	r3, [pc, #532]	; (8004088 <flowmodbus+0x508>)
- 8003e72:	2204      	movs	r2, #4
- 8003e74:	701a      	strb	r2, [r3, #0]
-		break;
- 8003e76:	f000 bed6 	b.w	8004c26 <flowmodbus+0x10a6>
-		} else if (registerFrame[1].U16 == 0b00100) { // Set Home
- 8003e7a:	4b78      	ldr	r3, [pc, #480]	; (800405c <flowmodbus+0x4dc>)
- 8003e7c:	885b      	ldrh	r3, [r3, #2]
- 8003e7e:	2b04      	cmp	r3, #4
- 8003e80:	d110      	bne.n	8003ea4 <flowmodbus+0x324>
-			registerFrame[1].U16 = 0;
- 8003e82:	4b76      	ldr	r3, [pc, #472]	; (800405c <flowmodbus+0x4dc>)
- 8003e84:	2200      	movs	r2, #0
- 8003e86:	805a      	strh	r2, [r3, #2]
-			homeflag = 0;
- 8003e88:	4b80      	ldr	r3, [pc, #512]	; (800408c <flowmodbus+0x50c>)
- 8003e8a:	2200      	movs	r2, #0
- 8003e8c:	601a      	str	r2, [r3, #0]
-			path = 0;
- 8003e8e:	4b7d      	ldr	r3, [pc, #500]	; (8004084 <flowmodbus+0x504>)
- 8003e90:	2200      	movs	r2, #0
- 8003e92:	601a      	str	r2, [r3, #0]
-			indexposition = 0;
- 8003e94:	4b7e      	ldr	r3, [pc, #504]	; (8004090 <flowmodbus+0x510>)
- 8003e96:	2200      	movs	r2, #0
- 8003e98:	601a      	str	r2, [r3, #0]
-			Mobus = Home;
- 8003e9a:	4b7b      	ldr	r3, [pc, #492]	; (8004088 <flowmodbus+0x508>)
- 8003e9c:	2203      	movs	r2, #3
- 8003e9e:	701a      	strb	r2, [r3, #0]
-		break;
- 8003ea0:	f000 bec1 	b.w	8004c26 <flowmodbus+0x10a6>
-		} else if (registerFrame[1].U16 == 0b01000) {
- 8003ea4:	4b6d      	ldr	r3, [pc, #436]	; (800405c <flowmodbus+0x4dc>)
- 8003ea6:	885b      	ldrh	r3, [r3, #2]
- 8003ea8:	2b08      	cmp	r3, #8
- 8003eaa:	f040 86bc 	bne.w	8004c26 <flowmodbus+0x10a6>
+ 8003d84:	805a      	strh	r2, [r3, #2]
+			registerFrame[16].U16 = 32; // y-axis moving status go point x
+ 8003d86:	4b18      	ldr	r3, [pc, #96]	; (8003de8 <flowmodbus+0x268>)
+ 8003d88:	2220      	movs	r2, #32
+ 8003d8a:	841a      	strh	r2, [r3, #32]
 			Joystick_Control = 0;
- 8003eae:	4b79      	ldr	r3, [pc, #484]	; (8004094 <flowmodbus+0x514>)
- 8003eb0:	2200      	movs	r2, #0
- 8003eb2:	601a      	str	r2, [r3, #0]
-			plustray = -1;
- 8003eb4:	4b78      	ldr	r3, [pc, #480]	; (8004098 <flowmodbus+0x518>)
- 8003eb6:	f04f 32ff 	mov.w	r2, #4294967295
- 8003eba:	601a      	str	r2, [r3, #0]
-			CaseTray = 0;
- 8003ebc:	4b77      	ldr	r3, [pc, #476]	; (800409c <flowmodbus+0x51c>)
- 8003ebe:	2200      	movs	r2, #0
- 8003ec0:	601a      	str	r2, [r3, #0]
-			registerFrame[1].U16 = 0;
- 8003ec2:	4b66      	ldr	r3, [pc, #408]	; (800405c <flowmodbus+0x4dc>)
- 8003ec4:	2200      	movs	r2, #0
- 8003ec6:	805a      	strh	r2, [r3, #2]
-			k = 0;
- 8003ec8:	2300      	movs	r3, #0
- 8003eca:	62fb      	str	r3, [r7, #44]	; 0x2c
-			b = 0;
- 8003ecc:	2300      	movs	r3, #0
- 8003ece:	62bb      	str	r3, [r7, #40]	; 0x28
-			for (i = 0; i < 9; i++) {
- 8003ed0:	2300      	movs	r3, #0
- 8003ed2:	637b      	str	r3, [r7, #52]	; 0x34
- 8003ed4:	e022      	b.n	8003f1c <flowmodbus+0x39c>
-				point_y[k++] = transformedPoints[i][1];
- 8003ed6:	6afa      	ldr	r2, [r7, #44]	; 0x2c
- 8003ed8:	1c53      	adds	r3, r2, #1
- 8003eda:	62fb      	str	r3, [r7, #44]	; 0x2c
- 8003edc:	4870      	ldr	r0, [pc, #448]	; (80040a0 <flowmodbus+0x520>)
- 8003ede:	6b79      	ldr	r1, [r7, #52]	; 0x34
- 8003ee0:	460b      	mov	r3, r1
- 8003ee2:	005b      	lsls	r3, r3, #1
- 8003ee4:	440b      	add	r3, r1
- 8003ee6:	009b      	lsls	r3, r3, #2
- 8003ee8:	4403      	add	r3, r0
- 8003eea:	3304      	adds	r3, #4
- 8003eec:	6819      	ldr	r1, [r3, #0]
- 8003eee:	486d      	ldr	r0, [pc, #436]	; (80040a4 <flowmodbus+0x524>)
- 8003ef0:	0093      	lsls	r3, r2, #2
- 8003ef2:	4403      	add	r3, r0
- 8003ef4:	6019      	str	r1, [r3, #0]
-				point_y[k++] = transformedPoints2[i][1];
- 8003ef6:	6afa      	ldr	r2, [r7, #44]	; 0x2c
- 8003ef8:	1c53      	adds	r3, r2, #1
- 8003efa:	62fb      	str	r3, [r7, #44]	; 0x2c
- 8003efc:	486a      	ldr	r0, [pc, #424]	; (80040a8 <flowmodbus+0x528>)
- 8003efe:	6b79      	ldr	r1, [r7, #52]	; 0x34
- 8003f00:	460b      	mov	r3, r1
- 8003f02:	005b      	lsls	r3, r3, #1
- 8003f04:	440b      	add	r3, r1
- 8003f06:	009b      	lsls	r3, r3, #2
- 8003f08:	4403      	add	r3, r0
- 8003f0a:	3304      	adds	r3, #4
- 8003f0c:	6819      	ldr	r1, [r3, #0]
- 8003f0e:	4865      	ldr	r0, [pc, #404]	; (80040a4 <flowmodbus+0x524>)
- 8003f10:	0093      	lsls	r3, r2, #2
- 8003f12:	4403      	add	r3, r0
- 8003f14:	6019      	str	r1, [r3, #0]
-			for (i = 0; i < 9; i++) {
- 8003f16:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 8003f18:	3301      	adds	r3, #1
- 8003f1a:	637b      	str	r3, [r7, #52]	; 0x34
- 8003f1c:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 8003f1e:	2b08      	cmp	r3, #8
- 8003f20:	ddd9      	ble.n	8003ed6 <flowmodbus+0x356>
-			for (j = 0; j < 9; j++) {
- 8003f22:	2300      	movs	r3, #0
- 8003f24:	633b      	str	r3, [r7, #48]	; 0x30
- 8003f26:	e020      	b.n	8003f6a <flowmodbus+0x3ea>
-				point_x[b++] = transformedPoints[j][0];
- 8003f28:	6aba      	ldr	r2, [r7, #40]	; 0x28
- 8003f2a:	1c53      	adds	r3, r2, #1
- 8003f2c:	62bb      	str	r3, [r7, #40]	; 0x28
- 8003f2e:	485c      	ldr	r0, [pc, #368]	; (80040a0 <flowmodbus+0x520>)
- 8003f30:	6b39      	ldr	r1, [r7, #48]	; 0x30
- 8003f32:	460b      	mov	r3, r1
- 8003f34:	005b      	lsls	r3, r3, #1
- 8003f36:	440b      	add	r3, r1
- 8003f38:	009b      	lsls	r3, r3, #2
- 8003f3a:	4403      	add	r3, r0
- 8003f3c:	6819      	ldr	r1, [r3, #0]
- 8003f3e:	485b      	ldr	r0, [pc, #364]	; (80040ac <flowmodbus+0x52c>)
- 8003f40:	0093      	lsls	r3, r2, #2
- 8003f42:	4403      	add	r3, r0
- 8003f44:	6019      	str	r1, [r3, #0]
-				point_x[b++] = transformedPoints2[j][0];
- 8003f46:	6aba      	ldr	r2, [r7, #40]	; 0x28
- 8003f48:	1c53      	adds	r3, r2, #1
- 8003f4a:	62bb      	str	r3, [r7, #40]	; 0x28
- 8003f4c:	4856      	ldr	r0, [pc, #344]	; (80040a8 <flowmodbus+0x528>)
- 8003f4e:	6b39      	ldr	r1, [r7, #48]	; 0x30
- 8003f50:	460b      	mov	r3, r1
- 8003f52:	005b      	lsls	r3, r3, #1
- 8003f54:	440b      	add	r3, r1
- 8003f56:	009b      	lsls	r3, r3, #2
- 8003f58:	4403      	add	r3, r0
- 8003f5a:	6819      	ldr	r1, [r3, #0]
- 8003f5c:	4853      	ldr	r0, [pc, #332]	; (80040ac <flowmodbus+0x52c>)
- 8003f5e:	0093      	lsls	r3, r2, #2
- 8003f60:	4403      	add	r3, r0
- 8003f62:	6019      	str	r1, [r3, #0]
-			for (j = 0; j < 9; j++) {
- 8003f64:	6b3b      	ldr	r3, [r7, #48]	; 0x30
- 8003f66:	3301      	adds	r3, #1
- 8003f68:	633b      	str	r3, [r7, #48]	; 0x30
- 8003f6a:	6b3b      	ldr	r3, [r7, #48]	; 0x30
- 8003f6c:	2b08      	cmp	r3, #8
- 8003f6e:	dddb      	ble.n	8003f28 <flowmodbus+0x3a8>
-			Mobus = Run_TrayMode;
- 8003f70:	4b45      	ldr	r3, [pc, #276]	; (8004088 <flowmodbus+0x508>)
- 8003f72:	2205      	movs	r2, #5
- 8003f74:	701a      	strb	r2, [r3, #0]
+ 8003d8c:	4b1c      	ldr	r3, [pc, #112]	; (8003e00 <flowmodbus+0x280>)
+ 8003d8e:	2200      	movs	r2, #0
+ 8003d90:	601a      	str	r2, [r3, #0]
+			indexposition = 0;
+ 8003d92:	4b1c      	ldr	r3, [pc, #112]	; (8003e04 <flowmodbus+0x284>)
+ 8003d94:	2200      	movs	r2, #0
+ 8003d96:	601a      	str	r2, [r3, #0]
+			if (registerFrame[49].U16 > 60000)
+ 8003d98:	4b13      	ldr	r3, [pc, #76]	; (8003de8 <flowmodbus+0x268>)
+ 8003d9a:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
+ 8003d9e:	f64e 2260 	movw	r2, #60000	; 0xea60
+ 8003da2:	4293      	cmp	r3, r2
+ 8003da4:	d934      	bls.n	8003e10 <flowmodbus+0x290>
+				posy_point = -((UINT16_MAX - registerFrame[49].U16) / 10.0);
+ 8003da6:	4b10      	ldr	r3, [pc, #64]	; (8003de8 <flowmodbus+0x268>)
+ 8003da8:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
+ 8003dac:	f5c3 437f 	rsb	r3, r3, #65280	; 0xff00
+ 8003db0:	33ff      	adds	r3, #255	; 0xff
+ 8003db2:	4618      	mov	r0, r3
+ 8003db4:	f7fc fb62 	bl	800047c <__aeabi_i2d>
+ 8003db8:	f04f 0200 	mov.w	r2, #0
+ 8003dbc:	4b12      	ldr	r3, [pc, #72]	; (8003e08 <flowmodbus+0x288>)
+ 8003dbe:	f7fc fcf1 	bl	80007a4 <__aeabi_ddiv>
+ 8003dc2:	4602      	mov	r2, r0
+ 8003dc4:	460b      	mov	r3, r1
+ 8003dc6:	4610      	mov	r0, r2
+ 8003dc8:	4619      	mov	r1, r3
+ 8003dca:	f7fc fe99 	bl	8000b00 <__aeabi_d2f>
+ 8003dce:	4603      	mov	r3, r0
+ 8003dd0:	ee07 3a90 	vmov	s15, r3
+ 8003dd4:	eef1 7a67 	vneg.f32	s15, s15
+ 8003dd8:	4b0c      	ldr	r3, [pc, #48]	; (8003e0c <flowmodbus+0x28c>)
+ 8003dda:	edc3 7a00 	vstr	s15, [r3]
+ 8003dde:	e032      	b.n	8003e46 <flowmodbus+0x2c6>
+ 8003de0:	20000d40 	.word	0x20000d40
+ 8003de4:	200009a8 	.word	0x200009a8
+ 8003de8:	2000121c 	.word	0x2000121c
+ 8003dec:	2000099c 	.word	0x2000099c
+ 8003df0:	20000998 	.word	0x20000998
+ 8003df4:	200009c4 	.word	0x200009c4
+ 8003df8:	200009c8 	.word	0x200009c8
+ 8003dfc:	200009a0 	.word	0x200009a0
+ 8003e00:	2000037c 	.word	0x2000037c
+ 8003e04:	2000131c 	.word	0x2000131c
+ 8003e08:	40240000 	.word	0x40240000
+ 8003e0c:	200009ac 	.word	0x200009ac
+			else if (registerFrame[49].U16 <= 3500) {
+ 8003e10:	4b97      	ldr	r3, [pc, #604]	; (8004070 <flowmodbus+0x4f0>)
+ 8003e12:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
+ 8003e16:	f640 52ac 	movw	r2, #3500	; 0xdac
+ 8003e1a:	4293      	cmp	r3, r2
+ 8003e1c:	d813      	bhi.n	8003e46 <flowmodbus+0x2c6>
+				posy_point = (registerFrame[49].U16 / 10.0);
+ 8003e1e:	4b94      	ldr	r3, [pc, #592]	; (8004070 <flowmodbus+0x4f0>)
+ 8003e20:	f8b3 3062 	ldrh.w	r3, [r3, #98]	; 0x62
+ 8003e24:	4618      	mov	r0, r3
+ 8003e26:	f7fc fb29 	bl	800047c <__aeabi_i2d>
+ 8003e2a:	f04f 0200 	mov.w	r2, #0
+ 8003e2e:	4b91      	ldr	r3, [pc, #580]	; (8004074 <flowmodbus+0x4f4>)
+ 8003e30:	f7fc fcb8 	bl	80007a4 <__aeabi_ddiv>
+ 8003e34:	4602      	mov	r2, r0
+ 8003e36:	460b      	mov	r3, r1
+ 8003e38:	4610      	mov	r0, r2
+ 8003e3a:	4619      	mov	r1, r3
+ 8003e3c:	f7fc fe60 	bl	8000b00 <__aeabi_d2f>
+ 8003e40:	4603      	mov	r3, r0
+ 8003e42:	4a8d      	ldr	r2, [pc, #564]	; (8004078 <flowmodbus+0x4f8>)
+ 8003e44:	6013      	str	r3, [r2, #0]
+			start_p = ReadDegree;
+ 8003e46:	4b8d      	ldr	r3, [pc, #564]	; (800407c <flowmodbus+0x4fc>)
+ 8003e48:	681b      	ldr	r3, [r3, #0]
+ 8003e4a:	4a8d      	ldr	r2, [pc, #564]	; (8004080 <flowmodbus+0x500>)
+ 8003e4c:	6013      	str	r3, [r2, #0]
+			stop_p = posy_point+350.0;
+ 8003e4e:	4b8a      	ldr	r3, [pc, #552]	; (8004078 <flowmodbus+0x4f8>)
+ 8003e50:	edd3 7a00 	vldr	s15, [r3]
+ 8003e54:	ed9f 7a8b 	vldr	s14, [pc, #556]	; 8004084 <flowmodbus+0x504>
+ 8003e58:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 8003e5c:	4b8a      	ldr	r3, [pc, #552]	; (8004088 <flowmodbus+0x508>)
+ 8003e5e:	edc3 7a00 	vstr	s15, [r3]
+			start_v = 0; // qk
+ 8003e62:	4b8a      	ldr	r3, [pc, #552]	; (800408c <flowmodbus+0x50c>)
+ 8003e64:	f04f 0200 	mov.w	r2, #0
+ 8003e68:	601a      	str	r2, [r3, #0]
+			stop_v = 0; // q_dotk+1
+ 8003e6a:	4b89      	ldr	r3, [pc, #548]	; (8004090 <flowmodbus+0x510>)
+ 8003e6c:	f04f 0200 	mov.w	r2, #0
+ 8003e70:	601a      	str	r2, [r3, #0]
+			timecycle = 1.5;
+ 8003e72:	4b88      	ldr	r3, [pc, #544]	; (8004094 <flowmodbus+0x514>)
+ 8003e74:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
+ 8003e78:	601a      	str	r2, [r3, #0]
+			main_Qubic();
+ 8003e7a:	f001 f8c9 	bl	8005010 <main_Qubic>
+			path = 1;
+ 8003e7e:	4b86      	ldr	r3, [pc, #536]	; (8004098 <flowmodbus+0x518>)
+ 8003e80:	2201      	movs	r2, #1
+ 8003e82:	601a      	str	r2, [r3, #0]
+			Mobus = Run_PointMode;
+ 8003e84:	4b85      	ldr	r3, [pc, #532]	; (800409c <flowmodbus+0x51c>)
+ 8003e86:	2204      	movs	r2, #4
+ 8003e88:	701a      	strb	r2, [r3, #0]
 		break;
- 8003f76:	f000 be56 	b.w	8004c26 <flowmodbus+0x10a6>
+ 8003e8a:	f000 befd 	b.w	8004c88 <flowmodbus+0x1108>
+		} else if (registerFrame[1].U16 == 0b00100) { // Set Home
+ 8003e8e:	4b78      	ldr	r3, [pc, #480]	; (8004070 <flowmodbus+0x4f0>)
+ 8003e90:	885b      	ldrh	r3, [r3, #2]
+ 8003e92:	2b04      	cmp	r3, #4
+ 8003e94:	d110      	bne.n	8003eb8 <flowmodbus+0x338>
+			registerFrame[1].U16 = 0;
+ 8003e96:	4b76      	ldr	r3, [pc, #472]	; (8004070 <flowmodbus+0x4f0>)
+ 8003e98:	2200      	movs	r2, #0
+ 8003e9a:	805a      	strh	r2, [r3, #2]
+			homeflag = 0;
+ 8003e9c:	4b80      	ldr	r3, [pc, #512]	; (80040a0 <flowmodbus+0x520>)
+ 8003e9e:	2200      	movs	r2, #0
+ 8003ea0:	601a      	str	r2, [r3, #0]
+			path = 0;
+ 8003ea2:	4b7d      	ldr	r3, [pc, #500]	; (8004098 <flowmodbus+0x518>)
+ 8003ea4:	2200      	movs	r2, #0
+ 8003ea6:	601a      	str	r2, [r3, #0]
+			indexposition = 0;
+ 8003ea8:	4b7e      	ldr	r3, [pc, #504]	; (80040a4 <flowmodbus+0x524>)
+ 8003eaa:	2200      	movs	r2, #0
+ 8003eac:	601a      	str	r2, [r3, #0]
+			Mobus = Home;
+ 8003eae:	4b7b      	ldr	r3, [pc, #492]	; (800409c <flowmodbus+0x51c>)
+ 8003eb0:	2203      	movs	r2, #3
+ 8003eb2:	701a      	strb	r2, [r3, #0]
+		break;
+ 8003eb4:	f000 bee8 	b.w	8004c88 <flowmodbus+0x1108>
+		} else if (registerFrame[1].U16 == 0b01000) {
+ 8003eb8:	4b6d      	ldr	r3, [pc, #436]	; (8004070 <flowmodbus+0x4f0>)
+ 8003eba:	885b      	ldrh	r3, [r3, #2]
+ 8003ebc:	2b08      	cmp	r3, #8
+ 8003ebe:	f040 86e3 	bne.w	8004c88 <flowmodbus+0x1108>
+			Joystick_Control = 0;
+ 8003ec2:	4b79      	ldr	r3, [pc, #484]	; (80040a8 <flowmodbus+0x528>)
+ 8003ec4:	2200      	movs	r2, #0
+ 8003ec6:	601a      	str	r2, [r3, #0]
+			plustray = -1;
+ 8003ec8:	4b78      	ldr	r3, [pc, #480]	; (80040ac <flowmodbus+0x52c>)
+ 8003eca:	f04f 32ff 	mov.w	r2, #4294967295
+ 8003ece:	601a      	str	r2, [r3, #0]
+			CaseTray = 0;
+ 8003ed0:	4b77      	ldr	r3, [pc, #476]	; (80040b0 <flowmodbus+0x530>)
+ 8003ed2:	2200      	movs	r2, #0
+ 8003ed4:	601a      	str	r2, [r3, #0]
+			registerFrame[1].U16 = 0;
+ 8003ed6:	4b66      	ldr	r3, [pc, #408]	; (8004070 <flowmodbus+0x4f0>)
+ 8003ed8:	2200      	movs	r2, #0
+ 8003eda:	805a      	strh	r2, [r3, #2]
+			k = 0;
+ 8003edc:	2300      	movs	r3, #0
+ 8003ede:	62fb      	str	r3, [r7, #44]	; 0x2c
+			b = 0;
+ 8003ee0:	2300      	movs	r3, #0
+ 8003ee2:	62bb      	str	r3, [r7, #40]	; 0x28
+			for (i = 0; i < 9; i++) {
+ 8003ee4:	2300      	movs	r3, #0
+ 8003ee6:	637b      	str	r3, [r7, #52]	; 0x34
+ 8003ee8:	e022      	b.n	8003f30 <flowmodbus+0x3b0>
+				point_y[k++] = transformedPoints[i][1];
+ 8003eea:	6afa      	ldr	r2, [r7, #44]	; 0x2c
+ 8003eec:	1c53      	adds	r3, r2, #1
+ 8003eee:	62fb      	str	r3, [r7, #44]	; 0x2c
+ 8003ef0:	4870      	ldr	r0, [pc, #448]	; (80040b4 <flowmodbus+0x534>)
+ 8003ef2:	6b79      	ldr	r1, [r7, #52]	; 0x34
+ 8003ef4:	460b      	mov	r3, r1
+ 8003ef6:	005b      	lsls	r3, r3, #1
+ 8003ef8:	440b      	add	r3, r1
+ 8003efa:	009b      	lsls	r3, r3, #2
+ 8003efc:	4403      	add	r3, r0
+ 8003efe:	3304      	adds	r3, #4
+ 8003f00:	6819      	ldr	r1, [r3, #0]
+ 8003f02:	486d      	ldr	r0, [pc, #436]	; (80040b8 <flowmodbus+0x538>)
+ 8003f04:	0093      	lsls	r3, r2, #2
+ 8003f06:	4403      	add	r3, r0
+ 8003f08:	6019      	str	r1, [r3, #0]
+				point_y[k++] = transformedPoints2[i][1];
+ 8003f0a:	6afa      	ldr	r2, [r7, #44]	; 0x2c
+ 8003f0c:	1c53      	adds	r3, r2, #1
+ 8003f0e:	62fb      	str	r3, [r7, #44]	; 0x2c
+ 8003f10:	486a      	ldr	r0, [pc, #424]	; (80040bc <flowmodbus+0x53c>)
+ 8003f12:	6b79      	ldr	r1, [r7, #52]	; 0x34
+ 8003f14:	460b      	mov	r3, r1
+ 8003f16:	005b      	lsls	r3, r3, #1
+ 8003f18:	440b      	add	r3, r1
+ 8003f1a:	009b      	lsls	r3, r3, #2
+ 8003f1c:	4403      	add	r3, r0
+ 8003f1e:	3304      	adds	r3, #4
+ 8003f20:	6819      	ldr	r1, [r3, #0]
+ 8003f22:	4865      	ldr	r0, [pc, #404]	; (80040b8 <flowmodbus+0x538>)
+ 8003f24:	0093      	lsls	r3, r2, #2
+ 8003f26:	4403      	add	r3, r0
+ 8003f28:	6019      	str	r1, [r3, #0]
+			for (i = 0; i < 9; i++) {
+ 8003f2a:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 8003f2c:	3301      	adds	r3, #1
+ 8003f2e:	637b      	str	r3, [r7, #52]	; 0x34
+ 8003f30:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 8003f32:	2b08      	cmp	r3, #8
+ 8003f34:	ddd9      	ble.n	8003eea <flowmodbus+0x36a>
+			for (j = 0; j < 9; j++) {
+ 8003f36:	2300      	movs	r3, #0
+ 8003f38:	633b      	str	r3, [r7, #48]	; 0x30
+ 8003f3a:	e020      	b.n	8003f7e <flowmodbus+0x3fe>
+				point_x[b++] = transformedPoints[j][0];
+ 8003f3c:	6aba      	ldr	r2, [r7, #40]	; 0x28
+ 8003f3e:	1c53      	adds	r3, r2, #1
+ 8003f40:	62bb      	str	r3, [r7, #40]	; 0x28
+ 8003f42:	485c      	ldr	r0, [pc, #368]	; (80040b4 <flowmodbus+0x534>)
+ 8003f44:	6b39      	ldr	r1, [r7, #48]	; 0x30
+ 8003f46:	460b      	mov	r3, r1
+ 8003f48:	005b      	lsls	r3, r3, #1
+ 8003f4a:	440b      	add	r3, r1
+ 8003f4c:	009b      	lsls	r3, r3, #2
+ 8003f4e:	4403      	add	r3, r0
+ 8003f50:	6819      	ldr	r1, [r3, #0]
+ 8003f52:	485b      	ldr	r0, [pc, #364]	; (80040c0 <flowmodbus+0x540>)
+ 8003f54:	0093      	lsls	r3, r2, #2
+ 8003f56:	4403      	add	r3, r0
+ 8003f58:	6019      	str	r1, [r3, #0]
+				point_x[b++] = transformedPoints2[j][0];
+ 8003f5a:	6aba      	ldr	r2, [r7, #40]	; 0x28
+ 8003f5c:	1c53      	adds	r3, r2, #1
+ 8003f5e:	62bb      	str	r3, [r7, #40]	; 0x28
+ 8003f60:	4856      	ldr	r0, [pc, #344]	; (80040bc <flowmodbus+0x53c>)
+ 8003f62:	6b39      	ldr	r1, [r7, #48]	; 0x30
+ 8003f64:	460b      	mov	r3, r1
+ 8003f66:	005b      	lsls	r3, r3, #1
+ 8003f68:	440b      	add	r3, r1
+ 8003f6a:	009b      	lsls	r3, r3, #2
+ 8003f6c:	4403      	add	r3, r0
+ 8003f6e:	6819      	ldr	r1, [r3, #0]
+ 8003f70:	4853      	ldr	r0, [pc, #332]	; (80040c0 <flowmodbus+0x540>)
+ 8003f72:	0093      	lsls	r3, r2, #2
+ 8003f74:	4403      	add	r3, r0
+ 8003f76:	6019      	str	r1, [r3, #0]
+			for (j = 0; j < 9; j++) {
+ 8003f78:	6b3b      	ldr	r3, [r7, #48]	; 0x30
+ 8003f7a:	3301      	adds	r3, #1
+ 8003f7c:	633b      	str	r3, [r7, #48]	; 0x30
+ 8003f7e:	6b3b      	ldr	r3, [r7, #48]	; 0x30
+ 8003f80:	2b08      	cmp	r3, #8
+ 8003f82:	dddb      	ble.n	8003f3c <flowmodbus+0x3bc>
+			Mobus = Run_TrayMode;
+ 8003f84:	4b45      	ldr	r3, [pc, #276]	; (800409c <flowmodbus+0x51c>)
+ 8003f86:	2205      	movs	r2, #5
+ 8003f88:	701a      	strb	r2, [r3, #0]
+		break;
+ 8003f8a:	f000 be7d 	b.w	8004c88 <flowmodbus+0x1108>
 	case Jogging_Place:
 		//y-axis jogging
 		if (Joystick_AND_Sensor[1] >= 3150) {
- 8003f7a:	4b4d      	ldr	r3, [pc, #308]	; (80040b0 <flowmodbus+0x530>)
- 8003f7c:	685b      	ldr	r3, [r3, #4]
- 8003f7e:	f640 424d 	movw	r2, #3149	; 0xc4d
- 8003f82:	4293      	cmp	r3, r2
- 8003f84:	d90a      	bls.n	8003f9c <flowmodbus+0x41c>
+ 8003f8e:	4b4d      	ldr	r3, [pc, #308]	; (80040c4 <flowmodbus+0x544>)
+ 8003f90:	685b      	ldr	r3, [r3, #4]
+ 8003f92:	f640 424d 	movw	r2, #3149	; 0xc4d
+ 8003f96:	4293      	cmp	r3, r2
+ 8003f98:	d90a      	bls.n	8003fb0 <flowmodbus+0x430>
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
- 8003f86:	4b4b      	ldr	r3, [pc, #300]	; (80040b4 <flowmodbus+0x534>)
- 8003f88:	681a      	ldr	r2, [r3, #0]
- 8003f8a:	4b4b      	ldr	r3, [pc, #300]	; (80040b8 <flowmodbus+0x538>)
- 8003f8c:	681b      	ldr	r3, [r3, #0]
- 8003f8e:	635a      	str	r2, [r3, #52]	; 0x34
+ 8003f9a:	4b4b      	ldr	r3, [pc, #300]	; (80040c8 <flowmodbus+0x548>)
+ 8003f9c:	681a      	ldr	r2, [r3, #0]
+ 8003f9e:	4b4b      	ldr	r3, [pc, #300]	; (80040cc <flowmodbus+0x54c>)
+ 8003fa0:	681b      	ldr	r3, [r3, #0]
+ 8003fa2:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
- 8003f90:	2200      	movs	r2, #0
- 8003f92:	2180      	movs	r1, #128	; 0x80
- 8003f94:	4849      	ldr	r0, [pc, #292]	; (80040bc <flowmodbus+0x53c>)
- 8003f96:	f002 ff9b 	bl	8006ed0 <HAL_GPIO_WritePin>
- 8003f9a:	e017      	b.n	8003fcc <flowmodbus+0x44c>
+ 8003fa4:	2200      	movs	r2, #0
+ 8003fa6:	2180      	movs	r1, #128	; 0x80
+ 8003fa8:	4849      	ldr	r0, [pc, #292]	; (80040d0 <flowmodbus+0x550>)
+ 8003faa:	f002 ff91 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 8003fae:	e017      	b.n	8003fe0 <flowmodbus+0x460>
 		} else if (Joystick_AND_Sensor[1] <= 100) {
- 8003f9c:	4b44      	ldr	r3, [pc, #272]	; (80040b0 <flowmodbus+0x530>)
- 8003f9e:	685b      	ldr	r3, [r3, #4]
- 8003fa0:	2b64      	cmp	r3, #100	; 0x64
- 8003fa2:	d80a      	bhi.n	8003fba <flowmodbus+0x43a>
+ 8003fb0:	4b44      	ldr	r3, [pc, #272]	; (80040c4 <flowmodbus+0x544>)
+ 8003fb2:	685b      	ldr	r3, [r3, #4]
+ 8003fb4:	2b64      	cmp	r3, #100	; 0x64
+ 8003fb6:	d80a      	bhi.n	8003fce <flowmodbus+0x44e>
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
- 8003fa4:	4b43      	ldr	r3, [pc, #268]	; (80040b4 <flowmodbus+0x534>)
- 8003fa6:	681a      	ldr	r2, [r3, #0]
- 8003fa8:	4b43      	ldr	r3, [pc, #268]	; (80040b8 <flowmodbus+0x538>)
- 8003faa:	681b      	ldr	r3, [r3, #0]
- 8003fac:	635a      	str	r2, [r3, #52]	; 0x34
+ 8003fb8:	4b43      	ldr	r3, [pc, #268]	; (80040c8 <flowmodbus+0x548>)
+ 8003fba:	681a      	ldr	r2, [r3, #0]
+ 8003fbc:	4b43      	ldr	r3, [pc, #268]	; (80040cc <flowmodbus+0x54c>)
+ 8003fbe:	681b      	ldr	r3, [r3, #0]
+ 8003fc0:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
- 8003fae:	2201      	movs	r2, #1
- 8003fb0:	2180      	movs	r1, #128	; 0x80
- 8003fb2:	4842      	ldr	r0, [pc, #264]	; (80040bc <flowmodbus+0x53c>)
- 8003fb4:	f002 ff8c 	bl	8006ed0 <HAL_GPIO_WritePin>
- 8003fb8:	e008      	b.n	8003fcc <flowmodbus+0x44c>
+ 8003fc2:	2201      	movs	r2, #1
+ 8003fc4:	2180      	movs	r1, #128	; 0x80
+ 8003fc6:	4842      	ldr	r0, [pc, #264]	; (80040d0 <flowmodbus+0x550>)
+ 8003fc8:	f002 ff82 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 8003fcc:	e008      	b.n	8003fe0 <flowmodbus+0x460>
 		} else {
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 0);
- 8003fba:	4b3f      	ldr	r3, [pc, #252]	; (80040b8 <flowmodbus+0x538>)
- 8003fbc:	681b      	ldr	r3, [r3, #0]
- 8003fbe:	2200      	movs	r2, #0
- 8003fc0:	635a      	str	r2, [r3, #52]	; 0x34
+ 8003fce:	4b3f      	ldr	r3, [pc, #252]	; (80040cc <flowmodbus+0x54c>)
+ 8003fd0:	681b      	ldr	r3, [r3, #0]
+ 8003fd2:	2200      	movs	r2, #0
+ 8003fd4:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
- 8003fc2:	2200      	movs	r2, #0
- 8003fc4:	2180      	movs	r1, #128	; 0x80
- 8003fc6:	483d      	ldr	r0, [pc, #244]	; (80040bc <flowmodbus+0x53c>)
- 8003fc8:	f002 ff82 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 8003fd6:	2200      	movs	r2, #0
+ 8003fd8:	2180      	movs	r1, #128	; 0x80
+ 8003fda:	483d      	ldr	r0, [pc, #244]	; (80040d0 <flowmodbus+0x550>)
+ 8003fdc:	f002 ff78 	bl	8006ed0 <HAL_GPIO_WritePin>
 		}
 		//x-axis jogging
 		if (Joystick_AND_Sensor[0] >= 3150) {
- 8003fcc:	4b38      	ldr	r3, [pc, #224]	; (80040b0 <flowmodbus+0x530>)
- 8003fce:	681b      	ldr	r3, [r3, #0]
- 8003fd0:	f640 424d 	movw	r2, #3149	; 0xc4d
- 8003fd4:	4293      	cmp	r3, r2
- 8003fd6:	d904      	bls.n	8003fe2 <flowmodbus+0x462>
+ 8003fe0:	4b38      	ldr	r3, [pc, #224]	; (80040c4 <flowmodbus+0x544>)
+ 8003fe2:	681b      	ldr	r3, [r3, #0]
+ 8003fe4:	f640 424d 	movw	r2, #3149	; 0xc4d
+ 8003fe8:	4293      	cmp	r3, r2
+ 8003fea:	d904      	bls.n	8003ff6 <flowmodbus+0x476>
 			registerFrame[64].U16 = 8;
- 8003fd8:	4b20      	ldr	r3, [pc, #128]	; (800405c <flowmodbus+0x4dc>)
- 8003fda:	2208      	movs	r2, #8
- 8003fdc:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
- 8003fe0:	e00c      	b.n	8003ffc <flowmodbus+0x47c>
+ 8003fec:	4b20      	ldr	r3, [pc, #128]	; (8004070 <flowmodbus+0x4f0>)
+ 8003fee:	2208      	movs	r2, #8
+ 8003ff0:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8003ff4:	e00c      	b.n	8004010 <flowmodbus+0x490>
 		} else if (Joystick_AND_Sensor[0] <= 100) {
- 8003fe2:	4b33      	ldr	r3, [pc, #204]	; (80040b0 <flowmodbus+0x530>)
- 8003fe4:	681b      	ldr	r3, [r3, #0]
- 8003fe6:	2b64      	cmp	r3, #100	; 0x64
- 8003fe8:	d804      	bhi.n	8003ff4 <flowmodbus+0x474>
+ 8003ff6:	4b33      	ldr	r3, [pc, #204]	; (80040c4 <flowmodbus+0x544>)
+ 8003ff8:	681b      	ldr	r3, [r3, #0]
+ 8003ffa:	2b64      	cmp	r3, #100	; 0x64
+ 8003ffc:	d804      	bhi.n	8004008 <flowmodbus+0x488>
 			registerFrame[64].U16 = 4;
- 8003fea:	4b1c      	ldr	r3, [pc, #112]	; (800405c <flowmodbus+0x4dc>)
- 8003fec:	2204      	movs	r2, #4
- 8003fee:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
- 8003ff2:	e003      	b.n	8003ffc <flowmodbus+0x47c>
+ 8003ffe:	4b1c      	ldr	r3, [pc, #112]	; (8004070 <flowmodbus+0x4f0>)
+ 8004000:	2204      	movs	r2, #4
+ 8004002:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004006:	e003      	b.n	8004010 <flowmodbus+0x490>
 		} else {
 			registerFrame[64].U16 = 0;
- 8003ff4:	4b19      	ldr	r3, [pc, #100]	; (800405c <flowmodbus+0x4dc>)
- 8003ff6:	2200      	movs	r2, #0
- 8003ff8:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004008:	4b19      	ldr	r3, [pc, #100]	; (8004070 <flowmodbus+0x4f0>)
+ 800400a:	2200      	movs	r2, #0
+ 800400c:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
 		}
 
 		// Set position
 		buttonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
- 8003ffc:	2120      	movs	r1, #32
- 8003ffe:	4830      	ldr	r0, [pc, #192]	; (80040c0 <flowmodbus+0x540>)
- 8004000:	f002 ff4e 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 8004004:	4603      	mov	r3, r0
- 8004006:	461a      	mov	r2, r3
- 8004008:	4b2e      	ldr	r3, [pc, #184]	; (80040c4 <flowmodbus+0x544>)
- 800400a:	701a      	strb	r2, [r3, #0]
+ 8004010:	2120      	movs	r1, #32
+ 8004012:	4830      	ldr	r0, [pc, #192]	; (80040d4 <flowmodbus+0x554>)
+ 8004014:	f002 ff44 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 8004018:	4603      	mov	r3, r0
+ 800401a:	461a      	mov	r2, r3
+ 800401c:	4b2e      	ldr	r3, [pc, #184]	; (80040d8 <flowmodbus+0x558>)
+ 800401e:	701a      	strb	r2, [r3, #0]
 		if (buttonState != lastButtonState) {
- 800400c:	4b2d      	ldr	r3, [pc, #180]	; (80040c4 <flowmodbus+0x544>)
- 800400e:	781a      	ldrb	r2, [r3, #0]
- 8004010:	4b2d      	ldr	r3, [pc, #180]	; (80040c8 <flowmodbus+0x548>)
- 8004012:	781b      	ldrb	r3, [r3, #0]
- 8004014:	429a      	cmp	r2, r3
- 8004016:	f000 812e 	beq.w	8004276 <flowmodbus+0x6f6>
+ 8004020:	4b2d      	ldr	r3, [pc, #180]	; (80040d8 <flowmodbus+0x558>)
+ 8004022:	781a      	ldrb	r2, [r3, #0]
+ 8004024:	4b2d      	ldr	r3, [pc, #180]	; (80040dc <flowmodbus+0x55c>)
+ 8004026:	781b      	ldrb	r3, [r3, #0]
+ 8004028:	429a      	cmp	r2, r3
+ 800402a:	f000 811b 	beq.w	8004264 <flowmodbus+0x6e4>
 			// Button press is valid, perform desired action
 			if (CheckTray == 0) {
- 800401a:	4b2c      	ldr	r3, [pc, #176]	; (80040cc <flowmodbus+0x54c>)
- 800401c:	781b      	ldrb	r3, [r3, #0]
- 800401e:	2b00      	cmp	r3, #0
- 8004020:	f040 8098 	bne.w	8004154 <flowmodbus+0x5d4>
+ 800402e:	4b2c      	ldr	r3, [pc, #176]	; (80040e0 <flowmodbus+0x560>)
+ 8004030:	781b      	ldrb	r3, [r3, #0]
+ 8004032:	2b00      	cmp	r3, #0
+ 8004034:	f040 8098 	bne.w	8004168 <flowmodbus+0x5e8>
 				if (registerFrame[68].U16 > 60000) {
- 8004024:	4b0d      	ldr	r3, [pc, #52]	; (800405c <flowmodbus+0x4dc>)
- 8004026:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 800402a:	f64e 2260 	movw	r2, #60000	; 0xea60
- 800402e:	4293      	cmp	r3, r2
- 8004030:	d952      	bls.n	80040d8 <flowmodbus+0x558>
+ 8004038:	4b0d      	ldr	r3, [pc, #52]	; (8004070 <flowmodbus+0x4f0>)
+ 800403a:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 800403e:	f64e 2260 	movw	r2, #60000	; 0xea60
+ 8004042:	4293      	cmp	r3, r2
+ 8004044:	d952      	bls.n	80040ec <flowmodbus+0x56c>
 					posx = registerFrame[68].U16 - UINT16_MAX - 1;
- 8004032:	4b0a      	ldr	r3, [pc, #40]	; (800405c <flowmodbus+0x4dc>)
- 8004034:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004038:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
- 800403c:	4a24      	ldr	r2, [pc, #144]	; (80040d0 <flowmodbus+0x550>)
- 800403e:	6013      	str	r3, [r2, #0]
+ 8004046:	4b0a      	ldr	r3, [pc, #40]	; (8004070 <flowmodbus+0x4f0>)
+ 8004048:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 800404c:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
+ 8004050:	4a24      	ldr	r2, [pc, #144]	; (80040e4 <flowmodbus+0x564>)
+ 8004052:	6013      	str	r3, [r2, #0]
 					bottom_left_jog2[0] = (float) (posx) / 10;
- 8004040:	4b23      	ldr	r3, [pc, #140]	; (80040d0 <flowmodbus+0x550>)
- 8004042:	681b      	ldr	r3, [r3, #0]
- 8004044:	ee07 3a90 	vmov	s15, r3
- 8004048:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 800404c:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 8004050:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 8004054:	4b1f      	ldr	r3, [pc, #124]	; (80040d4 <flowmodbus+0x554>)
- 8004056:	edc3 7a00 	vstr	s15, [r3]
- 800405a:	e050      	b.n	80040fe <flowmodbus+0x57e>
- 800405c:	2000121c 	.word	0x2000121c
- 8004060:	40240000 	.word	0x40240000
- 8004064:	200009ac 	.word	0x200009ac
- 8004068:	20001348 	.word	0x20001348
- 800406c:	200009cc 	.word	0x200009cc
- 8004070:	43af0000 	.word	0x43af0000
- 8004074:	200009d0 	.word	0x200009d0
- 8004078:	200009d4 	.word	0x200009d4
- 800407c:	200009d8 	.word	0x200009d8
- 8004080:	200009dc 	.word	0x200009dc
- 8004084:	200012b4 	.word	0x200012b4
- 8004088:	20000d40 	.word	0x20000d40
- 800408c:	200009a8 	.word	0x200009a8
- 8004090:	2000131c 	.word	0x2000131c
- 8004094:	2000037c 	.word	0x2000037c
- 8004098:	20000200 	.word	0x20000200
- 800409c:	200009c0 	.word	0x200009c0
- 80040a0:	20000b08 	.word	0x20000b08
- 80040a4:	2000024c 	.word	0x2000024c
- 80040a8:	20000cb8 	.word	0x20000cb8
- 80040ac:	20000204 	.word	0x20000204
- 80040b0:	200012c4 	.word	0x200012c4
- 80040b4:	20000380 	.word	0x20000380
- 80040b8:	200006a4 	.word	0x200006a4
- 80040bc:	40020000 	.word	0x40020000
- 80040c0:	40020800 	.word	0x40020800
- 80040c4:	200009cb 	.word	0x200009cb
- 80040c8:	200009ca 	.word	0x200009ca
- 80040cc:	200012d4 	.word	0x200012d4
- 80040d0:	200009e0 	.word	0x200009e0
- 80040d4:	20000d30 	.word	0x20000d30
+ 8004054:	4b23      	ldr	r3, [pc, #140]	; (80040e4 <flowmodbus+0x564>)
+ 8004056:	681b      	ldr	r3, [r3, #0]
+ 8004058:	ee07 3a90 	vmov	s15, r3
+ 800405c:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004060:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 8004064:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 8004068:	4b1f      	ldr	r3, [pc, #124]	; (80040e8 <flowmodbus+0x568>)
+ 800406a:	edc3 7a00 	vstr	s15, [r3]
+ 800406e:	e050      	b.n	8004112 <flowmodbus+0x592>
+ 8004070:	2000121c 	.word	0x2000121c
+ 8004074:	40240000 	.word	0x40240000
+ 8004078:	200009ac 	.word	0x200009ac
+ 800407c:	20001348 	.word	0x20001348
+ 8004080:	200009cc 	.word	0x200009cc
+ 8004084:	43af0000 	.word	0x43af0000
+ 8004088:	200009d0 	.word	0x200009d0
+ 800408c:	200009d4 	.word	0x200009d4
+ 8004090:	200009d8 	.word	0x200009d8
+ 8004094:	200009dc 	.word	0x200009dc
+ 8004098:	200012b4 	.word	0x200012b4
+ 800409c:	20000d40 	.word	0x20000d40
+ 80040a0:	200009a8 	.word	0x200009a8
+ 80040a4:	2000131c 	.word	0x2000131c
+ 80040a8:	2000037c 	.word	0x2000037c
+ 80040ac:	20000200 	.word	0x20000200
+ 80040b0:	200009c0 	.word	0x200009c0
+ 80040b4:	20000b08 	.word	0x20000b08
+ 80040b8:	2000024c 	.word	0x2000024c
+ 80040bc:	20000cb8 	.word	0x20000cb8
+ 80040c0:	20000204 	.word	0x20000204
+ 80040c4:	200012c4 	.word	0x200012c4
+ 80040c8:	20000380 	.word	0x20000380
+ 80040cc:	200006a4 	.word	0x200006a4
+ 80040d0:	40020000 	.word	0x40020000
+ 80040d4:	40020800 	.word	0x40020800
+ 80040d8:	200009cb 	.word	0x200009cb
+ 80040dc:	200009ca 	.word	0x200009ca
+ 80040e0:	200012d4 	.word	0x200012d4
+ 80040e4:	200009e0 	.word	0x200009e0
+ 80040e8:	20000d30 	.word	0x20000d30
 				} else {
 					posx = registerFrame[68].U16;
- 80040d8:	4ba5      	ldr	r3, [pc, #660]	; (8004370 <flowmodbus+0x7f0>)
- 80040da:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 80040de:	461a      	mov	r2, r3
- 80040e0:	4ba4      	ldr	r3, [pc, #656]	; (8004374 <flowmodbus+0x7f4>)
- 80040e2:	601a      	str	r2, [r3, #0]
+ 80040ec:	4b9c      	ldr	r3, [pc, #624]	; (8004360 <flowmodbus+0x7e0>)
+ 80040ee:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 80040f2:	461a      	mov	r2, r3
+ 80040f4:	4b9b      	ldr	r3, [pc, #620]	; (8004364 <flowmodbus+0x7e4>)
+ 80040f6:	601a      	str	r2, [r3, #0]
 					bottom_left_jog2[0] = (float) (posx) / 10;
- 80040e4:	4ba3      	ldr	r3, [pc, #652]	; (8004374 <flowmodbus+0x7f4>)
- 80040e6:	681b      	ldr	r3, [r3, #0]
- 80040e8:	ee07 3a90 	vmov	s15, r3
- 80040ec:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80040f0:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 80040f4:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80040f8:	4b9f      	ldr	r3, [pc, #636]	; (8004378 <flowmodbus+0x7f8>)
- 80040fa:	edc3 7a00 	vstr	s15, [r3]
+ 80040f8:	4b9a      	ldr	r3, [pc, #616]	; (8004364 <flowmodbus+0x7e4>)
+ 80040fa:	681b      	ldr	r3, [r3, #0]
+ 80040fc:	ee07 3a90 	vmov	s15, r3
+ 8004100:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004104:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 8004108:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 800410c:	4b96      	ldr	r3, [pc, #600]	; (8004368 <flowmodbus+0x7e8>)
+ 800410e:	edc3 7a00 	vstr	s15, [r3]
 				} // Calculate Point x-axis
 				bottom_left_jog2[1] = (float) (ReadDegree - 350); // Calulate Point y-axis
- 80040fe:	4b9f      	ldr	r3, [pc, #636]	; (800437c <flowmodbus+0x7fc>)
- 8004100:	edd3 7a00 	vldr	s15, [r3]
- 8004104:	ed9f 7a9e 	vldr	s14, [pc, #632]	; 8004380 <flowmodbus+0x800>
- 8004108:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 800410c:	4b9a      	ldr	r3, [pc, #616]	; (8004378 <flowmodbus+0x7f8>)
- 800410e:	edc3 7a01 	vstr	s15, [r3, #4]
+ 8004112:	4b96      	ldr	r3, [pc, #600]	; (800436c <flowmodbus+0x7ec>)
+ 8004114:	edd3 7a00 	vldr	s15, [r3]
+ 8004118:	ed9f 7a95 	vldr	s14, [pc, #596]	; 8004370 <flowmodbus+0x7f0>
+ 800411c:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 8004120:	4b91      	ldr	r3, [pc, #580]	; (8004368 <flowmodbus+0x7e8>)
+ 8004122:	edc3 7a01 	vstr	s15, [r3, #4]
 				registerFrame[35].U16 = (int) posx; // Place Tray Origin x
- 8004112:	4b98      	ldr	r3, [pc, #608]	; (8004374 <flowmodbus+0x7f4>)
- 8004114:	681b      	ldr	r3, [r3, #0]
- 8004116:	b29a      	uxth	r2, r3
- 8004118:	4b95      	ldr	r3, [pc, #596]	; (8004370 <flowmodbus+0x7f0>)
- 800411a:	f8a3 2046 	strh.w	r2, [r3, #70]	; 0x46
+ 8004126:	4b8f      	ldr	r3, [pc, #572]	; (8004364 <flowmodbus+0x7e4>)
+ 8004128:	681b      	ldr	r3, [r3, #0]
+ 800412a:	b29a      	uxth	r2, r3
+ 800412c:	4b8c      	ldr	r3, [pc, #560]	; (8004360 <flowmodbus+0x7e0>)
+ 800412e:	f8a3 2046 	strh.w	r2, [r3, #70]	; 0x46
 				registerFrame[36].U16 = (int) (ReadDegree - 350) * 10; // Place Tray Origin y
- 800411e:	4b97      	ldr	r3, [pc, #604]	; (800437c <flowmodbus+0x7fc>)
- 8004120:	edd3 7a00 	vldr	s15, [r3]
- 8004124:	ed9f 7a96 	vldr	s14, [pc, #600]	; 8004380 <flowmodbus+0x800>
- 8004128:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 800412c:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 8004130:	ee17 3a90 	vmov	r3, s15
- 8004134:	b29b      	uxth	r3, r3
- 8004136:	461a      	mov	r2, r3
- 8004138:	0092      	lsls	r2, r2, #2
- 800413a:	4413      	add	r3, r2
- 800413c:	005b      	lsls	r3, r3, #1
- 800413e:	b29a      	uxth	r2, r3
- 8004140:	4b8b      	ldr	r3, [pc, #556]	; (8004370 <flowmodbus+0x7f0>)
- 8004142:	f8a3 2048 	strh.w	r2, [r3, #72]	; 0x48
+ 8004132:	4b8e      	ldr	r3, [pc, #568]	; (800436c <flowmodbus+0x7ec>)
+ 8004134:	edd3 7a00 	vldr	s15, [r3]
+ 8004138:	ed9f 7a8d 	vldr	s14, [pc, #564]	; 8004370 <flowmodbus+0x7f0>
+ 800413c:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 8004140:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 8004144:	ee17 3a90 	vmov	r3, s15
+ 8004148:	b29b      	uxth	r3, r3
+ 800414a:	461a      	mov	r2, r3
+ 800414c:	0092      	lsls	r2, r2, #2
+ 800414e:	4413      	add	r3, r2
+ 8004150:	005b      	lsls	r3, r3, #1
+ 8004152:	b29a      	uxth	r2, r3
+ 8004154:	4b82      	ldr	r3, [pc, #520]	; (8004360 <flowmodbus+0x7e0>)
+ 8004156:	f8a3 2048 	strh.w	r2, [r3, #72]	; 0x48
 				CheckTray++;
- 8004146:	4b8f      	ldr	r3, [pc, #572]	; (8004384 <flowmodbus+0x804>)
- 8004148:	781b      	ldrb	r3, [r3, #0]
- 800414a:	3301      	adds	r3, #1
- 800414c:	b2da      	uxtb	r2, r3
- 800414e:	4b8d      	ldr	r3, [pc, #564]	; (8004384 <flowmodbus+0x804>)
- 8004150:	701a      	strb	r2, [r3, #0]
- 8004152:	e090      	b.n	8004276 <flowmodbus+0x6f6>
+ 800415a:	4b86      	ldr	r3, [pc, #536]	; (8004374 <flowmodbus+0x7f4>)
+ 800415c:	781b      	ldrb	r3, [r3, #0]
+ 800415e:	3301      	adds	r3, #1
+ 8004160:	b2da      	uxtb	r2, r3
+ 8004162:	4b84      	ldr	r3, [pc, #528]	; (8004374 <flowmodbus+0x7f4>)
+ 8004164:	701a      	strb	r2, [r3, #0]
+ 8004166:	e07d      	b.n	8004264 <flowmodbus+0x6e4>
 			} else if (CheckTray == 1) {
- 8004154:	4b8b      	ldr	r3, [pc, #556]	; (8004384 <flowmodbus+0x804>)
- 8004156:	781b      	ldrb	r3, [r3, #0]
- 8004158:	2b01      	cmp	r3, #1
- 800415a:	d152      	bne.n	8004202 <flowmodbus+0x682>
+ 8004168:	4b82      	ldr	r3, [pc, #520]	; (8004374 <flowmodbus+0x7f4>)
+ 800416a:	781b      	ldrb	r3, [r3, #0]
+ 800416c:	2b01      	cmp	r3, #1
+ 800416e:	d13f      	bne.n	80041f0 <flowmodbus+0x670>
 				if (registerFrame[68].U16 > 60000) {
- 800415c:	4b84      	ldr	r3, [pc, #528]	; (8004370 <flowmodbus+0x7f0>)
- 800415e:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004162:	f64e 2260 	movw	r2, #60000	; 0xea60
- 8004166:	4293      	cmp	r3, r2
- 8004168:	d914      	bls.n	8004194 <flowmodbus+0x614>
+ 8004170:	4b7b      	ldr	r3, [pc, #492]	; (8004360 <flowmodbus+0x7e0>)
+ 8004172:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 8004176:	f64e 2260 	movw	r2, #60000	; 0xea60
+ 800417a:	4293      	cmp	r3, r2
+ 800417c:	d914      	bls.n	80041a8 <flowmodbus+0x628>
 					posx = registerFrame[68].U16 - UINT16_MAX - 1;
- 800416a:	4b81      	ldr	r3, [pc, #516]	; (8004370 <flowmodbus+0x7f0>)
- 800416c:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004170:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
- 8004174:	4a7f      	ldr	r2, [pc, #508]	; (8004374 <flowmodbus+0x7f4>)
- 8004176:	6013      	str	r3, [r2, #0]
+ 800417e:	4b78      	ldr	r3, [pc, #480]	; (8004360 <flowmodbus+0x7e0>)
+ 8004180:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 8004184:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
+ 8004188:	4a76      	ldr	r2, [pc, #472]	; (8004364 <flowmodbus+0x7e4>)
+ 800418a:	6013      	str	r3, [r2, #0]
 					bottom_right_jog2[0] = (float) (posx) / 10;
- 8004178:	4b7e      	ldr	r3, [pc, #504]	; (8004374 <flowmodbus+0x7f4>)
- 800417a:	681b      	ldr	r3, [r3, #0]
- 800417c:	ee07 3a90 	vmov	s15, r3
- 8004180:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8004184:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 8004188:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 800418c:	4b7e      	ldr	r3, [pc, #504]	; (8004388 <flowmodbus+0x808>)
- 800418e:	edc3 7a00 	vstr	s15, [r3]
- 8004192:	e012      	b.n	80041ba <flowmodbus+0x63a>
+ 800418c:	4b75      	ldr	r3, [pc, #468]	; (8004364 <flowmodbus+0x7e4>)
+ 800418e:	681b      	ldr	r3, [r3, #0]
+ 8004190:	ee07 3a90 	vmov	s15, r3
+ 8004194:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004198:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 800419c:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 80041a0:	4b75      	ldr	r3, [pc, #468]	; (8004378 <flowmodbus+0x7f8>)
+ 80041a2:	edc3 7a00 	vstr	s15, [r3]
+ 80041a6:	e012      	b.n	80041ce <flowmodbus+0x64e>
 				} else {
 					posx = registerFrame[68].U16;
- 8004194:	4b76      	ldr	r3, [pc, #472]	; (8004370 <flowmodbus+0x7f0>)
- 8004196:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 800419a:	461a      	mov	r2, r3
- 800419c:	4b75      	ldr	r3, [pc, #468]	; (8004374 <flowmodbus+0x7f4>)
- 800419e:	601a      	str	r2, [r3, #0]
+ 80041a8:	4b6d      	ldr	r3, [pc, #436]	; (8004360 <flowmodbus+0x7e0>)
+ 80041aa:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 80041ae:	461a      	mov	r2, r3
+ 80041b0:	4b6c      	ldr	r3, [pc, #432]	; (8004364 <flowmodbus+0x7e4>)
+ 80041b2:	601a      	str	r2, [r3, #0]
 					bottom_right_jog2[0] = (float) (posx) / 10;
- 80041a0:	4b74      	ldr	r3, [pc, #464]	; (8004374 <flowmodbus+0x7f4>)
- 80041a2:	681b      	ldr	r3, [r3, #0]
- 80041a4:	ee07 3a90 	vmov	s15, r3
- 80041a8:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80041ac:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 80041b0:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80041b4:	4b74      	ldr	r3, [pc, #464]	; (8004388 <flowmodbus+0x808>)
- 80041b6:	edc3 7a00 	vstr	s15, [r3]
+ 80041b4:	4b6b      	ldr	r3, [pc, #428]	; (8004364 <flowmodbus+0x7e4>)
+ 80041b6:	681b      	ldr	r3, [r3, #0]
+ 80041b8:	ee07 3a90 	vmov	s15, r3
+ 80041bc:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 80041c0:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 80041c4:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 80041c8:	4b6b      	ldr	r3, [pc, #428]	; (8004378 <flowmodbus+0x7f8>)
+ 80041ca:	edc3 7a00 	vstr	s15, [r3]
 				}
-				posx = registerFrame[68].U16;
- 80041ba:	4b6d      	ldr	r3, [pc, #436]	; (8004370 <flowmodbus+0x7f0>)
- 80041bc:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 80041c0:	461a      	mov	r2, r3
- 80041c2:	4b6c      	ldr	r3, [pc, #432]	; (8004374 <flowmodbus+0x7f4>)
- 80041c4:	601a      	str	r2, [r3, #0]
-				bottom_right_jog2[0] = (float) (posx) / 10;
- 80041c6:	4b6b      	ldr	r3, [pc, #428]	; (8004374 <flowmodbus+0x7f4>)
- 80041c8:	681b      	ldr	r3, [r3, #0]
- 80041ca:	ee07 3a90 	vmov	s15, r3
- 80041ce:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80041d2:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 80041d6:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80041da:	4b6b      	ldr	r3, [pc, #428]	; (8004388 <flowmodbus+0x808>)
- 80041dc:	edc3 7a00 	vstr	s15, [r3]
 				bottom_right_jog2[1] = (float) (ReadDegree - 350); // Calculate Point y-axis
- 80041e0:	4b66      	ldr	r3, [pc, #408]	; (800437c <flowmodbus+0x7fc>)
- 80041e2:	edd3 7a00 	vldr	s15, [r3]
- 80041e6:	ed9f 7a66 	vldr	s14, [pc, #408]	; 8004380 <flowmodbus+0x800>
- 80041ea:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 80041ee:	4b66      	ldr	r3, [pc, #408]	; (8004388 <flowmodbus+0x808>)
- 80041f0:	edc3 7a01 	vstr	s15, [r3, #4]
+ 80041ce:	4b67      	ldr	r3, [pc, #412]	; (800436c <flowmodbus+0x7ec>)
+ 80041d0:	edd3 7a00 	vldr	s15, [r3]
+ 80041d4:	ed9f 7a66 	vldr	s14, [pc, #408]	; 8004370 <flowmodbus+0x7f0>
+ 80041d8:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 80041dc:	4b66      	ldr	r3, [pc, #408]	; (8004378 <flowmodbus+0x7f8>)
+ 80041de:	edc3 7a01 	vstr	s15, [r3, #4]
 				CheckTray++;
- 80041f4:	4b63      	ldr	r3, [pc, #396]	; (8004384 <flowmodbus+0x804>)
- 80041f6:	781b      	ldrb	r3, [r3, #0]
- 80041f8:	3301      	adds	r3, #1
- 80041fa:	b2da      	uxtb	r2, r3
- 80041fc:	4b61      	ldr	r3, [pc, #388]	; (8004384 <flowmodbus+0x804>)
- 80041fe:	701a      	strb	r2, [r3, #0]
- 8004200:	e039      	b.n	8004276 <flowmodbus+0x6f6>
+ 80041e2:	4b64      	ldr	r3, [pc, #400]	; (8004374 <flowmodbus+0x7f4>)
+ 80041e4:	781b      	ldrb	r3, [r3, #0]
+ 80041e6:	3301      	adds	r3, #1
+ 80041e8:	b2da      	uxtb	r2, r3
+ 80041ea:	4b62      	ldr	r3, [pc, #392]	; (8004374 <flowmodbus+0x7f4>)
+ 80041ec:	701a      	strb	r2, [r3, #0]
+ 80041ee:	e039      	b.n	8004264 <flowmodbus+0x6e4>
 			} else if (CheckTray == 2) {
- 8004202:	4b60      	ldr	r3, [pc, #384]	; (8004384 <flowmodbus+0x804>)
- 8004204:	781b      	ldrb	r3, [r3, #0]
- 8004206:	2b02      	cmp	r3, #2
- 8004208:	d135      	bne.n	8004276 <flowmodbus+0x6f6>
+ 80041f0:	4b60      	ldr	r3, [pc, #384]	; (8004374 <flowmodbus+0x7f4>)
+ 80041f2:	781b      	ldrb	r3, [r3, #0]
+ 80041f4:	2b02      	cmp	r3, #2
+ 80041f6:	d135      	bne.n	8004264 <flowmodbus+0x6e4>
 				transformRectangleAndPointsPlace();
- 800420a:	f7ff f9c3 	bl	8003594 <transformRectangleAndPointsPlace>
+ 80041f8:	f7ff f9cc 	bl	8003594 <transformRectangleAndPointsPlace>
 				orenationtray = abs((theta2) * 57.2958 * 100);
- 800420e:	4b5f      	ldr	r3, [pc, #380]	; (800438c <flowmodbus+0x80c>)
- 8004210:	681b      	ldr	r3, [r3, #0]
- 8004212:	4618      	mov	r0, r3
- 8004214:	f7fc f944 	bl	80004a0 <__aeabi_f2d>
- 8004218:	a353      	add	r3, pc, #332	; (adr r3, 8004368 <flowmodbus+0x7e8>)
- 800421a:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 80041fc:	4b5f      	ldr	r3, [pc, #380]	; (800437c <flowmodbus+0x7fc>)
+ 80041fe:	681b      	ldr	r3, [r3, #0]
+ 8004200:	4618      	mov	r0, r3
+ 8004202:	f7fc f94d 	bl	80004a0 <__aeabi_f2d>
+ 8004206:	a354      	add	r3, pc, #336	; (adr r3, 8004358 <flowmodbus+0x7d8>)
+ 8004208:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 800420c:	f7fc f9a0 	bl	8000550 <__aeabi_dmul>
+ 8004210:	4602      	mov	r2, r0
+ 8004212:	460b      	mov	r3, r1
+ 8004214:	4610      	mov	r0, r2
+ 8004216:	4619      	mov	r1, r3
+ 8004218:	f04f 0200 	mov.w	r2, #0
+ 800421c:	4b58      	ldr	r3, [pc, #352]	; (8004380 <flowmodbus+0x800>)
  800421e:	f7fc f997 	bl	8000550 <__aeabi_dmul>
  8004222:	4602      	mov	r2, r0
  8004224:	460b      	mov	r3, r1
  8004226:	4610      	mov	r0, r2
  8004228:	4619      	mov	r1, r3
- 800422a:	f04f 0200 	mov.w	r2, #0
- 800422e:	4b58      	ldr	r3, [pc, #352]	; (8004390 <flowmodbus+0x810>)
- 8004230:	f7fc f98e 	bl	8000550 <__aeabi_dmul>
- 8004234:	4602      	mov	r2, r0
- 8004236:	460b      	mov	r3, r1
- 8004238:	4610      	mov	r0, r2
- 800423a:	4619      	mov	r1, r3
- 800423c:	f7fc fc38 	bl	8000ab0 <__aeabi_d2iz>
- 8004240:	4603      	mov	r3, r0
- 8004242:	2b00      	cmp	r3, #0
- 8004244:	bfb8      	it	lt
- 8004246:	425b      	neglt	r3, r3
- 8004248:	4a52      	ldr	r2, [pc, #328]	; (8004394 <flowmodbus+0x814>)
- 800424a:	6013      	str	r3, [r2, #0]
+ 800422a:	f7fc fc41 	bl	8000ab0 <__aeabi_d2iz>
+ 800422e:	4603      	mov	r3, r0
+ 8004230:	2b00      	cmp	r3, #0
+ 8004232:	bfb8      	it	lt
+ 8004234:	425b      	neglt	r3, r3
+ 8004236:	4a53      	ldr	r2, [pc, #332]	; (8004384 <flowmodbus+0x804>)
+ 8004238:	6013      	str	r3, [r2, #0]
 				registerFrame[37].U16 = orenationtray;
- 800424c:	4b51      	ldr	r3, [pc, #324]	; (8004394 <flowmodbus+0x814>)
- 800424e:	681b      	ldr	r3, [r3, #0]
- 8004250:	b29a      	uxth	r2, r3
- 8004252:	4b47      	ldr	r3, [pc, #284]	; (8004370 <flowmodbus+0x7f0>)
- 8004254:	f8a3 204a 	strh.w	r2, [r3, #74]	; 0x4a
+ 800423a:	4b52      	ldr	r3, [pc, #328]	; (8004384 <flowmodbus+0x804>)
+ 800423c:	681b      	ldr	r3, [r3, #0]
+ 800423e:	b29a      	uxth	r2, r3
+ 8004240:	4b47      	ldr	r3, [pc, #284]	; (8004360 <flowmodbus+0x7e0>)
+ 8004242:	f8a3 204a 	strh.w	r2, [r3, #74]	; 0x4a
 				registerFrame[16].U16 = 0; //0x10 y-status jogging fisnish reset to 0
- 8004258:	4b45      	ldr	r3, [pc, #276]	; (8004370 <flowmodbus+0x7f0>)
- 800425a:	2200      	movs	r2, #0
- 800425c:	841a      	strh	r2, [r3, #32]
+ 8004246:	4b46      	ldr	r3, [pc, #280]	; (8004360 <flowmodbus+0x7e0>)
+ 8004248:	2200      	movs	r2, #0
+ 800424a:	841a      	strh	r2, [r3, #32]
 				CheckTray = 0;
- 800425e:	4b49      	ldr	r3, [pc, #292]	; (8004384 <flowmodbus+0x804>)
+ 800424c:	4b49      	ldr	r3, [pc, #292]	; (8004374 <flowmodbus+0x7f4>)
+ 800424e:	2200      	movs	r2, #0
+ 8004250:	701a      	strb	r2, [r3, #0]
+				choice = 2;
+ 8004252:	4b4d      	ldr	r3, [pc, #308]	; (8004388 <flowmodbus+0x808>)
+ 8004254:	2202      	movs	r2, #2
+ 8004256:	601a      	str	r2, [r3, #0]
+				I2C_all(&data_read);
+ 8004258:	484c      	ldr	r0, [pc, #304]	; (800438c <flowmodbus+0x80c>)
+ 800425a:	f7fe fe2d 	bl	8002eb8 <I2C_all>
+				Mobus = Initial;
+ 800425e:	4b4c      	ldr	r3, [pc, #304]	; (8004390 <flowmodbus+0x810>)
  8004260:	2200      	movs	r2, #0
  8004262:	701a      	strb	r2, [r3, #0]
-				choice = 2;
- 8004264:	4b4c      	ldr	r3, [pc, #304]	; (8004398 <flowmodbus+0x818>)
- 8004266:	2202      	movs	r2, #2
- 8004268:	601a      	str	r2, [r3, #0]
-				I2C_all(&data_read);
- 800426a:	484c      	ldr	r0, [pc, #304]	; (800439c <flowmodbus+0x81c>)
- 800426c:	f7fe fe24 	bl	8002eb8 <I2C_all>
-				Mobus = Initial;
- 8004270:	4b4b      	ldr	r3, [pc, #300]	; (80043a0 <flowmodbus+0x820>)
- 8004272:	2200      	movs	r2, #0
- 8004274:	701a      	strb	r2, [r3, #0]
 			}
 		}
 
 		// Update the previous state
 		lastButtonState = buttonState;
- 8004276:	4b4b      	ldr	r3, [pc, #300]	; (80043a4 <flowmodbus+0x824>)
- 8004278:	781a      	ldrb	r2, [r3, #0]
- 800427a:	4b4b      	ldr	r3, [pc, #300]	; (80043a8 <flowmodbus+0x828>)
- 800427c:	701a      	strb	r2, [r3, #0]
+ 8004264:	4b4b      	ldr	r3, [pc, #300]	; (8004394 <flowmodbus+0x814>)
+ 8004266:	781a      	ldrb	r2, [r3, #0]
+ 8004268:	4b4b      	ldr	r3, [pc, #300]	; (8004398 <flowmodbus+0x818>)
+ 800426a:	701a      	strb	r2, [r3, #0]
 		break;
- 800427e:	f000 bd08 	b.w	8004c92 <flowmodbus+0x1112>
+ 800426c:	f000 bd11 	b.w	8004c92 <flowmodbus+0x1112>
 	case Jogging_Pick:
 		//y-axis jogging
 		if (Joystick_AND_Sensor[1] >= 3150) {
- 8004282:	4b4a      	ldr	r3, [pc, #296]	; (80043ac <flowmodbus+0x82c>)
- 8004284:	685b      	ldr	r3, [r3, #4]
- 8004286:	f640 424d 	movw	r2, #3149	; 0xc4d
- 800428a:	4293      	cmp	r3, r2
- 800428c:	d90a      	bls.n	80042a4 <flowmodbus+0x724>
+ 8004270:	4b4a      	ldr	r3, [pc, #296]	; (800439c <flowmodbus+0x81c>)
+ 8004272:	685b      	ldr	r3, [r3, #4]
+ 8004274:	f640 424d 	movw	r2, #3149	; 0xc4d
+ 8004278:	4293      	cmp	r3, r2
+ 800427a:	d90a      	bls.n	8004292 <flowmodbus+0x712>
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
- 800428e:	4b48      	ldr	r3, [pc, #288]	; (80043b0 <flowmodbus+0x830>)
- 8004290:	681a      	ldr	r2, [r3, #0]
- 8004292:	4b48      	ldr	r3, [pc, #288]	; (80043b4 <flowmodbus+0x834>)
- 8004294:	681b      	ldr	r3, [r3, #0]
- 8004296:	635a      	str	r2, [r3, #52]	; 0x34
+ 800427c:	4b48      	ldr	r3, [pc, #288]	; (80043a0 <flowmodbus+0x820>)
+ 800427e:	681a      	ldr	r2, [r3, #0]
+ 8004280:	4b48      	ldr	r3, [pc, #288]	; (80043a4 <flowmodbus+0x824>)
+ 8004282:	681b      	ldr	r3, [r3, #0]
+ 8004284:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
- 8004298:	2200      	movs	r2, #0
- 800429a:	2180      	movs	r1, #128	; 0x80
- 800429c:	4846      	ldr	r0, [pc, #280]	; (80043b8 <flowmodbus+0x838>)
- 800429e:	f002 fe17 	bl	8006ed0 <HAL_GPIO_WritePin>
- 80042a2:	e017      	b.n	80042d4 <flowmodbus+0x754>
+ 8004286:	2200      	movs	r2, #0
+ 8004288:	2180      	movs	r1, #128	; 0x80
+ 800428a:	4847      	ldr	r0, [pc, #284]	; (80043a8 <flowmodbus+0x828>)
+ 800428c:	f002 fe20 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 8004290:	e017      	b.n	80042c2 <flowmodbus+0x742>
 		} else if (Joystick_AND_Sensor[1] <= 100) {
- 80042a4:	4b41      	ldr	r3, [pc, #260]	; (80043ac <flowmodbus+0x82c>)
- 80042a6:	685b      	ldr	r3, [r3, #4]
- 80042a8:	2b64      	cmp	r3, #100	; 0x64
- 80042aa:	d80a      	bhi.n	80042c2 <flowmodbus+0x742>
+ 8004292:	4b42      	ldr	r3, [pc, #264]	; (800439c <flowmodbus+0x81c>)
+ 8004294:	685b      	ldr	r3, [r3, #4]
+ 8004296:	2b64      	cmp	r3, #100	; 0x64
+ 8004298:	d80a      	bhi.n	80042b0 <flowmodbus+0x730>
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, JoystickSpeed);
- 80042ac:	4b40      	ldr	r3, [pc, #256]	; (80043b0 <flowmodbus+0x830>)
- 80042ae:	681a      	ldr	r2, [r3, #0]
- 80042b0:	4b40      	ldr	r3, [pc, #256]	; (80043b4 <flowmodbus+0x834>)
- 80042b2:	681b      	ldr	r3, [r3, #0]
- 80042b4:	635a      	str	r2, [r3, #52]	; 0x34
+ 800429a:	4b41      	ldr	r3, [pc, #260]	; (80043a0 <flowmodbus+0x820>)
+ 800429c:	681a      	ldr	r2, [r3, #0]
+ 800429e:	4b41      	ldr	r3, [pc, #260]	; (80043a4 <flowmodbus+0x824>)
+ 80042a0:	681b      	ldr	r3, [r3, #0]
+ 80042a2:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
- 80042b6:	2201      	movs	r2, #1
- 80042b8:	2180      	movs	r1, #128	; 0x80
- 80042ba:	483f      	ldr	r0, [pc, #252]	; (80043b8 <flowmodbus+0x838>)
- 80042bc:	f002 fe08 	bl	8006ed0 <HAL_GPIO_WritePin>
- 80042c0:	e008      	b.n	80042d4 <flowmodbus+0x754>
+ 80042a4:	2201      	movs	r2, #1
+ 80042a6:	2180      	movs	r1, #128	; 0x80
+ 80042a8:	483f      	ldr	r0, [pc, #252]	; (80043a8 <flowmodbus+0x828>)
+ 80042aa:	f002 fe11 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 80042ae:	e008      	b.n	80042c2 <flowmodbus+0x742>
 		} else {
 			__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, 0);
- 80042c2:	4b3c      	ldr	r3, [pc, #240]	; (80043b4 <flowmodbus+0x834>)
- 80042c4:	681b      	ldr	r3, [r3, #0]
- 80042c6:	2200      	movs	r2, #0
- 80042c8:	635a      	str	r2, [r3, #52]	; 0x34
+ 80042b0:	4b3c      	ldr	r3, [pc, #240]	; (80043a4 <flowmodbus+0x824>)
+ 80042b2:	681b      	ldr	r3, [r3, #0]
+ 80042b4:	2200      	movs	r2, #0
+ 80042b6:	635a      	str	r2, [r3, #52]	; 0x34
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
- 80042ca:	2200      	movs	r2, #0
- 80042cc:	2180      	movs	r1, #128	; 0x80
- 80042ce:	483a      	ldr	r0, [pc, #232]	; (80043b8 <flowmodbus+0x838>)
- 80042d0:	f002 fdfe 	bl	8006ed0 <HAL_GPIO_WritePin>
+ 80042b8:	2200      	movs	r2, #0
+ 80042ba:	2180      	movs	r1, #128	; 0x80
+ 80042bc:	483a      	ldr	r0, [pc, #232]	; (80043a8 <flowmodbus+0x828>)
+ 80042be:	f002 fe07 	bl	8006ed0 <HAL_GPIO_WritePin>
 		}
 		//x-axis jogging
 		if (Joystick_AND_Sensor[0] >= 3150) {
- 80042d4:	4b35      	ldr	r3, [pc, #212]	; (80043ac <flowmodbus+0x82c>)
- 80042d6:	681b      	ldr	r3, [r3, #0]
- 80042d8:	f640 424d 	movw	r2, #3149	; 0xc4d
- 80042dc:	4293      	cmp	r3, r2
- 80042de:	d904      	bls.n	80042ea <flowmodbus+0x76a>
+ 80042c2:	4b36      	ldr	r3, [pc, #216]	; (800439c <flowmodbus+0x81c>)
+ 80042c4:	681b      	ldr	r3, [r3, #0]
+ 80042c6:	f640 424d 	movw	r2, #3149	; 0xc4d
+ 80042ca:	4293      	cmp	r3, r2
+ 80042cc:	d904      	bls.n	80042d8 <flowmodbus+0x758>
 			registerFrame[64].U16 = 8;
- 80042e0:	4b23      	ldr	r3, [pc, #140]	; (8004370 <flowmodbus+0x7f0>)
- 80042e2:	2208      	movs	r2, #8
- 80042e4:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
- 80042e8:	e00c      	b.n	8004304 <flowmodbus+0x784>
+ 80042ce:	4b24      	ldr	r3, [pc, #144]	; (8004360 <flowmodbus+0x7e0>)
+ 80042d0:	2208      	movs	r2, #8
+ 80042d2:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 80042d6:	e00c      	b.n	80042f2 <flowmodbus+0x772>
 		} else if (Joystick_AND_Sensor[0] <= 100) {
- 80042ea:	4b30      	ldr	r3, [pc, #192]	; (80043ac <flowmodbus+0x82c>)
- 80042ec:	681b      	ldr	r3, [r3, #0]
- 80042ee:	2b64      	cmp	r3, #100	; 0x64
- 80042f0:	d804      	bhi.n	80042fc <flowmodbus+0x77c>
+ 80042d8:	4b30      	ldr	r3, [pc, #192]	; (800439c <flowmodbus+0x81c>)
+ 80042da:	681b      	ldr	r3, [r3, #0]
+ 80042dc:	2b64      	cmp	r3, #100	; 0x64
+ 80042de:	d804      	bhi.n	80042ea <flowmodbus+0x76a>
 			registerFrame[64].U16 = 4;
- 80042f2:	4b1f      	ldr	r3, [pc, #124]	; (8004370 <flowmodbus+0x7f0>)
- 80042f4:	2204      	movs	r2, #4
- 80042f6:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
- 80042fa:	e003      	b.n	8004304 <flowmodbus+0x784>
+ 80042e0:	4b1f      	ldr	r3, [pc, #124]	; (8004360 <flowmodbus+0x7e0>)
+ 80042e2:	2204      	movs	r2, #4
+ 80042e4:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 80042e8:	e003      	b.n	80042f2 <flowmodbus+0x772>
 		} else {
 			registerFrame[64].U16 = 0;
- 80042fc:	4b1c      	ldr	r3, [pc, #112]	; (8004370 <flowmodbus+0x7f0>)
- 80042fe:	2200      	movs	r2, #0
- 8004300:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 80042ea:	4b1d      	ldr	r3, [pc, #116]	; (8004360 <flowmodbus+0x7e0>)
+ 80042ec:	2200      	movs	r2, #0
+ 80042ee:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
 		}
 
 		// Set position
 		buttonState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_5);
- 8004304:	2120      	movs	r1, #32
- 8004306:	482d      	ldr	r0, [pc, #180]	; (80043bc <flowmodbus+0x83c>)
- 8004308:	f002 fdca 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 800430c:	4603      	mov	r3, r0
- 800430e:	461a      	mov	r2, r3
- 8004310:	4b24      	ldr	r3, [pc, #144]	; (80043a4 <flowmodbus+0x824>)
- 8004312:	701a      	strb	r2, [r3, #0]
+ 80042f2:	2120      	movs	r1, #32
+ 80042f4:	482d      	ldr	r0, [pc, #180]	; (80043ac <flowmodbus+0x82c>)
+ 80042f6:	f002 fdd3 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 80042fa:	4603      	mov	r3, r0
+ 80042fc:	461a      	mov	r2, r3
+ 80042fe:	4b25      	ldr	r3, [pc, #148]	; (8004394 <flowmodbus+0x814>)
+ 8004300:	701a      	strb	r2, [r3, #0]
 		if (buttonState != lastButtonState) {
- 8004314:	4b23      	ldr	r3, [pc, #140]	; (80043a4 <flowmodbus+0x824>)
- 8004316:	781a      	ldrb	r2, [r3, #0]
- 8004318:	4b23      	ldr	r3, [pc, #140]	; (80043a8 <flowmodbus+0x828>)
- 800431a:	781b      	ldrb	r3, [r3, #0]
- 800431c:	429a      	cmp	r2, r3
- 800431e:	f000 810d 	beq.w	800453c <flowmodbus+0x9bc>
+ 8004302:	4b24      	ldr	r3, [pc, #144]	; (8004394 <flowmodbus+0x814>)
+ 8004304:	781a      	ldrb	r2, [r3, #0]
+ 8004306:	4b24      	ldr	r3, [pc, #144]	; (8004398 <flowmodbus+0x818>)
+ 8004308:	781b      	ldrb	r3, [r3, #0]
+ 800430a:	429a      	cmp	r2, r3
+ 800430c:	f000 810e 	beq.w	800452c <flowmodbus+0x9ac>
 			// Button press is valid, perform desired action
 			if (CheckTray == 0) {
- 8004322:	4b18      	ldr	r3, [pc, #96]	; (8004384 <flowmodbus+0x804>)
- 8004324:	781b      	ldrb	r3, [r3, #0]
- 8004326:	2b00      	cmp	r3, #0
- 8004328:	f040 808a 	bne.w	8004440 <flowmodbus+0x8c0>
+ 8004310:	4b18      	ldr	r3, [pc, #96]	; (8004374 <flowmodbus+0x7f4>)
+ 8004312:	781b      	ldrb	r3, [r3, #0]
+ 8004314:	2b00      	cmp	r3, #0
+ 8004316:	f040 808b 	bne.w	8004430 <flowmodbus+0x8b0>
 				if (registerFrame[68].U16 > 60000) {
- 800432c:	4b10      	ldr	r3, [pc, #64]	; (8004370 <flowmodbus+0x7f0>)
- 800432e:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004332:	f64e 2260 	movw	r2, #60000	; 0xea60
- 8004336:	4293      	cmp	r3, r2
- 8004338:	d944      	bls.n	80043c4 <flowmodbus+0x844>
+ 800431a:	4b11      	ldr	r3, [pc, #68]	; (8004360 <flowmodbus+0x7e0>)
+ 800431c:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 8004320:	f64e 2260 	movw	r2, #60000	; 0xea60
+ 8004324:	4293      	cmp	r3, r2
+ 8004326:	d945      	bls.n	80043b4 <flowmodbus+0x834>
 					posx = registerFrame[68].U16 - UINT16_MAX - 1;
- 800433a:	4b0d      	ldr	r3, [pc, #52]	; (8004370 <flowmodbus+0x7f0>)
- 800433c:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004340:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
- 8004344:	4a0b      	ldr	r2, [pc, #44]	; (8004374 <flowmodbus+0x7f4>)
- 8004346:	6013      	str	r3, [r2, #0]
+ 8004328:	4b0d      	ldr	r3, [pc, #52]	; (8004360 <flowmodbus+0x7e0>)
+ 800432a:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 800432e:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
+ 8004332:	4a0c      	ldr	r2, [pc, #48]	; (8004364 <flowmodbus+0x7e4>)
+ 8004334:	6013      	str	r3, [r2, #0]
 					bottom_left_jog[0] = (float) (posx) / 10;
- 8004348:	4b0a      	ldr	r3, [pc, #40]	; (8004374 <flowmodbus+0x7f4>)
- 800434a:	681b      	ldr	r3, [r3, #0]
- 800434c:	ee07 3a90 	vmov	s15, r3
- 8004350:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8004354:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 8004358:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 800435c:	4b18      	ldr	r3, [pc, #96]	; (80043c0 <flowmodbus+0x840>)
- 800435e:	edc3 7a00 	vstr	s15, [r3]
- 8004362:	e042      	b.n	80043ea <flowmodbus+0x86a>
- 8004364:	f3af 8000 	nop.w
- 8004368:	c63f1412 	.word	0xc63f1412
- 800436c:	404ca5dc 	.word	0x404ca5dc
- 8004370:	2000121c 	.word	0x2000121c
- 8004374:	200009e0 	.word	0x200009e0
- 8004378:	20000d30 	.word	0x20000d30
- 800437c:	20001348 	.word	0x20001348
- 8004380:	43af0000 	.word	0x43af0000
- 8004384:	200012d4 	.word	0x200012d4
- 8004388:	20000d38 	.word	0x20000d38
- 800438c:	20000d28 	.word	0x20000d28
- 8004390:	40590000 	.word	0x40590000
- 8004394:	200009e4 	.word	0x200009e4
- 8004398:	200009c4 	.word	0x200009c4
- 800439c:	200009c8 	.word	0x200009c8
- 80043a0:	20000d40 	.word	0x20000d40
- 80043a4:	200009cb 	.word	0x200009cb
- 80043a8:	200009ca 	.word	0x200009ca
- 80043ac:	200012c4 	.word	0x200012c4
- 80043b0:	20000380 	.word	0x20000380
- 80043b4:	200006a4 	.word	0x200006a4
- 80043b8:	40020000 	.word	0x40020000
- 80043bc:	40020800 	.word	0x40020800
- 80043c0:	20000b80 	.word	0x20000b80
+ 8004336:	4b0b      	ldr	r3, [pc, #44]	; (8004364 <flowmodbus+0x7e4>)
+ 8004338:	681b      	ldr	r3, [r3, #0]
+ 800433a:	ee07 3a90 	vmov	s15, r3
+ 800433e:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004342:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 8004346:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 800434a:	4b19      	ldr	r3, [pc, #100]	; (80043b0 <flowmodbus+0x830>)
+ 800434c:	edc3 7a00 	vstr	s15, [r3]
+ 8004350:	e043      	b.n	80043da <flowmodbus+0x85a>
+ 8004352:	bf00      	nop
+ 8004354:	f3af 8000 	nop.w
+ 8004358:	c63f1412 	.word	0xc63f1412
+ 800435c:	404ca5dc 	.word	0x404ca5dc
+ 8004360:	2000121c 	.word	0x2000121c
+ 8004364:	200009e0 	.word	0x200009e0
+ 8004368:	20000d30 	.word	0x20000d30
+ 800436c:	20001348 	.word	0x20001348
+ 8004370:	43af0000 	.word	0x43af0000
+ 8004374:	200012d4 	.word	0x200012d4
+ 8004378:	20000d38 	.word	0x20000d38
+ 800437c:	20000d28 	.word	0x20000d28
+ 8004380:	40590000 	.word	0x40590000
+ 8004384:	200009e4 	.word	0x200009e4
+ 8004388:	200009c4 	.word	0x200009c4
+ 800438c:	200009c8 	.word	0x200009c8
+ 8004390:	20000d40 	.word	0x20000d40
+ 8004394:	200009cb 	.word	0x200009cb
+ 8004398:	200009ca 	.word	0x200009ca
+ 800439c:	200012c4 	.word	0x200012c4
+ 80043a0:	20000380 	.word	0x20000380
+ 80043a4:	200006a4 	.word	0x200006a4
+ 80043a8:	40020000 	.word	0x40020000
+ 80043ac:	40020800 	.word	0x40020800
+ 80043b0:	20000b80 	.word	0x20000b80
 				} else {
 					posx = registerFrame[68].U16;
- 80043c4:	4ba6      	ldr	r3, [pc, #664]	; (8004660 <flowmodbus+0xae0>)
- 80043c6:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 80043ca:	461a      	mov	r2, r3
- 80043cc:	4ba5      	ldr	r3, [pc, #660]	; (8004664 <flowmodbus+0xae4>)
- 80043ce:	601a      	str	r2, [r3, #0]
+ 80043b4:	4ba6      	ldr	r3, [pc, #664]	; (8004650 <flowmodbus+0xad0>)
+ 80043b6:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 80043ba:	461a      	mov	r2, r3
+ 80043bc:	4ba5      	ldr	r3, [pc, #660]	; (8004654 <flowmodbus+0xad4>)
+ 80043be:	601a      	str	r2, [r3, #0]
 					bottom_left_jog[0] = (float) (posx) / 10;
- 80043d0:	4ba4      	ldr	r3, [pc, #656]	; (8004664 <flowmodbus+0xae4>)
- 80043d2:	681b      	ldr	r3, [r3, #0]
- 80043d4:	ee07 3a90 	vmov	s15, r3
- 80043d8:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80043dc:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 80043e0:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80043e4:	4ba0      	ldr	r3, [pc, #640]	; (8004668 <flowmodbus+0xae8>)
- 80043e6:	edc3 7a00 	vstr	s15, [r3]
+ 80043c0:	4ba4      	ldr	r3, [pc, #656]	; (8004654 <flowmodbus+0xad4>)
+ 80043c2:	681b      	ldr	r3, [r3, #0]
+ 80043c4:	ee07 3a90 	vmov	s15, r3
+ 80043c8:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 80043cc:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 80043d0:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 80043d4:	4ba0      	ldr	r3, [pc, #640]	; (8004658 <flowmodbus+0xad8>)
+ 80043d6:	edc3 7a00 	vstr	s15, [r3]
 				}
 				bottom_left_jog[1] = ((float) ReadDegree - 350); // Calulate Point y-axis
- 80043ea:	4ba0      	ldr	r3, [pc, #640]	; (800466c <flowmodbus+0xaec>)
- 80043ec:	edd3 7a00 	vldr	s15, [r3]
- 80043f0:	ed9f 7a9f 	vldr	s14, [pc, #636]	; 8004670 <flowmodbus+0xaf0>
- 80043f4:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 80043f8:	4b9b      	ldr	r3, [pc, #620]	; (8004668 <flowmodbus+0xae8>)
- 80043fa:	edc3 7a01 	vstr	s15, [r3, #4]
+ 80043da:	4ba0      	ldr	r3, [pc, #640]	; (800465c <flowmodbus+0xadc>)
+ 80043dc:	edd3 7a00 	vldr	s15, [r3]
+ 80043e0:	ed9f 7a9f 	vldr	s14, [pc, #636]	; 8004660 <flowmodbus+0xae0>
+ 80043e4:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 80043e8:	4b9b      	ldr	r3, [pc, #620]	; (8004658 <flowmodbus+0xad8>)
+ 80043ea:	edc3 7a01 	vstr	s15, [r3, #4]
 				registerFrame[32].U16 = (int) posx; // Place Tray Origin x
- 80043fe:	4b99      	ldr	r3, [pc, #612]	; (8004664 <flowmodbus+0xae4>)
- 8004400:	681b      	ldr	r3, [r3, #0]
- 8004402:	b29a      	uxth	r2, r3
- 8004404:	4b96      	ldr	r3, [pc, #600]	; (8004660 <flowmodbus+0xae0>)
- 8004406:	f8a3 2040 	strh.w	r2, [r3, #64]	; 0x40
+ 80043ee:	4b99      	ldr	r3, [pc, #612]	; (8004654 <flowmodbus+0xad4>)
+ 80043f0:	681b      	ldr	r3, [r3, #0]
+ 80043f2:	b29a      	uxth	r2, r3
+ 80043f4:	4b96      	ldr	r3, [pc, #600]	; (8004650 <flowmodbus+0xad0>)
+ 80043f6:	f8a3 2040 	strh.w	r2, [r3, #64]	; 0x40
 				registerFrame[33].U16 = (int) (ReadDegree - 350) * 10; // Place Tray Origin y
- 800440a:	4b98      	ldr	r3, [pc, #608]	; (800466c <flowmodbus+0xaec>)
- 800440c:	edd3 7a00 	vldr	s15, [r3]
- 8004410:	ed9f 7a97 	vldr	s14, [pc, #604]	; 8004670 <flowmodbus+0xaf0>
- 8004414:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 8004418:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 800441c:	ee17 3a90 	vmov	r3, s15
- 8004420:	b29b      	uxth	r3, r3
- 8004422:	461a      	mov	r2, r3
- 8004424:	0092      	lsls	r2, r2, #2
- 8004426:	4413      	add	r3, r2
- 8004428:	005b      	lsls	r3, r3, #1
- 800442a:	b29a      	uxth	r2, r3
- 800442c:	4b8c      	ldr	r3, [pc, #560]	; (8004660 <flowmodbus+0xae0>)
- 800442e:	f8a3 2042 	strh.w	r2, [r3, #66]	; 0x42
+ 80043fa:	4b98      	ldr	r3, [pc, #608]	; (800465c <flowmodbus+0xadc>)
+ 80043fc:	edd3 7a00 	vldr	s15, [r3]
+ 8004400:	ed9f 7a97 	vldr	s14, [pc, #604]	; 8004660 <flowmodbus+0xae0>
+ 8004404:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 8004408:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 800440c:	ee17 3a90 	vmov	r3, s15
+ 8004410:	b29b      	uxth	r3, r3
+ 8004412:	461a      	mov	r2, r3
+ 8004414:	0092      	lsls	r2, r2, #2
+ 8004416:	4413      	add	r3, r2
+ 8004418:	005b      	lsls	r3, r3, #1
+ 800441a:	b29a      	uxth	r2, r3
+ 800441c:	4b8c      	ldr	r3, [pc, #560]	; (8004650 <flowmodbus+0xad0>)
+ 800441e:	f8a3 2042 	strh.w	r2, [r3, #66]	; 0x42
 				CheckTray++;
- 8004432:	4b90      	ldr	r3, [pc, #576]	; (8004674 <flowmodbus+0xaf4>)
- 8004434:	781b      	ldrb	r3, [r3, #0]
- 8004436:	3301      	adds	r3, #1
- 8004438:	b2da      	uxtb	r2, r3
- 800443a:	4b8e      	ldr	r3, [pc, #568]	; (8004674 <flowmodbus+0xaf4>)
- 800443c:	701a      	strb	r2, [r3, #0]
- 800443e:	e07d      	b.n	800453c <flowmodbus+0x9bc>
+ 8004422:	4b90      	ldr	r3, [pc, #576]	; (8004664 <flowmodbus+0xae4>)
+ 8004424:	781b      	ldrb	r3, [r3, #0]
+ 8004426:	3301      	adds	r3, #1
+ 8004428:	b2da      	uxtb	r2, r3
+ 800442a:	4b8e      	ldr	r3, [pc, #568]	; (8004664 <flowmodbus+0xae4>)
+ 800442c:	701a      	strb	r2, [r3, #0]
+ 800442e:	e07d      	b.n	800452c <flowmodbus+0x9ac>
 			} else if (CheckTray == 1) {
- 8004440:	4b8c      	ldr	r3, [pc, #560]	; (8004674 <flowmodbus+0xaf4>)
- 8004442:	781b      	ldrb	r3, [r3, #0]
- 8004444:	2b01      	cmp	r3, #1
- 8004446:	d13f      	bne.n	80044c8 <flowmodbus+0x948>
+ 8004430:	4b8c      	ldr	r3, [pc, #560]	; (8004664 <flowmodbus+0xae4>)
+ 8004432:	781b      	ldrb	r3, [r3, #0]
+ 8004434:	2b01      	cmp	r3, #1
+ 8004436:	d13f      	bne.n	80044b8 <flowmodbus+0x938>
 				if (registerFrame[68].U16 > 60000) {
- 8004448:	4b85      	ldr	r3, [pc, #532]	; (8004660 <flowmodbus+0xae0>)
- 800444a:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 800444e:	f64e 2260 	movw	r2, #60000	; 0xea60
- 8004452:	4293      	cmp	r3, r2
- 8004454:	d914      	bls.n	8004480 <flowmodbus+0x900>
+ 8004438:	4b85      	ldr	r3, [pc, #532]	; (8004650 <flowmodbus+0xad0>)
+ 800443a:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 800443e:	f64e 2260 	movw	r2, #60000	; 0xea60
+ 8004442:	4293      	cmp	r3, r2
+ 8004444:	d914      	bls.n	8004470 <flowmodbus+0x8f0>
 					posx = registerFrame[68].U16 - UINT16_MAX - 1;
- 8004456:	4b82      	ldr	r3, [pc, #520]	; (8004660 <flowmodbus+0xae0>)
- 8004458:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 800445c:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
- 8004460:	4a80      	ldr	r2, [pc, #512]	; (8004664 <flowmodbus+0xae4>)
- 8004462:	6013      	str	r3, [r2, #0]
+ 8004446:	4b82      	ldr	r3, [pc, #520]	; (8004650 <flowmodbus+0xad0>)
+ 8004448:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 800444c:	f5a3 3380 	sub.w	r3, r3, #65536	; 0x10000
+ 8004450:	4a80      	ldr	r2, [pc, #512]	; (8004654 <flowmodbus+0xad4>)
+ 8004452:	6013      	str	r3, [r2, #0]
 					bottom_right_jog[0] = (float) (posx) / 10;
- 8004464:	4b7f      	ldr	r3, [pc, #508]	; (8004664 <flowmodbus+0xae4>)
- 8004466:	681b      	ldr	r3, [r3, #0]
- 8004468:	ee07 3a90 	vmov	s15, r3
- 800446c:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8004470:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 8004474:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 8004478:	4b7f      	ldr	r3, [pc, #508]	; (8004678 <flowmodbus+0xaf8>)
- 800447a:	edc3 7a00 	vstr	s15, [r3]
- 800447e:	e012      	b.n	80044a6 <flowmodbus+0x926>
+ 8004454:	4b7f      	ldr	r3, [pc, #508]	; (8004654 <flowmodbus+0xad4>)
+ 8004456:	681b      	ldr	r3, [r3, #0]
+ 8004458:	ee07 3a90 	vmov	s15, r3
+ 800445c:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004460:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 8004464:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 8004468:	4b7f      	ldr	r3, [pc, #508]	; (8004668 <flowmodbus+0xae8>)
+ 800446a:	edc3 7a00 	vstr	s15, [r3]
+ 800446e:	e012      	b.n	8004496 <flowmodbus+0x916>
 				} else {
 					posx = registerFrame[68].U16;
- 8004480:	4b77      	ldr	r3, [pc, #476]	; (8004660 <flowmodbus+0xae0>)
- 8004482:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
- 8004486:	461a      	mov	r2, r3
- 8004488:	4b76      	ldr	r3, [pc, #472]	; (8004664 <flowmodbus+0xae4>)
- 800448a:	601a      	str	r2, [r3, #0]
+ 8004470:	4b77      	ldr	r3, [pc, #476]	; (8004650 <flowmodbus+0xad0>)
+ 8004472:	f8b3 3088 	ldrh.w	r3, [r3, #136]	; 0x88
+ 8004476:	461a      	mov	r2, r3
+ 8004478:	4b76      	ldr	r3, [pc, #472]	; (8004654 <flowmodbus+0xad4>)
+ 800447a:	601a      	str	r2, [r3, #0]
 					bottom_right_jog[0] = (float) (posx) / 10;
- 800448c:	4b75      	ldr	r3, [pc, #468]	; (8004664 <flowmodbus+0xae4>)
- 800448e:	681b      	ldr	r3, [r3, #0]
- 8004490:	ee07 3a90 	vmov	s15, r3
- 8004494:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8004498:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
- 800449c:	eec7 7a26 	vdiv.f32	s15, s14, s13
- 80044a0:	4b75      	ldr	r3, [pc, #468]	; (8004678 <flowmodbus+0xaf8>)
- 80044a2:	edc3 7a00 	vstr	s15, [r3]
+ 800447c:	4b75      	ldr	r3, [pc, #468]	; (8004654 <flowmodbus+0xad4>)
+ 800447e:	681b      	ldr	r3, [r3, #0]
+ 8004480:	ee07 3a90 	vmov	s15, r3
+ 8004484:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004488:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
+ 800448c:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 8004490:	4b75      	ldr	r3, [pc, #468]	; (8004668 <flowmodbus+0xae8>)
+ 8004492:	edc3 7a00 	vstr	s15, [r3]
 				}
 				bottom_right_jog[1] = (float) (ReadDegree - (float) 350); // Calculate Point y-axis
- 80044a6:	4b71      	ldr	r3, [pc, #452]	; (800466c <flowmodbus+0xaec>)
- 80044a8:	edd3 7a00 	vldr	s15, [r3]
- 80044ac:	ed9f 7a70 	vldr	s14, [pc, #448]	; 8004670 <flowmodbus+0xaf0>
- 80044b0:	ee77 7ac7 	vsub.f32	s15, s15, s14
- 80044b4:	4b70      	ldr	r3, [pc, #448]	; (8004678 <flowmodbus+0xaf8>)
- 80044b6:	edc3 7a01 	vstr	s15, [r3, #4]
+ 8004496:	4b71      	ldr	r3, [pc, #452]	; (800465c <flowmodbus+0xadc>)
+ 8004498:	edd3 7a00 	vldr	s15, [r3]
+ 800449c:	ed9f 7a70 	vldr	s14, [pc, #448]	; 8004660 <flowmodbus+0xae0>
+ 80044a0:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 80044a4:	4b70      	ldr	r3, [pc, #448]	; (8004668 <flowmodbus+0xae8>)
+ 80044a6:	edc3 7a01 	vstr	s15, [r3, #4]
 				CheckTray++;
- 80044ba:	4b6e      	ldr	r3, [pc, #440]	; (8004674 <flowmodbus+0xaf4>)
- 80044bc:	781b      	ldrb	r3, [r3, #0]
- 80044be:	3301      	adds	r3, #1
- 80044c0:	b2da      	uxtb	r2, r3
- 80044c2:	4b6c      	ldr	r3, [pc, #432]	; (8004674 <flowmodbus+0xaf4>)
- 80044c4:	701a      	strb	r2, [r3, #0]
- 80044c6:	e039      	b.n	800453c <flowmodbus+0x9bc>
+ 80044aa:	4b6e      	ldr	r3, [pc, #440]	; (8004664 <flowmodbus+0xae4>)
+ 80044ac:	781b      	ldrb	r3, [r3, #0]
+ 80044ae:	3301      	adds	r3, #1
+ 80044b0:	b2da      	uxtb	r2, r3
+ 80044b2:	4b6c      	ldr	r3, [pc, #432]	; (8004664 <flowmodbus+0xae4>)
+ 80044b4:	701a      	strb	r2, [r3, #0]
+ 80044b6:	e039      	b.n	800452c <flowmodbus+0x9ac>
 			} else if (CheckTray == 2) {
- 80044c8:	4b6a      	ldr	r3, [pc, #424]	; (8004674 <flowmodbus+0xaf4>)
- 80044ca:	781b      	ldrb	r3, [r3, #0]
- 80044cc:	2b02      	cmp	r3, #2
- 80044ce:	d135      	bne.n	800453c <flowmodbus+0x9bc>
+ 80044b8:	4b6a      	ldr	r3, [pc, #424]	; (8004664 <flowmodbus+0xae4>)
+ 80044ba:	781b      	ldrb	r3, [r3, #0]
+ 80044bc:	2b02      	cmp	r3, #2
+ 80044be:	d135      	bne.n	800452c <flowmodbus+0x9ac>
 				transformRectangleAndPointsPick();
- 80044d0:	f7fe fde0 	bl	8003094 <transformRectangleAndPointsPick>
+ 80044c0:	f7fe fde8 	bl	8003094 <transformRectangleAndPointsPick>
 				orenationtray = abs((theta) * 57.2958 * 100);
- 80044d4:	4b69      	ldr	r3, [pc, #420]	; (800467c <flowmodbus+0xafc>)
- 80044d6:	681b      	ldr	r3, [r3, #0]
- 80044d8:	4618      	mov	r0, r3
- 80044da:	f7fb ffe1 	bl	80004a0 <__aeabi_f2d>
- 80044de:	a35e      	add	r3, pc, #376	; (adr r3, 8004658 <flowmodbus+0xad8>)
- 80044e0:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80044e4:	f7fc f834 	bl	8000550 <__aeabi_dmul>
- 80044e8:	4602      	mov	r2, r0
- 80044ea:	460b      	mov	r3, r1
- 80044ec:	4610      	mov	r0, r2
- 80044ee:	4619      	mov	r1, r3
- 80044f0:	f04f 0200 	mov.w	r2, #0
- 80044f4:	4b62      	ldr	r3, [pc, #392]	; (8004680 <flowmodbus+0xb00>)
- 80044f6:	f7fc f82b 	bl	8000550 <__aeabi_dmul>
- 80044fa:	4602      	mov	r2, r0
- 80044fc:	460b      	mov	r3, r1
- 80044fe:	4610      	mov	r0, r2
- 8004500:	4619      	mov	r1, r3
- 8004502:	f7fc fad5 	bl	8000ab0 <__aeabi_d2iz>
- 8004506:	4603      	mov	r3, r0
- 8004508:	2b00      	cmp	r3, #0
- 800450a:	bfb8      	it	lt
- 800450c:	425b      	neglt	r3, r3
- 800450e:	4a5d      	ldr	r2, [pc, #372]	; (8004684 <flowmodbus+0xb04>)
- 8004510:	6013      	str	r3, [r2, #0]
+ 80044c4:	4b69      	ldr	r3, [pc, #420]	; (800466c <flowmodbus+0xaec>)
+ 80044c6:	681b      	ldr	r3, [r3, #0]
+ 80044c8:	4618      	mov	r0, r3
+ 80044ca:	f7fb ffe9 	bl	80004a0 <__aeabi_f2d>
+ 80044ce:	a35e      	add	r3, pc, #376	; (adr r3, 8004648 <flowmodbus+0xac8>)
+ 80044d0:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 80044d4:	f7fc f83c 	bl	8000550 <__aeabi_dmul>
+ 80044d8:	4602      	mov	r2, r0
+ 80044da:	460b      	mov	r3, r1
+ 80044dc:	4610      	mov	r0, r2
+ 80044de:	4619      	mov	r1, r3
+ 80044e0:	f04f 0200 	mov.w	r2, #0
+ 80044e4:	4b62      	ldr	r3, [pc, #392]	; (8004670 <flowmodbus+0xaf0>)
+ 80044e6:	f7fc f833 	bl	8000550 <__aeabi_dmul>
+ 80044ea:	4602      	mov	r2, r0
+ 80044ec:	460b      	mov	r3, r1
+ 80044ee:	4610      	mov	r0, r2
+ 80044f0:	4619      	mov	r1, r3
+ 80044f2:	f7fc fadd 	bl	8000ab0 <__aeabi_d2iz>
+ 80044f6:	4603      	mov	r3, r0
+ 80044f8:	2b00      	cmp	r3, #0
+ 80044fa:	bfb8      	it	lt
+ 80044fc:	425b      	neglt	r3, r3
+ 80044fe:	4a5d      	ldr	r2, [pc, #372]	; (8004674 <flowmodbus+0xaf4>)
+ 8004500:	6013      	str	r3, [r2, #0]
 				registerFrame[34].U16 = orenationtray;
- 8004512:	4b5c      	ldr	r3, [pc, #368]	; (8004684 <flowmodbus+0xb04>)
- 8004514:	681b      	ldr	r3, [r3, #0]
- 8004516:	b29a      	uxth	r2, r3
- 8004518:	4b51      	ldr	r3, [pc, #324]	; (8004660 <flowmodbus+0xae0>)
- 800451a:	f8a3 2044 	strh.w	r2, [r3, #68]	; 0x44
+ 8004502:	4b5c      	ldr	r3, [pc, #368]	; (8004674 <flowmodbus+0xaf4>)
+ 8004504:	681b      	ldr	r3, [r3, #0]
+ 8004506:	b29a      	uxth	r2, r3
+ 8004508:	4b51      	ldr	r3, [pc, #324]	; (8004650 <flowmodbus+0xad0>)
+ 800450a:	f8a3 2044 	strh.w	r2, [r3, #68]	; 0x44
 				registerFrame[16].U16 = 0; // 0x10 y-status jogging finish reset to 0
- 800451e:	4b50      	ldr	r3, [pc, #320]	; (8004660 <flowmodbus+0xae0>)
- 8004520:	2200      	movs	r2, #0
- 8004522:	841a      	strh	r2, [r3, #32]
+ 800450e:	4b50      	ldr	r3, [pc, #320]	; (8004650 <flowmodbus+0xad0>)
+ 8004510:	2200      	movs	r2, #0
+ 8004512:	841a      	strh	r2, [r3, #32]
 				CheckTray = 0;
- 8004524:	4b53      	ldr	r3, [pc, #332]	; (8004674 <flowmodbus+0xaf4>)
- 8004526:	2200      	movs	r2, #0
- 8004528:	701a      	strb	r2, [r3, #0]
+ 8004514:	4b53      	ldr	r3, [pc, #332]	; (8004664 <flowmodbus+0xae4>)
+ 8004516:	2200      	movs	r2, #0
+ 8004518:	701a      	strb	r2, [r3, #0]
 				choice = 2;
- 800452a:	4b57      	ldr	r3, [pc, #348]	; (8004688 <flowmodbus+0xb08>)
- 800452c:	2202      	movs	r2, #2
- 800452e:	601a      	str	r2, [r3, #0]
+ 800451a:	4b57      	ldr	r3, [pc, #348]	; (8004678 <flowmodbus+0xaf8>)
+ 800451c:	2202      	movs	r2, #2
+ 800451e:	601a      	str	r2, [r3, #0]
 				I2C_all(&data_read);
- 8004530:	4856      	ldr	r0, [pc, #344]	; (800468c <flowmodbus+0xb0c>)
- 8004532:	f7fe fcc1 	bl	8002eb8 <I2C_all>
+ 8004520:	4856      	ldr	r0, [pc, #344]	; (800467c <flowmodbus+0xafc>)
+ 8004522:	f7fe fcc9 	bl	8002eb8 <I2C_all>
 				Mobus = Initial;
- 8004536:	4b56      	ldr	r3, [pc, #344]	; (8004690 <flowmodbus+0xb10>)
- 8004538:	2200      	movs	r2, #0
- 800453a:	701a      	strb	r2, [r3, #0]
+ 8004526:	4b56      	ldr	r3, [pc, #344]	; (8004680 <flowmodbus+0xb00>)
+ 8004528:	2200      	movs	r2, #0
+ 800452a:	701a      	strb	r2, [r3, #0]
 			}
 		}
 		// Update the previous state
 		lastButtonState = buttonState;
- 800453c:	4b55      	ldr	r3, [pc, #340]	; (8004694 <flowmodbus+0xb14>)
- 800453e:	781a      	ldrb	r2, [r3, #0]
- 8004540:	4b55      	ldr	r3, [pc, #340]	; (8004698 <flowmodbus+0xb18>)
- 8004542:	701a      	strb	r2, [r3, #0]
+ 800452c:	4b55      	ldr	r3, [pc, #340]	; (8004684 <flowmodbus+0xb04>)
+ 800452e:	781a      	ldrb	r2, [r3, #0]
+ 8004530:	4b55      	ldr	r3, [pc, #340]	; (8004688 <flowmodbus+0xb08>)
+ 8004532:	701a      	strb	r2, [r3, #0]
 		break;
- 8004544:	e3a5      	b.n	8004c92 <flowmodbus+0x1112>
+ 8004534:	e3ad      	b.n	8004c92 <flowmodbus+0x1112>
 	case Home:
 		// x axis
 		registerFrame[64].U16 = 1; // 0x40 Moving Status x-axis - Home
- 8004546:	4b46      	ldr	r3, [pc, #280]	; (8004660 <flowmodbus+0xae0>)
- 8004548:	2201      	movs	r2, #1
- 800454a:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004536:	4b46      	ldr	r3, [pc, #280]	; (8004650 <flowmodbus+0xad0>)
+ 8004538:	2201      	movs	r2, #1
+ 800453a:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
 		home_yaxis();
- 800454e:	f7ff faa1 	bl	8003a94 <home_yaxis>
+ 800453e:	f7ff faa9 	bl	8003a94 <home_yaxis>
 		// y axis
 		break;
- 8004552:	e39e      	b.n	8004c92 <flowmodbus+0x1112>
+ 8004542:	e3a6      	b.n	8004c92 <flowmodbus+0x1112>
 	case Run_PointMode:
 		// x axis
 		registerFrame[65].U16 = registerFrame[48].U16; // position Tray pick/place
- 8004554:	4b42      	ldr	r3, [pc, #264]	; (8004660 <flowmodbus+0xae0>)
- 8004556:	f8b3 2060 	ldrh.w	r2, [r3, #96]	; 0x60
- 800455a:	4b41      	ldr	r3, [pc, #260]	; (8004660 <flowmodbus+0xae0>)
- 800455c:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
+ 8004544:	4b42      	ldr	r3, [pc, #264]	; (8004650 <flowmodbus+0xad0>)
+ 8004546:	f8b3 2060 	ldrh.w	r2, [r3, #96]	; 0x60
+ 800454a:	4b41      	ldr	r3, [pc, #260]	; (8004650 <flowmodbus+0xad0>)
+ 800454c:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
 		registerFrame[66].U16 = 3000; // speed x-axis 300mm
- 8004560:	4b3f      	ldr	r3, [pc, #252]	; (8004660 <flowmodbus+0xae0>)
- 8004562:	f640 32b8 	movw	r2, #3000	; 0xbb8
- 8004566:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
+ 8004550:	4b3f      	ldr	r3, [pc, #252]	; (8004650 <flowmodbus+0xad0>)
+ 8004552:	f640 32b8 	movw	r2, #3000	; 0xbb8
+ 8004556:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
 		registerFrame[67].U16 = 1; // Acc time 1mms
- 800456a:	4b3d      	ldr	r3, [pc, #244]	; (8004660 <flowmodbus+0xae0>)
- 800456c:	2201      	movs	r2, #1
- 800456e:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
+ 800455a:	4b3d      	ldr	r3, [pc, #244]	; (8004650 <flowmodbus+0xad0>)
+ 800455c:	2201      	movs	r2, #1
+ 800455e:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
 		registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
- 8004572:	4b3b      	ldr	r3, [pc, #236]	; (8004660 <flowmodbus+0xae0>)
- 8004574:	2202      	movs	r2, #2
- 8004576:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004562:	4b3b      	ldr	r3, [pc, #236]	; (8004650 <flowmodbus+0xad0>)
+ 8004564:	2202      	movs	r2, #2
+ 8004566:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+		path = 1;
+ 800456a:	4b48      	ldr	r3, [pc, #288]	; (800468c <flowmodbus+0xb0c>)
+ 800456c:	2201      	movs	r2, #1
+ 800456e:	601a      	str	r2, [r3, #0]
 		// y axis
 		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1){ // if Emergency Point mode on
- 800457a:	f44f 7100 	mov.w	r1, #512	; 0x200
- 800457e:	4847      	ldr	r0, [pc, #284]	; (800469c <flowmodbus+0xb1c>)
- 8004580:	f002 fc8e 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 8004584:	4603      	mov	r3, r0
- 8004586:	2b01      	cmp	r3, #1
- 8004588:	d113      	bne.n	80045b2 <flowmodbus+0xa32>
+ 8004570:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 8004574:	4846      	ldr	r0, [pc, #280]	; (8004690 <flowmodbus+0xb10>)
+ 8004576:	f002 fc93 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 800457a:	4603      	mov	r3, r0
+ 800457c:	2b01      	cmp	r3, #1
+ 800457e:	d113      	bne.n	80045a8 <flowmodbus+0xa28>
 			choice = 4;
- 800458a:	4b3f      	ldr	r3, [pc, #252]	; (8004688 <flowmodbus+0xb08>)
- 800458c:	2204      	movs	r2, #4
- 800458e:	601a      	str	r2, [r3, #0]
+ 8004580:	4b3d      	ldr	r3, [pc, #244]	; (8004678 <flowmodbus+0xaf8>)
+ 8004582:	2204      	movs	r2, #4
+ 8004584:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 8004590:	483e      	ldr	r0, [pc, #248]	; (800468c <flowmodbus+0xb0c>)
- 8004592:	f7fe fc91 	bl	8002eb8 <I2C_all>
+ 8004586:	483d      	ldr	r0, [pc, #244]	; (800467c <flowmodbus+0xafc>)
+ 8004588:	f7fe fc96 	bl	8002eb8 <I2C_all>
 			path = 0;
- 8004596:	4b42      	ldr	r3, [pc, #264]	; (80046a0 <flowmodbus+0xb20>)
- 8004598:	2200      	movs	r2, #0
- 800459a:	601a      	str	r2, [r3, #0]
+ 800458c:	4b3f      	ldr	r3, [pc, #252]	; (800468c <flowmodbus+0xb0c>)
+ 800458e:	2200      	movs	r2, #0
+ 8004590:	601a      	str	r2, [r3, #0]
 			s = 0;
- 800459c:	4b41      	ldr	r3, [pc, #260]	; (80046a4 <flowmodbus+0xb24>)
- 800459e:	f04f 0200 	mov.w	r2, #0
- 80045a2:	601a      	str	r2, [r3, #0]
+ 8004592:	4b40      	ldr	r3, [pc, #256]	; (8004694 <flowmodbus+0xb14>)
+ 8004594:	f04f 0200 	mov.w	r2, #0
+ 8004598:	601a      	str	r2, [r3, #0]
 			s2 = 0;
- 80045a4:	4b40      	ldr	r3, [pc, #256]	; (80046a8 <flowmodbus+0xb28>)
- 80045a6:	f04f 0200 	mov.w	r2, #0
- 80045aa:	601a      	str	r2, [r3, #0]
+ 800459a:	4b3f      	ldr	r3, [pc, #252]	; (8004698 <flowmodbus+0xb18>)
+ 800459c:	f04f 0200 	mov.w	r2, #0
+ 80045a0:	601a      	str	r2, [r3, #0]
 			Mobus = EM_Run_PointMode;
- 80045ac:	4b38      	ldr	r3, [pc, #224]	; (8004690 <flowmodbus+0xb10>)
- 80045ae:	2206      	movs	r2, #6
- 80045b0:	701a      	strb	r2, [r3, #0]
+ 80045a2:	4b37      	ldr	r3, [pc, #220]	; (8004680 <flowmodbus+0xb00>)
+ 80045a4:	2206      	movs	r2, #6
+ 80045a6:	701a      	strb	r2, [r3, #0]
 		}
 		if(abs(error) < 0.2 && indexposition == (timecycle*100)){
- 80045b2:	4b3e      	ldr	r3, [pc, #248]	; (80046ac <flowmodbus+0xb2c>)
- 80045b4:	edd3 7a00 	vldr	s15, [r3]
- 80045b8:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 80045bc:	ee17 3a90 	vmov	r3, s15
- 80045c0:	2b00      	cmp	r3, #0
- 80045c2:	f2c0 8332 	blt.w	8004c2a <flowmodbus+0x10aa>
- 80045c6:	4b39      	ldr	r3, [pc, #228]	; (80046ac <flowmodbus+0xb2c>)
- 80045c8:	edd3 7a00 	vldr	s15, [r3]
- 80045cc:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 80045d0:	ee17 3a90 	vmov	r3, s15
- 80045d4:	2b00      	cmp	r3, #0
- 80045d6:	f300 8328 	bgt.w	8004c2a <flowmodbus+0x10aa>
- 80045da:	4b35      	ldr	r3, [pc, #212]	; (80046b0 <flowmodbus+0xb30>)
- 80045dc:	681b      	ldr	r3, [r3, #0]
- 80045de:	ee07 3a90 	vmov	s15, r3
- 80045e2:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 80045e6:	4b33      	ldr	r3, [pc, #204]	; (80046b4 <flowmodbus+0xb34>)
- 80045e8:	edd3 7a00 	vldr	s15, [r3]
- 80045ec:	eddf 6a32 	vldr	s13, [pc, #200]	; 80046b8 <flowmodbus+0xb38>
- 80045f0:	ee67 7aa6 	vmul.f32	s15, s15, s13
- 80045f4:	eeb4 7a67 	vcmp.f32	s14, s15
- 80045f8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 80045fc:	f040 8315 	bne.w	8004c2a <flowmodbus+0x10aa>
+ 80045a8:	4b3c      	ldr	r3, [pc, #240]	; (800469c <flowmodbus+0xb1c>)
+ 80045aa:	edd3 7a00 	vldr	s15, [r3]
+ 80045ae:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 80045b2:	ee17 3a90 	vmov	r3, s15
+ 80045b6:	2b00      	cmp	r3, #0
+ 80045b8:	f2c0 8368 	blt.w	8004c8c <flowmodbus+0x110c>
+ 80045bc:	4b37      	ldr	r3, [pc, #220]	; (800469c <flowmodbus+0xb1c>)
+ 80045be:	edd3 7a00 	vldr	s15, [r3]
+ 80045c2:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 80045c6:	ee17 3a90 	vmov	r3, s15
+ 80045ca:	2b00      	cmp	r3, #0
+ 80045cc:	f300 835e 	bgt.w	8004c8c <flowmodbus+0x110c>
+ 80045d0:	4b33      	ldr	r3, [pc, #204]	; (80046a0 <flowmodbus+0xb20>)
+ 80045d2:	681b      	ldr	r3, [r3, #0]
+ 80045d4:	ee07 3a90 	vmov	s15, r3
+ 80045d8:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 80045dc:	4b31      	ldr	r3, [pc, #196]	; (80046a4 <flowmodbus+0xb24>)
+ 80045de:	edd3 7a00 	vldr	s15, [r3]
+ 80045e2:	eddf 6a31 	vldr	s13, [pc, #196]	; 80046a8 <flowmodbus+0xb28>
+ 80045e6:	ee67 7aa6 	vmul.f32	s15, s15, s13
+ 80045ea:	eeb4 7a67 	vcmp.f32	s14, s15
+ 80045ee:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 80045f2:	f040 834b 	bne.w	8004c8c <flowmodbus+0x110c>
 				Mobus = Initial;
- 8004600:	4b23      	ldr	r3, [pc, #140]	; (8004690 <flowmodbus+0xb10>)
- 8004602:	2200      	movs	r2, #0
- 8004604:	701a      	strb	r2, [r3, #0]
+ 80045f6:	4b22      	ldr	r3, [pc, #136]	; (8004680 <flowmodbus+0xb00>)
+ 80045f8:	2200      	movs	r2, #0
+ 80045fa:	701a      	strb	r2, [r3, #0]
 				registerFrame[16].U16 = 0;
- 8004606:	4b16      	ldr	r3, [pc, #88]	; (8004660 <flowmodbus+0xae0>)
- 8004608:	2200      	movs	r2, #0
- 800460a:	841a      	strh	r2, [r3, #32]
+ 80045fc:	4b14      	ldr	r3, [pc, #80]	; (8004650 <flowmodbus+0xad0>)
+ 80045fe:	2200      	movs	r2, #0
+ 8004600:	841a      	strh	r2, [r3, #32]
 		}
 		break;
- 800460c:	e30d      	b.n	8004c2a <flowmodbus+0x10aa>
+ 8004602:	e343      	b.n	8004c8c <flowmodbus+0x110c>
 	case EM_Run_PointMode:
 
 		switch (Em_state) {
- 800460e:	4b2b      	ldr	r3, [pc, #172]	; (80046bc <flowmodbus+0xb3c>)
- 8004610:	681b      	ldr	r3, [r3, #0]
- 8004612:	2b00      	cmp	r3, #0
- 8004614:	d002      	beq.n	800461c <flowmodbus+0xa9c>
- 8004616:	2b01      	cmp	r3, #1
- 8004618:	d054      	beq.n	80046c4 <flowmodbus+0xb44>
+ 8004604:	4b29      	ldr	r3, [pc, #164]	; (80046ac <flowmodbus+0xb2c>)
+ 8004606:	681b      	ldr	r3, [r3, #0]
+ 8004608:	2b00      	cmp	r3, #0
+ 800460a:	d002      	beq.n	8004612 <flowmodbus+0xa92>
+ 800460c:	2b01      	cmp	r3, #1
+ 800460e:	d051      	beq.n	80046b4 <flowmodbus+0xb34>
 						Mobus = Run_PointMode;
 					}
 				}
 				break;
 		}
 		break;
- 800461a:	e33a      	b.n	8004c92 <flowmodbus+0x1112>
+ 8004610:	e33f      	b.n	8004c92 <flowmodbus+0x1112>
 				path = 0;
- 800461c:	4b20      	ldr	r3, [pc, #128]	; (80046a0 <flowmodbus+0xb20>)
- 800461e:	2200      	movs	r2, #0
- 8004620:	601a      	str	r2, [r3, #0]
+ 8004612:	4b1e      	ldr	r3, [pc, #120]	; (800468c <flowmodbus+0xb0c>)
+ 8004614:	2200      	movs	r2, #0
+ 8004616:	601a      	str	r2, [r3, #0]
 				s = 0;
- 8004622:	4b20      	ldr	r3, [pc, #128]	; (80046a4 <flowmodbus+0xb24>)
- 8004624:	f04f 0200 	mov.w	r2, #0
- 8004628:	601a      	str	r2, [r3, #0]
+ 8004618:	4b1e      	ldr	r3, [pc, #120]	; (8004694 <flowmodbus+0xb14>)
+ 800461a:	f04f 0200 	mov.w	r2, #0
+ 800461e:	601a      	str	r2, [r3, #0]
 				s2 = 0;
- 800462a:	4b1f      	ldr	r3, [pc, #124]	; (80046a8 <flowmodbus+0xb28>)
- 800462c:	f04f 0200 	mov.w	r2, #0
- 8004630:	601a      	str	r2, [r3, #0]
+ 8004620:	4b1d      	ldr	r3, [pc, #116]	; (8004698 <flowmodbus+0xb18>)
+ 8004622:	f04f 0200 	mov.w	r2, #0
+ 8004626:	601a      	str	r2, [r3, #0]
 				if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Tray mode On
- 8004632:	f44f 7100 	mov.w	r1, #512	; 0x200
- 8004636:	4819      	ldr	r0, [pc, #100]	; (800469c <flowmodbus+0xb1c>)
- 8004638:	f002 fc32 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 800463c:	4603      	mov	r3, r0
- 800463e:	2b00      	cmp	r3, #0
- 8004640:	d179      	bne.n	8004736 <flowmodbus+0xbb6>
-					path = 1;
- 8004642:	4b17      	ldr	r3, [pc, #92]	; (80046a0 <flowmodbus+0xb20>)
- 8004644:	2201      	movs	r2, #1
- 8004646:	601a      	str	r2, [r3, #0]
+ 8004628:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 800462c:	4818      	ldr	r0, [pc, #96]	; (8004690 <flowmodbus+0xb10>)
+ 800462e:	f002 fc37 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 8004632:	4603      	mov	r3, r0
+ 8004634:	2b00      	cmp	r3, #0
+ 8004636:	d176      	bne.n	8004726 <flowmodbus+0xba6>
 					Em_state = 1;
- 8004648:	4b1c      	ldr	r3, [pc, #112]	; (80046bc <flowmodbus+0xb3c>)
- 800464a:	2201      	movs	r2, #1
- 800464c:	601a      	str	r2, [r3, #0]
+ 8004638:	4b1c      	ldr	r3, [pc, #112]	; (80046ac <flowmodbus+0xb2c>)
+ 800463a:	2201      	movs	r2, #1
+ 800463c:	601a      	str	r2, [r3, #0]
 					I2Cdone = 0;
- 800464e:	4b1c      	ldr	r3, [pc, #112]	; (80046c0 <flowmodbus+0xb40>)
- 8004650:	2200      	movs	r2, #0
- 8004652:	601a      	str	r2, [r3, #0]
+ 800463e:	4b1c      	ldr	r3, [pc, #112]	; (80046b0 <flowmodbus+0xb30>)
+ 8004640:	2200      	movs	r2, #0
+ 8004642:	601a      	str	r2, [r3, #0]
 				break;
- 8004654:	e06f      	b.n	8004736 <flowmodbus+0xbb6>
- 8004656:	bf00      	nop
- 8004658:	c63f1412 	.word	0xc63f1412
- 800465c:	404ca5dc 	.word	0x404ca5dc
- 8004660:	2000121c 	.word	0x2000121c
- 8004664:	200009e0 	.word	0x200009e0
- 8004668:	20000b80 	.word	0x20000b80
- 800466c:	20001348 	.word	0x20001348
- 8004670:	43af0000 	.word	0x43af0000
- 8004674:	200012d4 	.word	0x200012d4
- 8004678:	20000b88 	.word	0x20000b88
- 800467c:	20000b78 	.word	0x20000b78
- 8004680:	40590000 	.word	0x40590000
- 8004684:	200009e4 	.word	0x200009e4
- 8004688:	200009c4 	.word	0x200009c4
- 800468c:	200009c8 	.word	0x200009c8
- 8004690:	20000d40 	.word	0x20000d40
- 8004694:	200009cb 	.word	0x200009cb
- 8004698:	200009ca 	.word	0x200009ca
- 800469c:	40020000 	.word	0x40020000
- 80046a0:	200012b4 	.word	0x200012b4
- 80046a4:	20001328 	.word	0x20001328
- 80046a8:	20001334 	.word	0x20001334
- 80046ac:	20001354 	.word	0x20001354
- 80046b0:	2000131c 	.word	0x2000131c
- 80046b4:	200009dc 	.word	0x200009dc
- 80046b8:	42c80000 	.word	0x42c80000
- 80046bc:	200009a4 	.word	0x200009a4
- 80046c0:	200009b8 	.word	0x200009b8
+ 8004644:	e06f      	b.n	8004726 <flowmodbus+0xba6>
+ 8004646:	bf00      	nop
+ 8004648:	c63f1412 	.word	0xc63f1412
+ 800464c:	404ca5dc 	.word	0x404ca5dc
+ 8004650:	2000121c 	.word	0x2000121c
+ 8004654:	200009e0 	.word	0x200009e0
+ 8004658:	20000b80 	.word	0x20000b80
+ 800465c:	20001348 	.word	0x20001348
+ 8004660:	43af0000 	.word	0x43af0000
+ 8004664:	200012d4 	.word	0x200012d4
+ 8004668:	20000b88 	.word	0x20000b88
+ 800466c:	20000b78 	.word	0x20000b78
+ 8004670:	40590000 	.word	0x40590000
+ 8004674:	200009e4 	.word	0x200009e4
+ 8004678:	200009c4 	.word	0x200009c4
+ 800467c:	200009c8 	.word	0x200009c8
+ 8004680:	20000d40 	.word	0x20000d40
+ 8004684:	200009cb 	.word	0x200009cb
+ 8004688:	200009ca 	.word	0x200009ca
+ 800468c:	200012b4 	.word	0x200012b4
+ 8004690:	40020000 	.word	0x40020000
+ 8004694:	20001328 	.word	0x20001328
+ 8004698:	20001334 	.word	0x20001334
+ 800469c:	20001354 	.word	0x20001354
+ 80046a0:	2000131c 	.word	0x2000131c
+ 80046a4:	200009dc 	.word	0x200009dc
+ 80046a8:	42c80000 	.word	0x42c80000
+ 80046ac:	200009a4 	.word	0x200009a4
+ 80046b0:	200009b8 	.word	0x200009b8
 				if(I2Cdone == 0){
- 80046c4:	4b98      	ldr	r3, [pc, #608]	; (8004928 <flowmodbus+0xda8>)
- 80046c6:	681b      	ldr	r3, [r3, #0]
- 80046c8:	2b00      	cmp	r3, #0
- 80046ca:	d10f      	bne.n	80046ec <flowmodbus+0xb6c>
+ 80046b4:	4b98      	ldr	r3, [pc, #608]	; (8004918 <flowmodbus+0xd98>)
+ 80046b6:	681b      	ldr	r3, [r3, #0]
+ 80046b8:	2b00      	cmp	r3, #0
+ 80046ba:	d10f      	bne.n	80046dc <flowmodbus+0xb5c>
 					timestampI2Cdone = HAL_GetTick() + 500;
- 80046cc:	f001 f936 	bl	800593c <HAL_GetTick>
- 80046d0:	4603      	mov	r3, r0
- 80046d2:	f503 73fa 	add.w	r3, r3, #500	; 0x1f4
- 80046d6:	2200      	movs	r2, #0
- 80046d8:	623b      	str	r3, [r7, #32]
- 80046da:	627a      	str	r2, [r7, #36]	; 0x24
- 80046dc:	4b93      	ldr	r3, [pc, #588]	; (800492c <flowmodbus+0xdac>)
- 80046de:	e9d7 1208 	ldrd	r1, r2, [r7, #32]
- 80046e2:	e9c3 1200 	strd	r1, r2, [r3]
+ 80046bc:	f001 f93e 	bl	800593c <HAL_GetTick>
+ 80046c0:	4603      	mov	r3, r0
+ 80046c2:	f503 73fa 	add.w	r3, r3, #500	; 0x1f4
+ 80046c6:	2200      	movs	r2, #0
+ 80046c8:	623b      	str	r3, [r7, #32]
+ 80046ca:	627a      	str	r2, [r7, #36]	; 0x24
+ 80046cc:	4b93      	ldr	r3, [pc, #588]	; (800491c <flowmodbus+0xd9c>)
+ 80046ce:	e9d7 1208 	ldrd	r1, r2, [r7, #32]
+ 80046d2:	e9c3 1200 	strd	r1, r2, [r3]
 					I2Cdone = 1;
- 80046e6:	4b90      	ldr	r3, [pc, #576]	; (8004928 <flowmodbus+0xda8>)
- 80046e8:	2201      	movs	r2, #1
- 80046ea:	601a      	str	r2, [r3, #0]
+ 80046d6:	4b90      	ldr	r3, [pc, #576]	; (8004918 <flowmodbus+0xd98>)
+ 80046d8:	2201      	movs	r2, #1
+ 80046da:	601a      	str	r2, [r3, #0]
 				if(HAL_GetTick() >= timestampI2Cdone){
- 80046ec:	f001 f926 	bl	800593c <HAL_GetTick>
- 80046f0:	4603      	mov	r3, r0
- 80046f2:	2200      	movs	r2, #0
- 80046f4:	61bb      	str	r3, [r7, #24]
- 80046f6:	61fa      	str	r2, [r7, #28]
- 80046f8:	4b8c      	ldr	r3, [pc, #560]	; (800492c <flowmodbus+0xdac>)
- 80046fa:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80046fe:	e9d7 4506 	ldrd	r4, r5, [r7, #24]
- 8004702:	4621      	mov	r1, r4
- 8004704:	4291      	cmp	r1, r2
- 8004706:	4629      	mov	r1, r5
- 8004708:	eb71 0303 	sbcs.w	r3, r1, r3
- 800470c:	d315      	bcc.n	800473a <flowmodbus+0xbba>
+ 80046dc:	f001 f92e 	bl	800593c <HAL_GetTick>
+ 80046e0:	4603      	mov	r3, r0
+ 80046e2:	2200      	movs	r2, #0
+ 80046e4:	61bb      	str	r3, [r7, #24]
+ 80046e6:	61fa      	str	r2, [r7, #28]
+ 80046e8:	4b8c      	ldr	r3, [pc, #560]	; (800491c <flowmodbus+0xd9c>)
+ 80046ea:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 80046ee:	e9d7 4506 	ldrd	r4, r5, [r7, #24]
+ 80046f2:	4621      	mov	r1, r4
+ 80046f4:	4291      	cmp	r1, r2
+ 80046f6:	4629      	mov	r1, r5
+ 80046f8:	eb71 0303 	sbcs.w	r3, r1, r3
+ 80046fc:	d315      	bcc.n	800472a <flowmodbus+0xbaa>
 					choice = 5;
- 800470e:	4b88      	ldr	r3, [pc, #544]	; (8004930 <flowmodbus+0xdb0>)
- 8004710:	2205      	movs	r2, #5
- 8004712:	601a      	str	r2, [r3, #0]
+ 80046fe:	4b88      	ldr	r3, [pc, #544]	; (8004920 <flowmodbus+0xda0>)
+ 8004700:	2205      	movs	r2, #5
+ 8004702:	601a      	str	r2, [r3, #0]
 					I2C_all(&data_read);
- 8004714:	4887      	ldr	r0, [pc, #540]	; (8004934 <flowmodbus+0xdb4>)
- 8004716:	f7fe fbcf 	bl	8002eb8 <I2C_all>
+ 8004704:	4887      	ldr	r0, [pc, #540]	; (8004924 <flowmodbus+0xda4>)
+ 8004706:	f7fe fbd7 	bl	8002eb8 <I2C_all>
 					if(I2Cdone == 1){
- 800471a:	4b83      	ldr	r3, [pc, #524]	; (8004928 <flowmodbus+0xda8>)
- 800471c:	681b      	ldr	r3, [r3, #0]
- 800471e:	2b01      	cmp	r3, #1
- 8004720:	d10b      	bne.n	800473a <flowmodbus+0xbba>
+ 800470a:	4b83      	ldr	r3, [pc, #524]	; (8004918 <flowmodbus+0xd98>)
+ 800470c:	681b      	ldr	r3, [r3, #0]
+ 800470e:	2b01      	cmp	r3, #1
+ 8004710:	d10b      	bne.n	800472a <flowmodbus+0xbaa>
 						I2Cdone = 0;
- 8004722:	4b81      	ldr	r3, [pc, #516]	; (8004928 <flowmodbus+0xda8>)
- 8004724:	2200      	movs	r2, #0
- 8004726:	601a      	str	r2, [r3, #0]
+ 8004712:	4b81      	ldr	r3, [pc, #516]	; (8004918 <flowmodbus+0xd98>)
+ 8004714:	2200      	movs	r2, #0
+ 8004716:	601a      	str	r2, [r3, #0]
 						Em_state = 0;
- 8004728:	4b83      	ldr	r3, [pc, #524]	; (8004938 <flowmodbus+0xdb8>)
- 800472a:	2200      	movs	r2, #0
- 800472c:	601a      	str	r2, [r3, #0]
+ 8004718:	4b83      	ldr	r3, [pc, #524]	; (8004928 <flowmodbus+0xda8>)
+ 800471a:	2200      	movs	r2, #0
+ 800471c:	601a      	str	r2, [r3, #0]
 						Mobus = Run_PointMode;
- 800472e:	4b83      	ldr	r3, [pc, #524]	; (800493c <flowmodbus+0xdbc>)
- 8004730:	2204      	movs	r2, #4
- 8004732:	701a      	strb	r2, [r3, #0]
+ 800471e:	4b83      	ldr	r3, [pc, #524]	; (800492c <flowmodbus+0xdac>)
+ 8004720:	2204      	movs	r2, #4
+ 8004722:	701a      	strb	r2, [r3, #0]
 				break;
- 8004734:	e001      	b.n	800473a <flowmodbus+0xbba>
+ 8004724:	e001      	b.n	800472a <flowmodbus+0xbaa>
 				break;
- 8004736:	bf00      	nop
- 8004738:	e2ab      	b.n	8004c92 <flowmodbus+0x1112>
+ 8004726:	bf00      	nop
+ 8004728:	e2b3      	b.n	8004c92 <flowmodbus+0x1112>
 				break;
- 800473a:	bf00      	nop
+ 800472a:	bf00      	nop
 		break;
- 800473c:	e2a9      	b.n	8004c92 <flowmodbus+0x1112>
+ 800472c:	e2b1      	b.n	8004c92 <flowmodbus+0x1112>
 	case EM_Run_TrayMode:
 		switch (Em_state) {
- 800473e:	4b7e      	ldr	r3, [pc, #504]	; (8004938 <flowmodbus+0xdb8>)
- 8004740:	681b      	ldr	r3, [r3, #0]
- 8004742:	2b00      	cmp	r3, #0
- 8004744:	d002      	beq.n	800474c <flowmodbus+0xbcc>
- 8004746:	2b01      	cmp	r3, #1
- 8004748:	d01f      	beq.n	800478a <flowmodbus+0xc0a>
+ 800472e:	4b7e      	ldr	r3, [pc, #504]	; (8004928 <flowmodbus+0xda8>)
+ 8004730:	681b      	ldr	r3, [r3, #0]
+ 8004732:	2b00      	cmp	r3, #0
+ 8004734:	d002      	beq.n	800473c <flowmodbus+0xbbc>
+ 8004736:	2b01      	cmp	r3, #1
+ 8004738:	d01f      	beq.n	800477a <flowmodbus+0xbfa>
 						Mobus = Initial;;
 					}
 				}
 				break;
 		}
 		break;
- 800474a:	e2a2      	b.n	8004c92 <flowmodbus+0x1112>
+ 800473a:	e2aa      	b.n	8004c92 <flowmodbus+0x1112>
 				if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 0){ // if Emergency Tray mode On
- 800474c:	f44f 7100 	mov.w	r1, #512	; 0x200
- 8004750:	487b      	ldr	r0, [pc, #492]	; (8004940 <flowmodbus+0xdc0>)
- 8004752:	f002 fba5 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 8004756:	4603      	mov	r3, r0
- 8004758:	2b00      	cmp	r3, #0
- 800475a:	d14e      	bne.n	80047fa <flowmodbus+0xc7a>
+ 800473c:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 8004740:	487b      	ldr	r0, [pc, #492]	; (8004930 <flowmodbus+0xdb0>)
+ 8004742:	f002 fbad 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 8004746:	4603      	mov	r3, r0
+ 8004748:	2b00      	cmp	r3, #0
+ 800474a:	d14e      	bne.n	80047ea <flowmodbus+0xc6a>
 					CaseTray = 0;
- 800475c:	4b79      	ldr	r3, [pc, #484]	; (8004944 <flowmodbus+0xdc4>)
- 800475e:	2200      	movs	r2, #0
- 8004760:	601a      	str	r2, [r3, #0]
+ 800474c:	4b79      	ldr	r3, [pc, #484]	; (8004934 <flowmodbus+0xdb4>)
+ 800474e:	2200      	movs	r2, #0
+ 8004750:	601a      	str	r2, [r3, #0]
 					plustray = -1;
- 8004762:	4b79      	ldr	r3, [pc, #484]	; (8004948 <flowmodbus+0xdc8>)
- 8004764:	f04f 32ff 	mov.w	r2, #4294967295
- 8004768:	601a      	str	r2, [r3, #0]
+ 8004752:	4b79      	ldr	r3, [pc, #484]	; (8004938 <flowmodbus+0xdb8>)
+ 8004754:	f04f 32ff 	mov.w	r2, #4294967295
+ 8004758:	601a      	str	r2, [r3, #0]
 					path = 0;
- 800476a:	4b78      	ldr	r3, [pc, #480]	; (800494c <flowmodbus+0xdcc>)
- 800476c:	2200      	movs	r2, #0
- 800476e:	601a      	str	r2, [r3, #0]
+ 800475a:	4b78      	ldr	r3, [pc, #480]	; (800493c <flowmodbus+0xdbc>)
+ 800475c:	2200      	movs	r2, #0
+ 800475e:	601a      	str	r2, [r3, #0]
 					data_read = 0;
- 8004770:	4b70      	ldr	r3, [pc, #448]	; (8004934 <flowmodbus+0xdb4>)
- 8004772:	2200      	movs	r2, #0
- 8004774:	701a      	strb	r2, [r3, #0]
+ 8004760:	4b70      	ldr	r3, [pc, #448]	; (8004924 <flowmodbus+0xda4>)
+ 8004762:	2200      	movs	r2, #0
+ 8004764:	701a      	strb	r2, [r3, #0]
 					done = 0;
- 8004776:	4b76      	ldr	r3, [pc, #472]	; (8004950 <flowmodbus+0xdd0>)
- 8004778:	2200      	movs	r2, #0
- 800477a:	601a      	str	r2, [r3, #0]
+ 8004766:	4b76      	ldr	r3, [pc, #472]	; (8004940 <flowmodbus+0xdc0>)
+ 8004768:	2200      	movs	r2, #0
+ 800476a:	601a      	str	r2, [r3, #0]
 					I2Cdone = 0;
- 800477c:	4b6a      	ldr	r3, [pc, #424]	; (8004928 <flowmodbus+0xda8>)
- 800477e:	2200      	movs	r2, #0
- 8004780:	601a      	str	r2, [r3, #0]
+ 800476c:	4b6a      	ldr	r3, [pc, #424]	; (8004918 <flowmodbus+0xd98>)
+ 800476e:	2200      	movs	r2, #0
+ 8004770:	601a      	str	r2, [r3, #0]
 					Em_state = 1;
- 8004782:	4b6d      	ldr	r3, [pc, #436]	; (8004938 <flowmodbus+0xdb8>)
- 8004784:	2201      	movs	r2, #1
- 8004786:	601a      	str	r2, [r3, #0]
+ 8004772:	4b6d      	ldr	r3, [pc, #436]	; (8004928 <flowmodbus+0xda8>)
+ 8004774:	2201      	movs	r2, #1
+ 8004776:	601a      	str	r2, [r3, #0]
 				break;
- 8004788:	e037      	b.n	80047fa <flowmodbus+0xc7a>
+ 8004778:	e037      	b.n	80047ea <flowmodbus+0xc6a>
 				if(I2Cdone == 0){
- 800478a:	4b67      	ldr	r3, [pc, #412]	; (8004928 <flowmodbus+0xda8>)
- 800478c:	681b      	ldr	r3, [r3, #0]
- 800478e:	2b00      	cmp	r3, #0
- 8004790:	d10f      	bne.n	80047b2 <flowmodbus+0xc32>
+ 800477a:	4b67      	ldr	r3, [pc, #412]	; (8004918 <flowmodbus+0xd98>)
+ 800477c:	681b      	ldr	r3, [r3, #0]
+ 800477e:	2b00      	cmp	r3, #0
+ 8004780:	d10f      	bne.n	80047a2 <flowmodbus+0xc22>
 					timestampI2Cdone = HAL_GetTick() + 500;
- 8004792:	f001 f8d3 	bl	800593c <HAL_GetTick>
- 8004796:	4603      	mov	r3, r0
- 8004798:	f503 73fa 	add.w	r3, r3, #500	; 0x1f4
- 800479c:	2200      	movs	r2, #0
- 800479e:	613b      	str	r3, [r7, #16]
- 80047a0:	617a      	str	r2, [r7, #20]
- 80047a2:	4b62      	ldr	r3, [pc, #392]	; (800492c <flowmodbus+0xdac>)
- 80047a4:	e9d7 1204 	ldrd	r1, r2, [r7, #16]
- 80047a8:	e9c3 1200 	strd	r1, r2, [r3]
+ 8004782:	f001 f8db 	bl	800593c <HAL_GetTick>
+ 8004786:	4603      	mov	r3, r0
+ 8004788:	f503 73fa 	add.w	r3, r3, #500	; 0x1f4
+ 800478c:	2200      	movs	r2, #0
+ 800478e:	613b      	str	r3, [r7, #16]
+ 8004790:	617a      	str	r2, [r7, #20]
+ 8004792:	4b62      	ldr	r3, [pc, #392]	; (800491c <flowmodbus+0xd9c>)
+ 8004794:	e9d7 1204 	ldrd	r1, r2, [r7, #16]
+ 8004798:	e9c3 1200 	strd	r1, r2, [r3]
 					I2Cdone = 1;
- 80047ac:	4b5e      	ldr	r3, [pc, #376]	; (8004928 <flowmodbus+0xda8>)
- 80047ae:	2201      	movs	r2, #1
- 80047b0:	601a      	str	r2, [r3, #0]
+ 800479c:	4b5e      	ldr	r3, [pc, #376]	; (8004918 <flowmodbus+0xd98>)
+ 800479e:	2201      	movs	r2, #1
+ 80047a0:	601a      	str	r2, [r3, #0]
 				if(HAL_GetTick() >= timestampI2Cdone){
- 80047b2:	f001 f8c3 	bl	800593c <HAL_GetTick>
- 80047b6:	4603      	mov	r3, r0
- 80047b8:	2200      	movs	r2, #0
- 80047ba:	469a      	mov	sl, r3
- 80047bc:	4693      	mov	fp, r2
- 80047be:	4b5b      	ldr	r3, [pc, #364]	; (800492c <flowmodbus+0xdac>)
- 80047c0:	e9d3 2300 	ldrd	r2, r3, [r3]
- 80047c4:	4592      	cmp	sl, r2
- 80047c6:	eb7b 0303 	sbcs.w	r3, fp, r3
- 80047ca:	d318      	bcc.n	80047fe <flowmodbus+0xc7e>
+ 80047a2:	f001 f8cb 	bl	800593c <HAL_GetTick>
+ 80047a6:	4603      	mov	r3, r0
+ 80047a8:	2200      	movs	r2, #0
+ 80047aa:	469a      	mov	sl, r3
+ 80047ac:	4693      	mov	fp, r2
+ 80047ae:	4b5b      	ldr	r3, [pc, #364]	; (800491c <flowmodbus+0xd9c>)
+ 80047b0:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 80047b4:	4592      	cmp	sl, r2
+ 80047b6:	eb7b 0303 	sbcs.w	r3, fp, r3
+ 80047ba:	d318      	bcc.n	80047ee <flowmodbus+0xc6e>
 					choice = 5;
- 80047cc:	4b58      	ldr	r3, [pc, #352]	; (8004930 <flowmodbus+0xdb0>)
- 80047ce:	2205      	movs	r2, #5
- 80047d0:	601a      	str	r2, [r3, #0]
+ 80047bc:	4b58      	ldr	r3, [pc, #352]	; (8004920 <flowmodbus+0xda0>)
+ 80047be:	2205      	movs	r2, #5
+ 80047c0:	601a      	str	r2, [r3, #0]
 					I2C_all(&data_read);
- 80047d2:	4858      	ldr	r0, [pc, #352]	; (8004934 <flowmodbus+0xdb4>)
- 80047d4:	f7fe fb70 	bl	8002eb8 <I2C_all>
+ 80047c2:	4858      	ldr	r0, [pc, #352]	; (8004924 <flowmodbus+0xda4>)
+ 80047c4:	f7fe fb78 	bl	8002eb8 <I2C_all>
 					if(I2Cdone == 1){
- 80047d8:	4b53      	ldr	r3, [pc, #332]	; (8004928 <flowmodbus+0xda8>)
- 80047da:	681b      	ldr	r3, [r3, #0]
- 80047dc:	2b01      	cmp	r3, #1
- 80047de:	d10e      	bne.n	80047fe <flowmodbus+0xc7e>
+ 80047c8:	4b53      	ldr	r3, [pc, #332]	; (8004918 <flowmodbus+0xd98>)
+ 80047ca:	681b      	ldr	r3, [r3, #0]
+ 80047cc:	2b01      	cmp	r3, #1
+ 80047ce:	d10e      	bne.n	80047ee <flowmodbus+0xc6e>
 						registerFrame[16].U16 = 0;
- 80047e0:	4b5c      	ldr	r3, [pc, #368]	; (8004954 <flowmodbus+0xdd4>)
- 80047e2:	2200      	movs	r2, #0
- 80047e4:	841a      	strh	r2, [r3, #32]
+ 80047d0:	4b5c      	ldr	r3, [pc, #368]	; (8004944 <flowmodbus+0xdc4>)
+ 80047d2:	2200      	movs	r2, #0
+ 80047d4:	841a      	strh	r2, [r3, #32]
 						I2Cdone = 0;
- 80047e6:	4b50      	ldr	r3, [pc, #320]	; (8004928 <flowmodbus+0xda8>)
- 80047e8:	2200      	movs	r2, #0
- 80047ea:	601a      	str	r2, [r3, #0]
+ 80047d6:	4b50      	ldr	r3, [pc, #320]	; (8004918 <flowmodbus+0xd98>)
+ 80047d8:	2200      	movs	r2, #0
+ 80047da:	601a      	str	r2, [r3, #0]
 						Em_state = 0;
- 80047ec:	4b52      	ldr	r3, [pc, #328]	; (8004938 <flowmodbus+0xdb8>)
- 80047ee:	2200      	movs	r2, #0
- 80047f0:	601a      	str	r2, [r3, #0]
+ 80047dc:	4b52      	ldr	r3, [pc, #328]	; (8004928 <flowmodbus+0xda8>)
+ 80047de:	2200      	movs	r2, #0
+ 80047e0:	601a      	str	r2, [r3, #0]
 						Mobus = Initial;;
- 80047f2:	4b52      	ldr	r3, [pc, #328]	; (800493c <flowmodbus+0xdbc>)
- 80047f4:	2200      	movs	r2, #0
- 80047f6:	701a      	strb	r2, [r3, #0]
+ 80047e2:	4b52      	ldr	r3, [pc, #328]	; (800492c <flowmodbus+0xdac>)
+ 80047e4:	2200      	movs	r2, #0
+ 80047e6:	701a      	strb	r2, [r3, #0]
 				break;
- 80047f8:	e001      	b.n	80047fe <flowmodbus+0xc7e>
+ 80047e8:	e001      	b.n	80047ee <flowmodbus+0xc6e>
 				break;
- 80047fa:	bf00      	nop
- 80047fc:	e249      	b.n	8004c92 <flowmodbus+0x1112>
+ 80047ea:	bf00      	nop
+ 80047ec:	e251      	b.n	8004c92 <flowmodbus+0x1112>
 				break;
- 80047fe:	bf00      	nop
+ 80047ee:	bf00      	nop
 		break;
- 8004800:	e247      	b.n	8004c92 <flowmodbus+0x1112>
+ 80047f0:	e24f      	b.n	8004c92 <flowmodbus+0x1112>
 	case Run_TrayMode:
 		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9) == 1){ // if Emergency Tray mode On
- 8004802:	f44f 7100 	mov.w	r1, #512	; 0x200
- 8004806:	484e      	ldr	r0, [pc, #312]	; (8004940 <flowmodbus+0xdc0>)
- 8004808:	f002 fb4a 	bl	8006ea0 <HAL_GPIO_ReadPin>
- 800480c:	4603      	mov	r3, r0
- 800480e:	2b01      	cmp	r3, #1
- 8004810:	d11b      	bne.n	800484a <flowmodbus+0xcca>
+ 80047f2:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 80047f6:	484e      	ldr	r0, [pc, #312]	; (8004930 <flowmodbus+0xdb0>)
+ 80047f8:	f002 fb52 	bl	8006ea0 <HAL_GPIO_ReadPin>
+ 80047fc:	4603      	mov	r3, r0
+ 80047fe:	2b01      	cmp	r3, #1
+ 8004800:	d11b      	bne.n	800483a <flowmodbus+0xcba>
 			CaseTray = 0;
- 8004812:	4b4c      	ldr	r3, [pc, #304]	; (8004944 <flowmodbus+0xdc4>)
- 8004814:	2200      	movs	r2, #0
- 8004816:	601a      	str	r2, [r3, #0]
+ 8004802:	4b4c      	ldr	r3, [pc, #304]	; (8004934 <flowmodbus+0xdb4>)
+ 8004804:	2200      	movs	r2, #0
+ 8004806:	601a      	str	r2, [r3, #0]
 			plustray = -1;
- 8004818:	4b4b      	ldr	r3, [pc, #300]	; (8004948 <flowmodbus+0xdc8>)
- 800481a:	f04f 32ff 	mov.w	r2, #4294967295
- 800481e:	601a      	str	r2, [r3, #0]
+ 8004808:	4b4b      	ldr	r3, [pc, #300]	; (8004938 <flowmodbus+0xdb8>)
+ 800480a:	f04f 32ff 	mov.w	r2, #4294967295
+ 800480e:	601a      	str	r2, [r3, #0]
 			path = 0;
- 8004820:	4b4a      	ldr	r3, [pc, #296]	; (800494c <flowmodbus+0xdcc>)
- 8004822:	2200      	movs	r2, #0
- 8004824:	601a      	str	r2, [r3, #0]
+ 8004810:	4b4a      	ldr	r3, [pc, #296]	; (800493c <flowmodbus+0xdbc>)
+ 8004812:	2200      	movs	r2, #0
+ 8004814:	601a      	str	r2, [r3, #0]
 			data_read = 0;
- 8004826:	4b43      	ldr	r3, [pc, #268]	; (8004934 <flowmodbus+0xdb4>)
- 8004828:	2200      	movs	r2, #0
- 800482a:	701a      	strb	r2, [r3, #0]
+ 8004816:	4b43      	ldr	r3, [pc, #268]	; (8004924 <flowmodbus+0xda4>)
+ 8004818:	2200      	movs	r2, #0
+ 800481a:	701a      	strb	r2, [r3, #0]
 			done = 0;
- 800482c:	4b48      	ldr	r3, [pc, #288]	; (8004950 <flowmodbus+0xdd0>)
- 800482e:	2200      	movs	r2, #0
- 8004830:	601a      	str	r2, [r3, #0]
+ 800481c:	4b48      	ldr	r3, [pc, #288]	; (8004940 <flowmodbus+0xdc0>)
+ 800481e:	2200      	movs	r2, #0
+ 8004820:	601a      	str	r2, [r3, #0]
 			I2Cdone = 0;
- 8004832:	4b3d      	ldr	r3, [pc, #244]	; (8004928 <flowmodbus+0xda8>)
- 8004834:	2200      	movs	r2, #0
- 8004836:	601a      	str	r2, [r3, #0]
+ 8004822:	4b3d      	ldr	r3, [pc, #244]	; (8004918 <flowmodbus+0xd98>)
+ 8004824:	2200      	movs	r2, #0
+ 8004826:	601a      	str	r2, [r3, #0]
 			choice = 4;
- 8004838:	4b3d      	ldr	r3, [pc, #244]	; (8004930 <flowmodbus+0xdb0>)
- 800483a:	2204      	movs	r2, #4
- 800483c:	601a      	str	r2, [r3, #0]
+ 8004828:	4b3d      	ldr	r3, [pc, #244]	; (8004920 <flowmodbus+0xda0>)
+ 800482a:	2204      	movs	r2, #4
+ 800482c:	601a      	str	r2, [r3, #0]
 			I2C_all(&data_read);
- 800483e:	483d      	ldr	r0, [pc, #244]	; (8004934 <flowmodbus+0xdb4>)
- 8004840:	f7fe fb3a 	bl	8002eb8 <I2C_all>
+ 800482e:	483d      	ldr	r0, [pc, #244]	; (8004924 <flowmodbus+0xda4>)
+ 8004830:	f7fe fb42 	bl	8002eb8 <I2C_all>
 			Mobus = EM_Run_TrayMode;
- 8004844:	4b3d      	ldr	r3, [pc, #244]	; (800493c <flowmodbus+0xdbc>)
- 8004846:	2207      	movs	r2, #7
- 8004848:	701a      	strb	r2, [r3, #0]
+ 8004834:	4b3d      	ldr	r3, [pc, #244]	; (800492c <flowmodbus+0xdac>)
+ 8004836:	2207      	movs	r2, #7
+ 8004838:	701a      	strb	r2, [r3, #0]
 		}
 		switch (CaseTray) {
- 800484a:	4b3e      	ldr	r3, [pc, #248]	; (8004944 <flowmodbus+0xdc4>)
- 800484c:	681b      	ldr	r3, [r3, #0]
- 800484e:	2b04      	cmp	r3, #4
- 8004850:	f200 821e 	bhi.w	8004c90 <flowmodbus+0x1110>
- 8004854:	a201      	add	r2, pc, #4	; (adr r2, 800485c <flowmodbus+0xcdc>)
- 8004856:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
- 800485a:	bf00      	nop
- 800485c:	08004871 	.word	0x08004871
- 8004860:	08004a25 	.word	0x08004a25
- 8004864:	08004a77 	.word	0x08004a77
- 8004868:	08004b7b 	.word	0x08004b7b
- 800486c:	08004bd7 	.word	0x08004bd7
+ 800483a:	4b3e      	ldr	r3, [pc, #248]	; (8004934 <flowmodbus+0xdb4>)
+ 800483c:	681b      	ldr	r3, [r3, #0]
+ 800483e:	2b04      	cmp	r3, #4
+ 8004840:	f200 8226 	bhi.w	8004c90 <flowmodbus+0x1110>
+ 8004844:	a201      	add	r2, pc, #4	; (adr r2, 800484c <flowmodbus+0xccc>)
+ 8004846:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 800484a:	bf00      	nop
+ 800484c:	08004861 	.word	0x08004861
+ 8004850:	08004a15 	.word	0x08004a15
+ 8004854:	08004a67 	.word	0x08004a67
+ 8004858:	08004b7d 	.word	0x08004b7d
+ 800485c:	08004bd9 	.word	0x08004bd9
 			case 0:
 				path = 1;
- 8004870:	4b36      	ldr	r3, [pc, #216]	; (800494c <flowmodbus+0xdcc>)
- 8004872:	2201      	movs	r2, #1
- 8004874:	601a      	str	r2, [r3, #0]
+ 8004860:	4b36      	ldr	r3, [pc, #216]	; (800493c <flowmodbus+0xdbc>)
+ 8004862:	2201      	movs	r2, #1
+ 8004864:	601a      	str	r2, [r3, #0]
 				indexposition = 0;
- 8004876:	4b38      	ldr	r3, [pc, #224]	; (8004958 <flowmodbus+0xdd8>)
- 8004878:	2200      	movs	r2, #0
- 800487a:	601a      	str	r2, [r3, #0]
+ 8004866:	4b38      	ldr	r3, [pc, #224]	; (8004948 <flowmodbus+0xdc8>)
+ 8004868:	2200      	movs	r2, #0
+ 800486a:	601a      	str	r2, [r3, #0]
 				choice = 6;
- 800487c:	4b2c      	ldr	r3, [pc, #176]	; (8004930 <flowmodbus+0xdb0>)
- 800487e:	2206      	movs	r2, #6
- 8004880:	601a      	str	r2, [r3, #0]
+ 800486c:	4b2c      	ldr	r3, [pc, #176]	; (8004920 <flowmodbus+0xda0>)
+ 800486e:	2206      	movs	r2, #6
+ 8004870:	601a      	str	r2, [r3, #0]
 				I2C_all(&data_read);
- 8004882:	482c      	ldr	r0, [pc, #176]	; (8004934 <flowmodbus+0xdb4>)
- 8004884:	f7fe fb18 	bl	8002eb8 <I2C_all>
+ 8004872:	482c      	ldr	r0, [pc, #176]	; (8004924 <flowmodbus+0xda4>)
+ 8004874:	f7fe fb20 	bl	8002eb8 <I2C_all>
 				// y axis
 				if(plustray == -1){ // home
- 8004888:	4b2f      	ldr	r3, [pc, #188]	; (8004948 <flowmodbus+0xdc8>)
- 800488a:	681b      	ldr	r3, [r3, #0]
- 800488c:	f1b3 3fff 	cmp.w	r3, #4294967295
- 8004890:	d176      	bne.n	8004980 <flowmodbus+0xe00>
+ 8004878:	4b2f      	ldr	r3, [pc, #188]	; (8004938 <flowmodbus+0xdb8>)
+ 800487a:	681b      	ldr	r3, [r3, #0]
+ 800487c:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8004880:	d176      	bne.n	8004970 <flowmodbus+0xdf0>
 					// y-axis
 					start_p = 0+350.0;
- 8004892:	4b32      	ldr	r3, [pc, #200]	; (800495c <flowmodbus+0xddc>)
- 8004894:	4a32      	ldr	r2, [pc, #200]	; (8004960 <flowmodbus+0xde0>)
- 8004896:	601a      	str	r2, [r3, #0]
+ 8004882:	4b32      	ldr	r3, [pc, #200]	; (800494c <flowmodbus+0xdcc>)
+ 8004884:	4a32      	ldr	r2, [pc, #200]	; (8004950 <flowmodbus+0xdd0>)
+ 8004886:	601a      	str	r2, [r3, #0]
 					stop_p = point_y[plustray+1]+350.0;
- 8004898:	4b2b      	ldr	r3, [pc, #172]	; (8004948 <flowmodbus+0xdc8>)
- 800489a:	681b      	ldr	r3, [r3, #0]
- 800489c:	3301      	adds	r3, #1
- 800489e:	4a31      	ldr	r2, [pc, #196]	; (8004964 <flowmodbus+0xde4>)
- 80048a0:	009b      	lsls	r3, r3, #2
- 80048a2:	4413      	add	r3, r2
- 80048a4:	edd3 7a00 	vldr	s15, [r3]
- 80048a8:	ed9f 7a2f 	vldr	s14, [pc, #188]	; 8004968 <flowmodbus+0xde8>
- 80048ac:	ee77 7a87 	vadd.f32	s15, s15, s14
- 80048b0:	4b2e      	ldr	r3, [pc, #184]	; (800496c <flowmodbus+0xdec>)
- 80048b2:	edc3 7a00 	vstr	s15, [r3]
+ 8004888:	4b2b      	ldr	r3, [pc, #172]	; (8004938 <flowmodbus+0xdb8>)
+ 800488a:	681b      	ldr	r3, [r3, #0]
+ 800488c:	3301      	adds	r3, #1
+ 800488e:	4a31      	ldr	r2, [pc, #196]	; (8004954 <flowmodbus+0xdd4>)
+ 8004890:	009b      	lsls	r3, r3, #2
+ 8004892:	4413      	add	r3, r2
+ 8004894:	edd3 7a00 	vldr	s15, [r3]
+ 8004898:	ed9f 7a2f 	vldr	s14, [pc, #188]	; 8004958 <flowmodbus+0xdd8>
+ 800489c:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 80048a0:	4b2e      	ldr	r3, [pc, #184]	; (800495c <flowmodbus+0xddc>)
+ 80048a2:	edc3 7a00 	vstr	s15, [r3]
 					start_v = 0; // qk
- 80048b6:	4b2e      	ldr	r3, [pc, #184]	; (8004970 <flowmodbus+0xdf0>)
- 80048b8:	f04f 0200 	mov.w	r2, #0
- 80048bc:	601a      	str	r2, [r3, #0]
+ 80048a6:	4b2e      	ldr	r3, [pc, #184]	; (8004960 <flowmodbus+0xde0>)
+ 80048a8:	f04f 0200 	mov.w	r2, #0
+ 80048ac:	601a      	str	r2, [r3, #0]
 					stop_v = 0; // q_dotk+1
- 80048be:	4b2d      	ldr	r3, [pc, #180]	; (8004974 <flowmodbus+0xdf4>)
- 80048c0:	f04f 0200 	mov.w	r2, #0
- 80048c4:	601a      	str	r2, [r3, #0]
+ 80048ae:	4b2d      	ldr	r3, [pc, #180]	; (8004964 <flowmodbus+0xde4>)
+ 80048b0:	f04f 0200 	mov.w	r2, #0
+ 80048b4:	601a      	str	r2, [r3, #0]
 					timecycle = 1.5;
- 80048c6:	4b2c      	ldr	r3, [pc, #176]	; (8004978 <flowmodbus+0xdf8>)
- 80048c8:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
- 80048cc:	601a      	str	r2, [r3, #0]
+ 80048b6:	4b2c      	ldr	r3, [pc, #176]	; (8004968 <flowmodbus+0xde8>)
+ 80048b8:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
+ 80048bc:	601a      	str	r2, [r3, #0]
 					main_Qubic();
- 80048ce:	f000 fb9f 	bl	8005010 <main_Qubic>
+ 80048be:	f000 fba7 	bl	8005010 <main_Qubic>
 					// x axis
 					if(registerFrame[64].U16 == 0){
- 80048d2:	4b20      	ldr	r3, [pc, #128]	; (8004954 <flowmodbus+0xdd4>)
- 80048d4:	f8b3 3080 	ldrh.w	r3, [r3, #128]	; 0x80
- 80048d8:	2b00      	cmp	r3, #0
- 80048da:	d121      	bne.n	8004920 <flowmodbus+0xda0>
+ 80048c2:	4b20      	ldr	r3, [pc, #128]	; (8004944 <flowmodbus+0xdc4>)
+ 80048c4:	f8b3 3080 	ldrh.w	r3, [r3, #128]	; 0x80
+ 80048c8:	2b00      	cmp	r3, #0
+ 80048ca:	d121      	bne.n	8004910 <flowmodbus+0xd90>
 					 registerFrame[65].U16 = (int16_t)(point_x[plustray+1]*10); // position Tray pick/place
- 80048dc:	4b1a      	ldr	r3, [pc, #104]	; (8004948 <flowmodbus+0xdc8>)
- 80048de:	681b      	ldr	r3, [r3, #0]
- 80048e0:	3301      	adds	r3, #1
- 80048e2:	4a26      	ldr	r2, [pc, #152]	; (800497c <flowmodbus+0xdfc>)
- 80048e4:	009b      	lsls	r3, r3, #2
- 80048e6:	4413      	add	r3, r2
- 80048e8:	edd3 7a00 	vldr	s15, [r3]
- 80048ec:	eeb2 7a04 	vmov.f32	s14, #36	; 0x41200000  10.0
- 80048f0:	ee67 7a87 	vmul.f32	s15, s15, s14
- 80048f4:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 80048f8:	ee17 3a90 	vmov	r3, s15
- 80048fc:	b21b      	sxth	r3, r3
- 80048fe:	b29a      	uxth	r2, r3
- 8004900:	4b14      	ldr	r3, [pc, #80]	; (8004954 <flowmodbus+0xdd4>)
- 8004902:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
+ 80048cc:	4b1a      	ldr	r3, [pc, #104]	; (8004938 <flowmodbus+0xdb8>)
+ 80048ce:	681b      	ldr	r3, [r3, #0]
+ 80048d0:	3301      	adds	r3, #1
+ 80048d2:	4a26      	ldr	r2, [pc, #152]	; (800496c <flowmodbus+0xdec>)
+ 80048d4:	009b      	lsls	r3, r3, #2
+ 80048d6:	4413      	add	r3, r2
+ 80048d8:	edd3 7a00 	vldr	s15, [r3]
+ 80048dc:	eeb2 7a04 	vmov.f32	s14, #36	; 0x41200000  10.0
+ 80048e0:	ee67 7a87 	vmul.f32	s15, s15, s14
+ 80048e4:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 80048e8:	ee17 3a90 	vmov	r3, s15
+ 80048ec:	b21b      	sxth	r3, r3
+ 80048ee:	b29a      	uxth	r2, r3
+ 80048f0:	4b14      	ldr	r3, [pc, #80]	; (8004944 <flowmodbus+0xdc4>)
+ 80048f2:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
 					 registerFrame[66].U16 = 3000; // speed x-axis 300mm
- 8004906:	4b13      	ldr	r3, [pc, #76]	; (8004954 <flowmodbus+0xdd4>)
- 8004908:	f640 32b8 	movw	r2, #3000	; 0xbb8
- 800490c:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
+ 80048f6:	4b13      	ldr	r3, [pc, #76]	; (8004944 <flowmodbus+0xdc4>)
+ 80048f8:	f640 32b8 	movw	r2, #3000	; 0xbb8
+ 80048fc:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
 					 registerFrame[67].U16 = 1; // Acc time 1mms
- 8004910:	4b10      	ldr	r3, [pc, #64]	; (8004954 <flowmodbus+0xdd4>)
- 8004912:	2201      	movs	r2, #1
- 8004914:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
+ 8004900:	4b10      	ldr	r3, [pc, #64]	; (8004944 <flowmodbus+0xdc4>)
+ 8004902:	2201      	movs	r2, #1
+ 8004904:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
 					 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
- 8004918:	4b0e      	ldr	r3, [pc, #56]	; (8004954 <flowmodbus+0xdd4>)
- 800491a:	2202      	movs	r2, #2
- 800491c:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004908:	4b0e      	ldr	r3, [pc, #56]	; (8004944 <flowmodbus+0xdc4>)
+ 800490a:	2202      	movs	r2, #2
+ 800490c:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
 					}
 					 CaseTray = 1;
- 8004920:	4b08      	ldr	r3, [pc, #32]	; (8004944 <flowmodbus+0xdc4>)
- 8004922:	2201      	movs	r2, #1
- 8004924:	601a      	str	r2, [r3, #0]
+ 8004910:	4b08      	ldr	r3, [pc, #32]	; (8004934 <flowmodbus+0xdb4>)
+ 8004912:	2201      	movs	r2, #1
+ 8004914:	601a      	str	r2, [r3, #0]
 				 registerFrame[66].U16 = 3000; // speed x-axis 300mm
 				 registerFrame[67].U16 = 1; // Acc time 1mms
 				 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
 				 CaseTray = 1;
 				}
 				break;
- 8004926:	e17d      	b.n	8004c24 <flowmodbus+0x10a4>
- 8004928:	200009b8 	.word	0x200009b8
- 800492c:	200009b0 	.word	0x200009b0
- 8004930:	200009c4 	.word	0x200009c4
- 8004934:	200009c8 	.word	0x200009c8
- 8004938:	200009a4 	.word	0x200009a4
- 800493c:	20000d40 	.word	0x20000d40
- 8004940:	40020000 	.word	0x40020000
- 8004944:	200009c0 	.word	0x200009c0
- 8004948:	20000200 	.word	0x20000200
- 800494c:	200012b4 	.word	0x200012b4
- 8004950:	200009bc 	.word	0x200009bc
- 8004954:	2000121c 	.word	0x2000121c
- 8004958:	2000131c 	.word	0x2000131c
- 800495c:	200009cc 	.word	0x200009cc
- 8004960:	43af0000 	.word	0x43af0000
- 8004964:	2000024c 	.word	0x2000024c
- 8004968:	43af0000 	.word	0x43af0000
- 800496c:	200009d0 	.word	0x200009d0
- 8004970:	200009d4 	.word	0x200009d4
- 8004974:	200009d8 	.word	0x200009d8
- 8004978:	200009dc 	.word	0x200009dc
- 800497c:	20000204 	.word	0x20000204
+ 8004916:	e1b6      	b.n	8004c86 <flowmodbus+0x1106>
+ 8004918:	200009b8 	.word	0x200009b8
+ 800491c:	200009b0 	.word	0x200009b0
+ 8004920:	200009c4 	.word	0x200009c4
+ 8004924:	200009c8 	.word	0x200009c8
+ 8004928:	200009a4 	.word	0x200009a4
+ 800492c:	20000d40 	.word	0x20000d40
+ 8004930:	40020000 	.word	0x40020000
+ 8004934:	200009c0 	.word	0x200009c0
+ 8004938:	20000200 	.word	0x20000200
+ 800493c:	200012b4 	.word	0x200012b4
+ 8004940:	200009bc 	.word	0x200009bc
+ 8004944:	2000121c 	.word	0x2000121c
+ 8004948:	2000131c 	.word	0x2000131c
+ 800494c:	200009cc 	.word	0x200009cc
+ 8004950:	43af0000 	.word	0x43af0000
+ 8004954:	2000024c 	.word	0x2000024c
+ 8004958:	43af0000 	.word	0x43af0000
+ 800495c:	200009d0 	.word	0x200009d0
+ 8004960:	200009d4 	.word	0x200009d4
+ 8004964:	200009d8 	.word	0x200009d8
+ 8004968:	200009dc 	.word	0x200009dc
+ 800496c:	20000204 	.word	0x20000204
 				start_p = point_y[plustray]+350 ;
- 8004980:	4bab      	ldr	r3, [pc, #684]	; (8004c30 <flowmodbus+0x10b0>)
- 8004982:	681b      	ldr	r3, [r3, #0]
- 8004984:	4aab      	ldr	r2, [pc, #684]	; (8004c34 <flowmodbus+0x10b4>)
- 8004986:	009b      	lsls	r3, r3, #2
- 8004988:	4413      	add	r3, r2
- 800498a:	edd3 7a00 	vldr	s15, [r3]
- 800498e:	ed9f 7aaa 	vldr	s14, [pc, #680]	; 8004c38 <flowmodbus+0x10b8>
- 8004992:	ee77 7a87 	vadd.f32	s15, s15, s14
- 8004996:	4ba9      	ldr	r3, [pc, #676]	; (8004c3c <flowmodbus+0x10bc>)
- 8004998:	edc3 7a00 	vstr	s15, [r3]
+ 8004970:	4bab      	ldr	r3, [pc, #684]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004972:	681b      	ldr	r3, [r3, #0]
+ 8004974:	4aab      	ldr	r2, [pc, #684]	; (8004c24 <flowmodbus+0x10a4>)
+ 8004976:	009b      	lsls	r3, r3, #2
+ 8004978:	4413      	add	r3, r2
+ 800497a:	edd3 7a00 	vldr	s15, [r3]
+ 800497e:	ed9f 7aaa 	vldr	s14, [pc, #680]	; 8004c28 <flowmodbus+0x10a8>
+ 8004982:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 8004986:	4ba9      	ldr	r3, [pc, #676]	; (8004c2c <flowmodbus+0x10ac>)
+ 8004988:	edc3 7a00 	vstr	s15, [r3]
 				stop_p = point_y[plustray + 1]+350 ;
- 800499c:	4ba4      	ldr	r3, [pc, #656]	; (8004c30 <flowmodbus+0x10b0>)
- 800499e:	681b      	ldr	r3, [r3, #0]
- 80049a0:	3301      	adds	r3, #1
- 80049a2:	4aa4      	ldr	r2, [pc, #656]	; (8004c34 <flowmodbus+0x10b4>)
- 80049a4:	009b      	lsls	r3, r3, #2
- 80049a6:	4413      	add	r3, r2
- 80049a8:	edd3 7a00 	vldr	s15, [r3]
- 80049ac:	ed9f 7aa2 	vldr	s14, [pc, #648]	; 8004c38 <flowmodbus+0x10b8>
- 80049b0:	ee77 7a87 	vadd.f32	s15, s15, s14
- 80049b4:	4ba2      	ldr	r3, [pc, #648]	; (8004c40 <flowmodbus+0x10c0>)
- 80049b6:	edc3 7a00 	vstr	s15, [r3]
+ 800498c:	4ba4      	ldr	r3, [pc, #656]	; (8004c20 <flowmodbus+0x10a0>)
+ 800498e:	681b      	ldr	r3, [r3, #0]
+ 8004990:	3301      	adds	r3, #1
+ 8004992:	4aa4      	ldr	r2, [pc, #656]	; (8004c24 <flowmodbus+0x10a4>)
+ 8004994:	009b      	lsls	r3, r3, #2
+ 8004996:	4413      	add	r3, r2
+ 8004998:	edd3 7a00 	vldr	s15, [r3]
+ 800499c:	ed9f 7aa2 	vldr	s14, [pc, #648]	; 8004c28 <flowmodbus+0x10a8>
+ 80049a0:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 80049a4:	4ba2      	ldr	r3, [pc, #648]	; (8004c30 <flowmodbus+0x10b0>)
+ 80049a6:	edc3 7a00 	vstr	s15, [r3]
 				start_v = 0; // qk
- 80049ba:	4ba2      	ldr	r3, [pc, #648]	; (8004c44 <flowmodbus+0x10c4>)
- 80049bc:	f04f 0200 	mov.w	r2, #0
- 80049c0:	601a      	str	r2, [r3, #0]
+ 80049aa:	4ba2      	ldr	r3, [pc, #648]	; (8004c34 <flowmodbus+0x10b4>)
+ 80049ac:	f04f 0200 	mov.w	r2, #0
+ 80049b0:	601a      	str	r2, [r3, #0]
 				stop_v = 0; // q_dotk+1
- 80049c2:	4ba1      	ldr	r3, [pc, #644]	; (8004c48 <flowmodbus+0x10c8>)
- 80049c4:	f04f 0200 	mov.w	r2, #0
- 80049c8:	601a      	str	r2, [r3, #0]
+ 80049b2:	4ba1      	ldr	r3, [pc, #644]	; (8004c38 <flowmodbus+0x10b8>)
+ 80049b4:	f04f 0200 	mov.w	r2, #0
+ 80049b8:	601a      	str	r2, [r3, #0]
 				timecycle = 1.5;
- 80049ca:	4ba0      	ldr	r3, [pc, #640]	; (8004c4c <flowmodbus+0x10cc>)
- 80049cc:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
- 80049d0:	601a      	str	r2, [r3, #0]
+ 80049ba:	4ba0      	ldr	r3, [pc, #640]	; (8004c3c <flowmodbus+0x10bc>)
+ 80049bc:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
+ 80049c0:	601a      	str	r2, [r3, #0]
 				main_Qubic();
- 80049d2:	f000 fb1d 	bl	8005010 <main_Qubic>
+ 80049c2:	f000 fb25 	bl	8005010 <main_Qubic>
 				 registerFrame[65].U16 = (int16_t)point_x[plustray+1]*10; // position Tray pick/place
- 80049d6:	4b96      	ldr	r3, [pc, #600]	; (8004c30 <flowmodbus+0x10b0>)
- 80049d8:	681b      	ldr	r3, [r3, #0]
- 80049da:	3301      	adds	r3, #1
- 80049dc:	4a9c      	ldr	r2, [pc, #624]	; (8004c50 <flowmodbus+0x10d0>)
- 80049de:	009b      	lsls	r3, r3, #2
- 80049e0:	4413      	add	r3, r2
- 80049e2:	edd3 7a00 	vldr	s15, [r3]
- 80049e6:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 80049ea:	ee17 3a90 	vmov	r3, s15
- 80049ee:	b21b      	sxth	r3, r3
- 80049f0:	b29b      	uxth	r3, r3
- 80049f2:	461a      	mov	r2, r3
- 80049f4:	0092      	lsls	r2, r2, #2
- 80049f6:	4413      	add	r3, r2
- 80049f8:	005b      	lsls	r3, r3, #1
- 80049fa:	b29a      	uxth	r2, r3
- 80049fc:	4b95      	ldr	r3, [pc, #596]	; (8004c54 <flowmodbus+0x10d4>)
- 80049fe:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
+ 80049c6:	4b96      	ldr	r3, [pc, #600]	; (8004c20 <flowmodbus+0x10a0>)
+ 80049c8:	681b      	ldr	r3, [r3, #0]
+ 80049ca:	3301      	adds	r3, #1
+ 80049cc:	4a9c      	ldr	r2, [pc, #624]	; (8004c40 <flowmodbus+0x10c0>)
+ 80049ce:	009b      	lsls	r3, r3, #2
+ 80049d0:	4413      	add	r3, r2
+ 80049d2:	edd3 7a00 	vldr	s15, [r3]
+ 80049d6:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 80049da:	ee17 3a90 	vmov	r3, s15
+ 80049de:	b21b      	sxth	r3, r3
+ 80049e0:	b29b      	uxth	r3, r3
+ 80049e2:	461a      	mov	r2, r3
+ 80049e4:	0092      	lsls	r2, r2, #2
+ 80049e6:	4413      	add	r3, r2
+ 80049e8:	005b      	lsls	r3, r3, #1
+ 80049ea:	b29a      	uxth	r2, r3
+ 80049ec:	4b95      	ldr	r3, [pc, #596]	; (8004c44 <flowmodbus+0x10c4>)
+ 80049ee:	f8a3 2082 	strh.w	r2, [r3, #130]	; 0x82
 				 registerFrame[66].U16 = 3000; // speed x-axis 300mm
- 8004a02:	4b94      	ldr	r3, [pc, #592]	; (8004c54 <flowmodbus+0x10d4>)
- 8004a04:	f640 32b8 	movw	r2, #3000	; 0xbb8
- 8004a08:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
+ 80049f2:	4b94      	ldr	r3, [pc, #592]	; (8004c44 <flowmodbus+0x10c4>)
+ 80049f4:	f640 32b8 	movw	r2, #3000	; 0xbb8
+ 80049f8:	f8a3 2084 	strh.w	r2, [r3, #132]	; 0x84
 				 registerFrame[67].U16 = 1; // Acc time 1mms
- 8004a0c:	4b91      	ldr	r3, [pc, #580]	; (8004c54 <flowmodbus+0x10d4>)
- 8004a0e:	2201      	movs	r2, #1
- 8004a10:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
+ 80049fc:	4b91      	ldr	r3, [pc, #580]	; (8004c44 <flowmodbus+0x10c4>)
+ 80049fe:	2201      	movs	r2, #1
+ 8004a00:	f8a3 2086 	strh.w	r2, [r3, #134]	; 0x86
 				 registerFrame[64].U16 = 2; //0x40 Moving Status x-axis - run mode
- 8004a14:	4b8f      	ldr	r3, [pc, #572]	; (8004c54 <flowmodbus+0x10d4>)
- 8004a16:	2202      	movs	r2, #2
- 8004a18:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
+ 8004a04:	4b8f      	ldr	r3, [pc, #572]	; (8004c44 <flowmodbus+0x10c4>)
+ 8004a06:	2202      	movs	r2, #2
+ 8004a08:	f8a3 2080 	strh.w	r2, [r3, #128]	; 0x80
 				 CaseTray = 1;
- 8004a1c:	4b8e      	ldr	r3, [pc, #568]	; (8004c58 <flowmodbus+0x10d8>)
- 8004a1e:	2201      	movs	r2, #1
- 8004a20:	601a      	str	r2, [r3, #0]
+ 8004a0c:	4b8e      	ldr	r3, [pc, #568]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004a0e:	2201      	movs	r2, #1
+ 8004a10:	601a      	str	r2, [r3, #0]
 				break;
- 8004a22:	e0ff      	b.n	8004c24 <flowmodbus+0x10a4>
+ 8004a12:	e138      	b.n	8004c86 <flowmodbus+0x1106>
 			case 1:
 				if(done == 0){
- 8004a24:	4b8d      	ldr	r3, [pc, #564]	; (8004c5c <flowmodbus+0x10dc>)
- 8004a26:	681b      	ldr	r3, [r3, #0]
- 8004a28:	2b00      	cmp	r3, #0
- 8004a2a:	d10f      	bne.n	8004a4c <flowmodbus+0xecc>
+ 8004a14:	4b8d      	ldr	r3, [pc, #564]	; (8004c4c <flowmodbus+0x10cc>)
+ 8004a16:	681b      	ldr	r3, [r3, #0]
+ 8004a18:	2b00      	cmp	r3, #0
+ 8004a1a:	d10f      	bne.n	8004a3c <flowmodbus+0xebc>
 				timestamptray = HAL_GetTick() + 2000;
- 8004a2c:	f000 ff86 	bl	800593c <HAL_GetTick>
- 8004a30:	4603      	mov	r3, r0
- 8004a32:	f503 63fa 	add.w	r3, r3, #2000	; 0x7d0
- 8004a36:	2200      	movs	r2, #0
- 8004a38:	60bb      	str	r3, [r7, #8]
- 8004a3a:	60fa      	str	r2, [r7, #12]
- 8004a3c:	4b88      	ldr	r3, [pc, #544]	; (8004c60 <flowmodbus+0x10e0>)
- 8004a3e:	e9d7 1202 	ldrd	r1, r2, [r7, #8]
- 8004a42:	e9c3 1200 	strd	r1, r2, [r3]
+ 8004a1c:	f000 ff8e 	bl	800593c <HAL_GetTick>
+ 8004a20:	4603      	mov	r3, r0
+ 8004a22:	f503 63fa 	add.w	r3, r3, #2000	; 0x7d0
+ 8004a26:	2200      	movs	r2, #0
+ 8004a28:	60bb      	str	r3, [r7, #8]
+ 8004a2a:	60fa      	str	r2, [r7, #12]
+ 8004a2c:	4b88      	ldr	r3, [pc, #544]	; (8004c50 <flowmodbus+0x10d0>)
+ 8004a2e:	e9d7 1202 	ldrd	r1, r2, [r7, #8]
+ 8004a32:	e9c3 1200 	strd	r1, r2, [r3]
 				done = 1;
- 8004a46:	4b85      	ldr	r3, [pc, #532]	; (8004c5c <flowmodbus+0x10dc>)
- 8004a48:	2201      	movs	r2, #1
- 8004a4a:	601a      	str	r2, [r3, #0]
+ 8004a36:	4b85      	ldr	r3, [pc, #532]	; (8004c4c <flowmodbus+0x10cc>)
+ 8004a38:	2201      	movs	r2, #1
+ 8004a3a:	601a      	str	r2, [r3, #0]
 				}
 				if(HAL_GetTick() >= timestamptray){
- 8004a4c:	f000 ff76 	bl	800593c <HAL_GetTick>
- 8004a50:	4603      	mov	r3, r0
- 8004a52:	2200      	movs	r2, #0
- 8004a54:	4698      	mov	r8, r3
- 8004a56:	4691      	mov	r9, r2
- 8004a58:	4b81      	ldr	r3, [pc, #516]	; (8004c60 <flowmodbus+0x10e0>)
- 8004a5a:	e9d3 2300 	ldrd	r2, r3, [r3]
- 8004a5e:	4590      	cmp	r8, r2
- 8004a60:	eb79 0303 	sbcs.w	r3, r9, r3
- 8004a64:	f0c0 80d7 	bcc.w	8004c16 <flowmodbus+0x1096>
+ 8004a3c:	f000 ff7e 	bl	800593c <HAL_GetTick>
+ 8004a40:	4603      	mov	r3, r0
+ 8004a42:	2200      	movs	r2, #0
+ 8004a44:	4698      	mov	r8, r3
+ 8004a46:	4691      	mov	r9, r2
+ 8004a48:	4b81      	ldr	r3, [pc, #516]	; (8004c50 <flowmodbus+0x10d0>)
+ 8004a4a:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 8004a4e:	4590      	cmp	r8, r2
+ 8004a50:	eb79 0303 	sbcs.w	r3, r9, r3
+ 8004a54:	f0c0 80e0 	bcc.w	8004c18 <flowmodbus+0x1098>
 					CaseTray = 2;
- 8004a68:	4b7b      	ldr	r3, [pc, #492]	; (8004c58 <flowmodbus+0x10d8>)
- 8004a6a:	2202      	movs	r2, #2
- 8004a6c:	601a      	str	r2, [r3, #0]
+ 8004a58:	4b7b      	ldr	r3, [pc, #492]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004a5a:	2202      	movs	r2, #2
+ 8004a5c:	601a      	str	r2, [r3, #0]
 					done = 0;
- 8004a6e:	4b7b      	ldr	r3, [pc, #492]	; (8004c5c <flowmodbus+0x10dc>)
- 8004a70:	2200      	movs	r2, #0
- 8004a72:	601a      	str	r2, [r3, #0]
+ 8004a5e:	4b7b      	ldr	r3, [pc, #492]	; (8004c4c <flowmodbus+0x10cc>)
+ 8004a60:	2200      	movs	r2, #0
+ 8004a62:	601a      	str	r2, [r3, #0]
 				}
 			break;
- 8004a74:	e0cf      	b.n	8004c16 <flowmodbus+0x1096>
+ 8004a64:	e0d8      	b.n	8004c18 <flowmodbus+0x1098>
 			case 2:
 				 if(plustray == 17){
- 8004a76:	4b6e      	ldr	r3, [pc, #440]	; (8004c30 <flowmodbus+0x10b0>)
- 8004a78:	681b      	ldr	r3, [r3, #0]
- 8004a7a:	2b11      	cmp	r3, #17
- 8004a7c:	d113      	bne.n	8004aa6 <flowmodbus+0xf26>
-					Mobus = Initial;
- 8004a7e:	4b79      	ldr	r3, [pc, #484]	; (8004c64 <flowmodbus+0x10e4>)
- 8004a80:	2200      	movs	r2, #0
- 8004a82:	701a      	strb	r2, [r3, #0]
+ 8004a66:	4b6e      	ldr	r3, [pc, #440]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004a68:	681b      	ldr	r3, [r3, #0]
+ 8004a6a:	2b11      	cmp	r3, #17
+ 8004a6c:	d11c      	bne.n	8004aa8 <flowmodbus+0xf28>
+					registerFrame[16].U16 = 4;
+ 8004a6e:	4b75      	ldr	r3, [pc, #468]	; (8004c44 <flowmodbus+0x10c4>)
+ 8004a70:	2204      	movs	r2, #4
+ 8004a72:	841a      	strh	r2, [r3, #32]
 					plustray = -1;
- 8004a84:	4b6a      	ldr	r3, [pc, #424]	; (8004c30 <flowmodbus+0x10b0>)
- 8004a86:	f04f 32ff 	mov.w	r2, #4294967295
- 8004a8a:	601a      	str	r2, [r3, #0]
+ 8004a74:	4b6a      	ldr	r3, [pc, #424]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004a76:	f04f 32ff 	mov.w	r2, #4294967295
+ 8004a7a:	601a      	str	r2, [r3, #0]
 					CaseTray = 0;
- 8004a8c:	4b72      	ldr	r3, [pc, #456]	; (8004c58 <flowmodbus+0x10d8>)
- 8004a8e:	2200      	movs	r2, #0
- 8004a90:	601a      	str	r2, [r3, #0]
+ 8004a7c:	4b72      	ldr	r3, [pc, #456]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004a7e:	2200      	movs	r2, #0
+ 8004a80:	601a      	str	r2, [r3, #0]
 					data_read = 0;
- 8004a92:	4b75      	ldr	r3, [pc, #468]	; (8004c68 <flowmodbus+0x10e8>)
- 8004a94:	2200      	movs	r2, #0
- 8004a96:	701a      	strb	r2, [r3, #0]
+ 8004a82:	4b74      	ldr	r3, [pc, #464]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004a84:	2200      	movs	r2, #0
+ 8004a86:	701a      	strb	r2, [r3, #0]
 					choice = 7;
- 8004a98:	4b74      	ldr	r3, [pc, #464]	; (8004c6c <flowmodbus+0x10ec>)
- 8004a9a:	2207      	movs	r2, #7
- 8004a9c:	601a      	str	r2, [r3, #0]
+ 8004a88:	4b73      	ldr	r3, [pc, #460]	; (8004c58 <flowmodbus+0x10d8>)
+ 8004a8a:	2207      	movs	r2, #7
+ 8004a8c:	601a      	str	r2, [r3, #0]
+					indexposition = 0;
+ 8004a8e:	4b73      	ldr	r3, [pc, #460]	; (8004c5c <flowmodbus+0x10dc>)
+ 8004a90:	2200      	movs	r2, #0
+ 8004a92:	601a      	str	r2, [r3, #0]
+					path = 0;
+ 8004a94:	4b72      	ldr	r3, [pc, #456]	; (8004c60 <flowmodbus+0x10e0>)
+ 8004a96:	2200      	movs	r2, #0
+ 8004a98:	601a      	str	r2, [r3, #0]
 					I2C_all(&data_read);
- 8004a9e:	4872      	ldr	r0, [pc, #456]	; (8004c68 <flowmodbus+0x10e8>)
- 8004aa0:	f7fe fa0a 	bl	8002eb8 <I2C_all>
+ 8004a9a:	486e      	ldr	r0, [pc, #440]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004a9c:	f7fe fa0c 	bl	8002eb8 <I2C_all>
+					Mobus = Home;
+ 8004aa0:	4b70      	ldr	r3, [pc, #448]	; (8004c64 <flowmodbus+0x10e4>)
+ 8004aa2:	2203      	movs	r2, #3
+ 8004aa4:	701a      	strb	r2, [r3, #0]
 						 I2C_all(&data_read);
 						 CaseTray = 3;
 					 	 }
 				 	 }
 				 }
 				break;
- 8004aa4:	e0b9      	b.n	8004c1a <flowmodbus+0x109a>
+ 8004aa6:	e0b9      	b.n	8004c1c <flowmodbus+0x109c>
 				if(indexposition >= (timecycle*100)){
- 8004aa6:	4b72      	ldr	r3, [pc, #456]	; (8004c70 <flowmodbus+0x10f0>)
- 8004aa8:	681b      	ldr	r3, [r3, #0]
- 8004aaa:	ee07 3a90 	vmov	s15, r3
- 8004aae:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
- 8004ab2:	4b66      	ldr	r3, [pc, #408]	; (8004c4c <flowmodbus+0x10cc>)
- 8004ab4:	edd3 7a00 	vldr	s15, [r3]
- 8004ab8:	eddf 6a6e 	vldr	s13, [pc, #440]	; 8004c74 <flowmodbus+0x10f4>
- 8004abc:	ee67 7aa6 	vmul.f32	s15, s15, s13
- 8004ac0:	eeb4 7ae7 	vcmpe.f32	s14, s15
- 8004ac4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8004ac8:	db09      	blt.n	8004ade <flowmodbus+0xf5e>
+ 8004aa8:	4b6c      	ldr	r3, [pc, #432]	; (8004c5c <flowmodbus+0x10dc>)
+ 8004aaa:	681b      	ldr	r3, [r3, #0]
+ 8004aac:	ee07 3a90 	vmov	s15, r3
+ 8004ab0:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 8004ab4:	4b61      	ldr	r3, [pc, #388]	; (8004c3c <flowmodbus+0x10bc>)
+ 8004ab6:	edd3 7a00 	vldr	s15, [r3]
+ 8004aba:	eddf 6a6b 	vldr	s13, [pc, #428]	; 8004c68 <flowmodbus+0x10e8>
+ 8004abe:	ee67 7aa6 	vmul.f32	s15, s15, s13
+ 8004ac2:	eeb4 7ae7 	vcmpe.f32	s14, s15
+ 8004ac6:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8004aca:	db09      	blt.n	8004ae0 <flowmodbus+0xf60>
 						s2 = 0;
- 8004aca:	4b6b      	ldr	r3, [pc, #428]	; (8004c78 <flowmodbus+0x10f8>)
- 8004acc:	f04f 0200 	mov.w	r2, #0
- 8004ad0:	601a      	str	r2, [r3, #0]
+ 8004acc:	4b67      	ldr	r3, [pc, #412]	; (8004c6c <flowmodbus+0x10ec>)
+ 8004ace:	f04f 0200 	mov.w	r2, #0
+ 8004ad2:	601a      	str	r2, [r3, #0]
 						indexposition = 0;
- 8004ad2:	4b67      	ldr	r3, [pc, #412]	; (8004c70 <flowmodbus+0x10f0>)
- 8004ad4:	2200      	movs	r2, #0
- 8004ad6:	601a      	str	r2, [r3, #0]
+ 8004ad4:	4b61      	ldr	r3, [pc, #388]	; (8004c5c <flowmodbus+0x10dc>)
+ 8004ad6:	2200      	movs	r2, #0
+ 8004ad8:	601a      	str	r2, [r3, #0]
 						path = 0;
- 8004ad8:	4b68      	ldr	r3, [pc, #416]	; (8004c7c <flowmodbus+0x10fc>)
- 8004ada:	2200      	movs	r2, #0
- 8004adc:	601a      	str	r2, [r3, #0]
+ 8004ada:	4b61      	ldr	r3, [pc, #388]	; (8004c60 <flowmodbus+0x10e0>)
+ 8004adc:	2200      	movs	r2, #0
+ 8004ade:	601a      	str	r2, [r3, #0]
 				 if(abs(error) < 0.2){
- 8004ade:	4b68      	ldr	r3, [pc, #416]	; (8004c80 <flowmodbus+0x1100>)
- 8004ae0:	edd3 7a00 	vldr	s15, [r3]
- 8004ae4:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 8004ae8:	ee17 3a90 	vmov	r3, s15
- 8004aec:	2b00      	cmp	r3, #0
- 8004aee:	f2c0 8094 	blt.w	8004c1a <flowmodbus+0x109a>
- 8004af2:	4b63      	ldr	r3, [pc, #396]	; (8004c80 <flowmodbus+0x1100>)
- 8004af4:	edd3 7a00 	vldr	s15, [r3]
- 8004af8:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 8004afc:	ee17 3a90 	vmov	r3, s15
- 8004b00:	2b00      	cmp	r3, #0
- 8004b02:	f300 808a 	bgt.w	8004c1a <flowmodbus+0x109a>
+ 8004ae0:	4b63      	ldr	r3, [pc, #396]	; (8004c70 <flowmodbus+0x10f0>)
+ 8004ae2:	edd3 7a00 	vldr	s15, [r3]
+ 8004ae6:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 8004aea:	ee17 3a90 	vmov	r3, s15
+ 8004aee:	2b00      	cmp	r3, #0
+ 8004af0:	f2c0 8094 	blt.w	8004c1c <flowmodbus+0x109c>
+ 8004af4:	4b5e      	ldr	r3, [pc, #376]	; (8004c70 <flowmodbus+0x10f0>)
+ 8004af6:	edd3 7a00 	vldr	s15, [r3]
+ 8004afa:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 8004afe:	ee17 3a90 	vmov	r3, s15
+ 8004b02:	2b00      	cmp	r3, #0
+ 8004b04:	f300 808a 	bgt.w	8004c1c <flowmodbus+0x109c>
 					 if((plustray%2) != 0 || plustray == -1){ // Pick Case
- 8004b06:	4b4a      	ldr	r3, [pc, #296]	; (8004c30 <flowmodbus+0x10b0>)
- 8004b08:	681b      	ldr	r3, [r3, #0]
- 8004b0a:	f003 0301 	and.w	r3, r3, #1
- 8004b0e:	2b00      	cmp	r3, #0
- 8004b10:	d104      	bne.n	8004b1c <flowmodbus+0xf9c>
- 8004b12:	4b47      	ldr	r3, [pc, #284]	; (8004c30 <flowmodbus+0x10b0>)
- 8004b14:	681b      	ldr	r3, [r3, #0]
- 8004b16:	f1b3 3fff 	cmp.w	r3, #4294967295
- 8004b1a:	d113      	bne.n	8004b44 <flowmodbus+0xfc4>
-						registerFrame[16].U16 = 8; //Status Picking
- 8004b1c:	4b4d      	ldr	r3, [pc, #308]	; (8004c54 <flowmodbus+0x10d4>)
- 8004b1e:	2208      	movs	r2, #8
- 8004b20:	841a      	strh	r2, [r3, #32]
+ 8004b08:	4b45      	ldr	r3, [pc, #276]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004b0a:	681b      	ldr	r3, [r3, #0]
+ 8004b0c:	f003 0301 	and.w	r3, r3, #1
+ 8004b10:	2b00      	cmp	r3, #0
+ 8004b12:	d104      	bne.n	8004b1e <flowmodbus+0xf9e>
+ 8004b14:	4b42      	ldr	r3, [pc, #264]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004b16:	681b      	ldr	r3, [r3, #0]
+ 8004b18:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8004b1c:	d113      	bne.n	8004b46 <flowmodbus+0xfc6>
+						registerFrame[16].U16 = 16; //Status Picking
+ 8004b1e:	4b49      	ldr	r3, [pc, #292]	; (8004c44 <flowmodbus+0x10c4>)
+ 8004b20:	2210      	movs	r2, #16
+ 8004b22:	841a      	strh	r2, [r3, #32]
 						s2 = 0;
- 8004b22:	4b55      	ldr	r3, [pc, #340]	; (8004c78 <flowmodbus+0x10f8>)
- 8004b24:	f04f 0200 	mov.w	r2, #0
- 8004b28:	601a      	str	r2, [r3, #0]
+ 8004b24:	4b51      	ldr	r3, [pc, #324]	; (8004c6c <flowmodbus+0x10ec>)
+ 8004b26:	f04f 0200 	mov.w	r2, #0
+ 8004b2a:	601a      	str	r2, [r3, #0]
 						s = 0;
- 8004b2a:	4b56      	ldr	r3, [pc, #344]	; (8004c84 <flowmodbus+0x1104>)
- 8004b2c:	f04f 0200 	mov.w	r2, #0
- 8004b30:	601a      	str	r2, [r3, #0]
+ 8004b2c:	4b51      	ldr	r3, [pc, #324]	; (8004c74 <flowmodbus+0x10f4>)
+ 8004b2e:	f04f 0200 	mov.w	r2, #0
+ 8004b32:	601a      	str	r2, [r3, #0]
 						 choice = 8;
- 8004b32:	4b4e      	ldr	r3, [pc, #312]	; (8004c6c <flowmodbus+0x10ec>)
- 8004b34:	2208      	movs	r2, #8
- 8004b36:	601a      	str	r2, [r3, #0]
+ 8004b34:	4b48      	ldr	r3, [pc, #288]	; (8004c58 <flowmodbus+0x10d8>)
+ 8004b36:	2208      	movs	r2, #8
+ 8004b38:	601a      	str	r2, [r3, #0]
 						 I2C_all(&data_read);
- 8004b38:	484b      	ldr	r0, [pc, #300]	; (8004c68 <flowmodbus+0x10e8>)
- 8004b3a:	f7fe f9bd 	bl	8002eb8 <I2C_all>
+ 8004b3a:	4846      	ldr	r0, [pc, #280]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004b3c:	f7fe f9bc 	bl	8002eb8 <I2C_all>
 						 CaseTray = 3;
- 8004b3e:	4b46      	ldr	r3, [pc, #280]	; (8004c58 <flowmodbus+0x10d8>)
- 8004b40:	2203      	movs	r2, #3
- 8004b42:	601a      	str	r2, [r3, #0]
+ 8004b40:	4b41      	ldr	r3, [pc, #260]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004b42:	2203      	movs	r2, #3
+ 8004b44:	601a      	str	r2, [r3, #0]
 					 if(plustray%2 == 0){ // Place Case
- 8004b44:	4b3a      	ldr	r3, [pc, #232]	; (8004c30 <flowmodbus+0x10b0>)
- 8004b46:	681b      	ldr	r3, [r3, #0]
- 8004b48:	f003 0301 	and.w	r3, r3, #1
- 8004b4c:	2b00      	cmp	r3, #0
- 8004b4e:	d164      	bne.n	8004c1a <flowmodbus+0x109a>
-						registerFrame[16].U16 = 16; //Status Placing
- 8004b50:	4b40      	ldr	r3, [pc, #256]	; (8004c54 <flowmodbus+0x10d4>)
- 8004b52:	2210      	movs	r2, #16
- 8004b54:	841a      	strh	r2, [r3, #32]
+ 8004b46:	4b36      	ldr	r3, [pc, #216]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004b48:	681b      	ldr	r3, [r3, #0]
+ 8004b4a:	f003 0301 	and.w	r3, r3, #1
+ 8004b4e:	2b00      	cmp	r3, #0
+ 8004b50:	d164      	bne.n	8004c1c <flowmodbus+0x109c>
+						registerFrame[16].U16 = 8; //Status Placing
+ 8004b52:	4b3c      	ldr	r3, [pc, #240]	; (8004c44 <flowmodbus+0x10c4>)
+ 8004b54:	2208      	movs	r2, #8
+ 8004b56:	841a      	strh	r2, [r3, #32]
 						s2 = 0;
- 8004b56:	4b48      	ldr	r3, [pc, #288]	; (8004c78 <flowmodbus+0x10f8>)
- 8004b58:	f04f 0200 	mov.w	r2, #0
- 8004b5c:	601a      	str	r2, [r3, #0]
+ 8004b58:	4b44      	ldr	r3, [pc, #272]	; (8004c6c <flowmodbus+0x10ec>)
+ 8004b5a:	f04f 0200 	mov.w	r2, #0
+ 8004b5e:	601a      	str	r2, [r3, #0]
 						s = 0;
- 8004b5e:	4b49      	ldr	r3, [pc, #292]	; (8004c84 <flowmodbus+0x1104>)
- 8004b60:	f04f 0200 	mov.w	r2, #0
- 8004b64:	601a      	str	r2, [r3, #0]
+ 8004b60:	4b44      	ldr	r3, [pc, #272]	; (8004c74 <flowmodbus+0x10f4>)
+ 8004b62:	f04f 0200 	mov.w	r2, #0
+ 8004b66:	601a      	str	r2, [r3, #0]
 						 choice = 9;
- 8004b66:	4b41      	ldr	r3, [pc, #260]	; (8004c6c <flowmodbus+0x10ec>)
- 8004b68:	2209      	movs	r2, #9
- 8004b6a:	601a      	str	r2, [r3, #0]
+ 8004b68:	4b3b      	ldr	r3, [pc, #236]	; (8004c58 <flowmodbus+0x10d8>)
+ 8004b6a:	2209      	movs	r2, #9
+ 8004b6c:	601a      	str	r2, [r3, #0]
 						 I2C_all(&data_read);
- 8004b6c:	483e      	ldr	r0, [pc, #248]	; (8004c68 <flowmodbus+0x10e8>)
- 8004b6e:	f7fe f9a3 	bl	8002eb8 <I2C_all>
+ 8004b6e:	4839      	ldr	r0, [pc, #228]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004b70:	f7fe f9a2 	bl	8002eb8 <I2C_all>
 						 CaseTray = 3;
- 8004b72:	4b39      	ldr	r3, [pc, #228]	; (8004c58 <flowmodbus+0x10d8>)
- 8004b74:	2203      	movs	r2, #3
- 8004b76:	601a      	str	r2, [r3, #0]
+ 8004b74:	4b34      	ldr	r3, [pc, #208]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004b76:	2203      	movs	r2, #3
+ 8004b78:	601a      	str	r2, [r3, #0]
 				break;
- 8004b78:	e04f      	b.n	8004c1a <flowmodbus+0x109a>
+ 8004b7a:	e04f      	b.n	8004c1c <flowmodbus+0x109c>
 			case 3:
 				if(I2Cdone == 0){
- 8004b7a:	4b43      	ldr	r3, [pc, #268]	; (8004c88 <flowmodbus+0x1108>)
- 8004b7c:	681b      	ldr	r3, [r3, #0]
- 8004b7e:	2b00      	cmp	r3, #0
- 8004b80:	d10f      	bne.n	8004ba2 <flowmodbus+0x1022>
+ 8004b7c:	4b3e      	ldr	r3, [pc, #248]	; (8004c78 <flowmodbus+0x10f8>)
+ 8004b7e:	681b      	ldr	r3, [r3, #0]
+ 8004b80:	2b00      	cmp	r3, #0
+ 8004b82:	d10f      	bne.n	8004ba4 <flowmodbus+0x1024>
 					timestampI2Cdone = HAL_GetTick() + 2500;
- 8004b82:	f000 fedb 	bl	800593c <HAL_GetTick>
- 8004b86:	4603      	mov	r3, r0
- 8004b88:	f603 13c4 	addw	r3, r3, #2500	; 0x9c4
- 8004b8c:	2200      	movs	r2, #0
- 8004b8e:	603b      	str	r3, [r7, #0]
- 8004b90:	607a      	str	r2, [r7, #4]
- 8004b92:	4b3e      	ldr	r3, [pc, #248]	; (8004c8c <flowmodbus+0x110c>)
- 8004b94:	e9d7 1200 	ldrd	r1, r2, [r7]
- 8004b98:	e9c3 1200 	strd	r1, r2, [r3]
+ 8004b84:	f000 feda 	bl	800593c <HAL_GetTick>
+ 8004b88:	4603      	mov	r3, r0
+ 8004b8a:	f603 13c4 	addw	r3, r3, #2500	; 0x9c4
+ 8004b8e:	2200      	movs	r2, #0
+ 8004b90:	603b      	str	r3, [r7, #0]
+ 8004b92:	607a      	str	r2, [r7, #4]
+ 8004b94:	4b39      	ldr	r3, [pc, #228]	; (8004c7c <flowmodbus+0x10fc>)
+ 8004b96:	e9d7 1200 	ldrd	r1, r2, [r7]
+ 8004b9a:	e9c3 1200 	strd	r1, r2, [r3]
 				I2Cdone = 1;
- 8004b9c:	4b3a      	ldr	r3, [pc, #232]	; (8004c88 <flowmodbus+0x1108>)
- 8004b9e:	2201      	movs	r2, #1
- 8004ba0:	601a      	str	r2, [r3, #0]
+ 8004b9e:	4b36      	ldr	r3, [pc, #216]	; (8004c78 <flowmodbus+0x10f8>)
+ 8004ba0:	2201      	movs	r2, #1
+ 8004ba2:	601a      	str	r2, [r3, #0]
 				}
 				if(HAL_GetTick() >= timestampI2Cdone){
- 8004ba2:	f000 fecb 	bl	800593c <HAL_GetTick>
- 8004ba6:	4603      	mov	r3, r0
- 8004ba8:	2200      	movs	r2, #0
- 8004baa:	461c      	mov	r4, r3
- 8004bac:	4615      	mov	r5, r2
- 8004bae:	4b37      	ldr	r3, [pc, #220]	; (8004c8c <flowmodbus+0x110c>)
- 8004bb0:	e9d3 2300 	ldrd	r2, r3, [r3]
- 8004bb4:	4294      	cmp	r4, r2
- 8004bb6:	eb75 0303 	sbcs.w	r3, r5, r3
- 8004bba:	d330      	bcc.n	8004c1e <flowmodbus+0x109e>
+ 8004ba4:	f000 feca 	bl	800593c <HAL_GetTick>
+ 8004ba8:	4603      	mov	r3, r0
+ 8004baa:	2200      	movs	r2, #0
+ 8004bac:	461c      	mov	r4, r3
+ 8004bae:	4615      	mov	r5, r2
+ 8004bb0:	4b32      	ldr	r3, [pc, #200]	; (8004c7c <flowmodbus+0x10fc>)
+ 8004bb2:	e9d3 2300 	ldrd	r2, r3, [r3]
+ 8004bb6:	4294      	cmp	r4, r2
+ 8004bb8:	eb75 0303 	sbcs.w	r3, r5, r3
+ 8004bbc:	d360      	bcc.n	8004c80 <flowmodbus+0x1100>
 					choice = 10;
- 8004bbc:	4b2b      	ldr	r3, [pc, #172]	; (8004c6c <flowmodbus+0x10ec>)
- 8004bbe:	220a      	movs	r2, #10
- 8004bc0:	601a      	str	r2, [r3, #0]
+ 8004bbe:	4b26      	ldr	r3, [pc, #152]	; (8004c58 <flowmodbus+0x10d8>)
+ 8004bc0:	220a      	movs	r2, #10
+ 8004bc2:	601a      	str	r2, [r3, #0]
 					I2C_all(&data_read);
- 8004bc2:	4829      	ldr	r0, [pc, #164]	; (8004c68 <flowmodbus+0x10e8>)
- 8004bc4:	f7fe f978 	bl	8002eb8 <I2C_all>
+ 8004bc4:	4823      	ldr	r0, [pc, #140]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004bc6:	f7fe f977 	bl	8002eb8 <I2C_all>
 					CaseTray = 4;
- 8004bc8:	4b23      	ldr	r3, [pc, #140]	; (8004c58 <flowmodbus+0x10d8>)
- 8004bca:	2204      	movs	r2, #4
- 8004bcc:	601a      	str	r2, [r3, #0]
+ 8004bca:	4b1f      	ldr	r3, [pc, #124]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004bcc:	2204      	movs	r2, #4
+ 8004bce:	601a      	str	r2, [r3, #0]
 					I2Cdone = 0;
- 8004bce:	4b2e      	ldr	r3, [pc, #184]	; (8004c88 <flowmodbus+0x1108>)
- 8004bd0:	2200      	movs	r2, #0
- 8004bd2:	601a      	str	r2, [r3, #0]
+ 8004bd0:	4b29      	ldr	r3, [pc, #164]	; (8004c78 <flowmodbus+0x10f8>)
+ 8004bd2:	2200      	movs	r2, #0
+ 8004bd4:	601a      	str	r2, [r3, #0]
 				}
 				break;
- 8004bd4:	e023      	b.n	8004c1e <flowmodbus+0x109e>
+ 8004bd6:	e053      	b.n	8004c80 <flowmodbus+0x1100>
 			case 4: // Pick Case
 				if(data_read == 7 || data_read == 4){
- 8004bd6:	4b24      	ldr	r3, [pc, #144]	; (8004c68 <flowmodbus+0x10e8>)
- 8004bd8:	781b      	ldrb	r3, [r3, #0]
- 8004bda:	2b07      	cmp	r3, #7
- 8004bdc:	d003      	beq.n	8004be6 <flowmodbus+0x1066>
- 8004bde:	4b22      	ldr	r3, [pc, #136]	; (8004c68 <flowmodbus+0x10e8>)
- 8004be0:	781b      	ldrb	r3, [r3, #0]
- 8004be2:	2b04      	cmp	r3, #4
- 8004be4:	d11d      	bne.n	8004c22 <flowmodbus+0x10a2>
+ 8004bd8:	4b1e      	ldr	r3, [pc, #120]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004bda:	781b      	ldrb	r3, [r3, #0]
+ 8004bdc:	2b07      	cmp	r3, #7
+ 8004bde:	d003      	beq.n	8004be8 <flowmodbus+0x1068>
+ 8004be0:	4b1c      	ldr	r3, [pc, #112]	; (8004c54 <flowmodbus+0x10d4>)
+ 8004be2:	781b      	ldrb	r3, [r3, #0]
+ 8004be4:	2b04      	cmp	r3, #4
+ 8004be6:	d14d      	bne.n	8004c84 <flowmodbus+0x1104>
 					if(plustray < 17 || plustray == -1){
- 8004be6:	4b12      	ldr	r3, [pc, #72]	; (8004c30 <flowmodbus+0x10b0>)
- 8004be8:	681b      	ldr	r3, [r3, #0]
- 8004bea:	2b10      	cmp	r3, #16
- 8004bec:	dd04      	ble.n	8004bf8 <flowmodbus+0x1078>
- 8004bee:	4b10      	ldr	r3, [pc, #64]	; (8004c30 <flowmodbus+0x10b0>)
- 8004bf0:	681b      	ldr	r3, [r3, #0]
- 8004bf2:	f1b3 3fff 	cmp.w	r3, #4294967295
- 8004bf6:	d114      	bne.n	8004c22 <flowmodbus+0x10a2>
+ 8004be8:	4b0d      	ldr	r3, [pc, #52]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004bea:	681b      	ldr	r3, [r3, #0]
+ 8004bec:	2b10      	cmp	r3, #16
+ 8004bee:	dd04      	ble.n	8004bfa <flowmodbus+0x107a>
+ 8004bf0:	4b0b      	ldr	r3, [pc, #44]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004bf2:	681b      	ldr	r3, [r3, #0]
+ 8004bf4:	f1b3 3fff 	cmp.w	r3, #4294967295
+ 8004bf8:	d144      	bne.n	8004c84 <flowmodbus+0x1104>
 					choice = 0;
- 8004bf8:	4b1c      	ldr	r3, [pc, #112]	; (8004c6c <flowmodbus+0x10ec>)
- 8004bfa:	2200      	movs	r2, #0
- 8004bfc:	601a      	str	r2, [r3, #0]
+ 8004bfa:	4b17      	ldr	r3, [pc, #92]	; (8004c58 <flowmodbus+0x10d8>)
+ 8004bfc:	2200      	movs	r2, #0
+ 8004bfe:	601a      	str	r2, [r3, #0]
 					plustray++;
- 8004bfe:	4b0c      	ldr	r3, [pc, #48]	; (8004c30 <flowmodbus+0x10b0>)
- 8004c00:	681b      	ldr	r3, [r3, #0]
- 8004c02:	3301      	adds	r3, #1
- 8004c04:	4a0a      	ldr	r2, [pc, #40]	; (8004c30 <flowmodbus+0x10b0>)
- 8004c06:	6013      	str	r3, [r2, #0]
+ 8004c00:	4b07      	ldr	r3, [pc, #28]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004c02:	681b      	ldr	r3, [r3, #0]
+ 8004c04:	3301      	adds	r3, #1
+ 8004c06:	4a06      	ldr	r2, [pc, #24]	; (8004c20 <flowmodbus+0x10a0>)
+ 8004c08:	6013      	str	r3, [r2, #0]
 					CaseTray = 0;
- 8004c08:	4b13      	ldr	r3, [pc, #76]	; (8004c58 <flowmodbus+0x10d8>)
- 8004c0a:	2200      	movs	r2, #0
- 8004c0c:	601a      	str	r2, [r3, #0]
+ 8004c0a:	4b0f      	ldr	r3, [pc, #60]	; (8004c48 <flowmodbus+0x10c8>)
+ 8004c0c:	2200      	movs	r2, #0
+ 8004c0e:	601a      	str	r2, [r3, #0]
 					done = 0;
- 8004c0e:	4b13      	ldr	r3, [pc, #76]	; (8004c5c <flowmodbus+0x10dc>)
- 8004c10:	2200      	movs	r2, #0
- 8004c12:	601a      	str	r2, [r3, #0]
+ 8004c10:	4b0e      	ldr	r3, [pc, #56]	; (8004c4c <flowmodbus+0x10cc>)
+ 8004c12:	2200      	movs	r2, #0
+ 8004c14:	601a      	str	r2, [r3, #0]
 					}
 				}
 				break;
- 8004c14:	e005      	b.n	8004c22 <flowmodbus+0x10a2>
+ 8004c16:	e035      	b.n	8004c84 <flowmodbus+0x1104>
 			break;
- 8004c16:	bf00      	nop
- 8004c18:	e03a      	b.n	8004c90 <flowmodbus+0x1110>
+ 8004c18:	bf00      	nop
+ 8004c1a:	e039      	b.n	8004c90 <flowmodbus+0x1110>
 				break;
- 8004c1a:	bf00      	nop
- 8004c1c:	e038      	b.n	8004c90 <flowmodbus+0x1110>
+ 8004c1c:	bf00      	nop
+ 8004c1e:	e037      	b.n	8004c90 <flowmodbus+0x1110>
+ 8004c20:	20000200 	.word	0x20000200
+ 8004c24:	2000024c 	.word	0x2000024c
+ 8004c28:	43af0000 	.word	0x43af0000
+ 8004c2c:	200009cc 	.word	0x200009cc
+ 8004c30:	200009d0 	.word	0x200009d0
+ 8004c34:	200009d4 	.word	0x200009d4
+ 8004c38:	200009d8 	.word	0x200009d8
+ 8004c3c:	200009dc 	.word	0x200009dc
+ 8004c40:	20000204 	.word	0x20000204
+ 8004c44:	2000121c 	.word	0x2000121c
+ 8004c48:	200009c0 	.word	0x200009c0
+ 8004c4c:	200009bc 	.word	0x200009bc
+ 8004c50:	20000398 	.word	0x20000398
+ 8004c54:	200009c8 	.word	0x200009c8
+ 8004c58:	200009c4 	.word	0x200009c4
+ 8004c5c:	2000131c 	.word	0x2000131c
+ 8004c60:	200012b4 	.word	0x200012b4
+ 8004c64:	20000d40 	.word	0x20000d40
+ 8004c68:	42c80000 	.word	0x42c80000
+ 8004c6c:	20001334 	.word	0x20001334
+ 8004c70:	20001354 	.word	0x20001354
+ 8004c74:	20001328 	.word	0x20001328
+ 8004c78:	200009b8 	.word	0x200009b8
+ 8004c7c:	200009b0 	.word	0x200009b0
 				break;
- 8004c1e:	bf00      	nop
- 8004c20:	e036      	b.n	8004c90 <flowmodbus+0x1110>
+ 8004c80:	bf00      	nop
+ 8004c82:	e005      	b.n	8004c90 <flowmodbus+0x1110>
 				break;
- 8004c22:	bf00      	nop
+ 8004c84:	bf00      	nop
 		}
 		break;
- 8004c24:	e034      	b.n	8004c90 <flowmodbus+0x1110>
+ 8004c86:	e003      	b.n	8004c90 <flowmodbus+0x1110>
 		break;
- 8004c26:	bf00      	nop
- 8004c28:	e033      	b.n	8004c92 <flowmodbus+0x1112>
+ 8004c88:	bf00      	nop
+ 8004c8a:	e002      	b.n	8004c92 <flowmodbus+0x1112>
 		break;
- 8004c2a:	bf00      	nop
- 8004c2c:	e031      	b.n	8004c92 <flowmodbus+0x1112>
- 8004c2e:	bf00      	nop
- 8004c30:	20000200 	.word	0x20000200
- 8004c34:	2000024c 	.word	0x2000024c
- 8004c38:	43af0000 	.word	0x43af0000
- 8004c3c:	200009cc 	.word	0x200009cc
- 8004c40:	200009d0 	.word	0x200009d0
- 8004c44:	200009d4 	.word	0x200009d4
- 8004c48:	200009d8 	.word	0x200009d8
- 8004c4c:	200009dc 	.word	0x200009dc
- 8004c50:	20000204 	.word	0x20000204
- 8004c54:	2000121c 	.word	0x2000121c
- 8004c58:	200009c0 	.word	0x200009c0
- 8004c5c:	200009bc 	.word	0x200009bc
- 8004c60:	20000398 	.word	0x20000398
- 8004c64:	20000d40 	.word	0x20000d40
- 8004c68:	200009c8 	.word	0x200009c8
- 8004c6c:	200009c4 	.word	0x200009c4
- 8004c70:	2000131c 	.word	0x2000131c
- 8004c74:	42c80000 	.word	0x42c80000
- 8004c78:	20001334 	.word	0x20001334
- 8004c7c:	200012b4 	.word	0x200012b4
- 8004c80:	20001354 	.word	0x20001354
- 8004c84:	20001328 	.word	0x20001328
- 8004c88:	200009b8 	.word	0x200009b8
- 8004c8c:	200009b0 	.word	0x200009b0
+ 8004c8c:	bf00      	nop
+ 8004c8e:	e000      	b.n	8004c92 <flowmodbus+0x1112>
 		break;
  8004c90:	bf00      	nop
 	}
